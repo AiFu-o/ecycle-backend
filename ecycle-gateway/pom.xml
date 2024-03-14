@@ -12,4 +12,10 @@
     <artifactId>ecycle-gateway</artifactId>
     <name>ecycle-gateway</name>
 
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-openfeign</artifactId>
+        </dependency>
+    </dependencies>
 </project>

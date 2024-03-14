@@ -1,15 +1,21 @@
 package com.ecycle.auth.mapper;
 
+import com.ecycle.auth.config.CustomUserDetails;
+import com.ecycle.auth.model.User;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.ecycle.auth.model.UserEntity;
-import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Component;
 
 /**
- * @author wangweichen
- * @Date 2024/1/24
- * @Description TODO
- */
-@Mapper
-public interface UserMapper extends BaseMapper<UserEntity> {
-
+* @author wangweichen
+* @description 针对表【ecycle_user】的数据库操作Mapper
+* @createDate 2024-01-24 14:21:05
+* @Entity com.ecycle.auth.model.User
+*/
+public interface UserMapper extends BaseMapper<User> {
+    CustomUserDetails findByUsername(@Param("username") String username);
 }
+
+
+
+

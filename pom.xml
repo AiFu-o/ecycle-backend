@@ -21,12 +21,12 @@
         <mybatis-plus.version>3.5.5</mybatis-plus.version>
         <mysql-connector-java.version>8.0.30</mysql-connector-java.version>
         <commons-lang3.version>3.10</commons-lang3.version>
-        <spring-cloud-security.version>2.2.5.RELEASE</spring-cloud-security.version>
     </properties>
 
     <modules>
         <module>ecycle-auth</module>
         <module>ecycle-gateway</module>
+        <module>ecycle-commodity</module>
     </modules>
 
     <repositories>
@@ -44,11 +44,14 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
-
         <!--spring-cloud-->
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-bootstrap</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-loadbalancer</artifactId>
         </dependency>
 
         <!--spring-cloud-alibaba-->
@@ -77,24 +80,19 @@
         </dependency>
         <dependency>
             <groupId>com.baomidou</groupId>
-            <artifactId>mybatis-plus-generator</artifactId>
-            <version>${mybatis-plus.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus-boot-starter</artifactId>
             <version>${mybatis-plus.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.gitee.sunchenbin.mybatis.actable</groupId>
-            <artifactId>mybatis-enhance-actable</artifactId>
-            <version>1.5.0.RELEASE</version>
         </dependency>
 
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
             <version>${commons-lang3.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
         </dependency>
     </dependencies>
     <dependencyManagement>
@@ -143,13 +141,6 @@
                 <groupId>com.ecycle</groupId>
                 <artifactId>ecycle-gateway</artifactId>
                 <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework.cloud</groupId>
-                <artifactId>spring-cloud-security-dependencies</artifactId>
-                <version>${spring-cloud-security.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
             </dependency>
         </dependencies>
     </dependencyManagement>

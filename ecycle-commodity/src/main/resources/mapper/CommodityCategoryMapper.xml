@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ecycle.commodity.mapper.CommodityCategoryMapper">
+
+    <resultMap id="BaseResultMap" type="com.ecycle.commodity.model.CommodityCategory">
+            <id property="id" column="id" jdbcType="VARCHAR"/>
+            <result property="name" column="name" jdbcType="INTEGER"/>
+            <result property="title" column="title" jdbcType="INTEGER"/>
+            <result property="enable" column="enable" jdbcType="TINYINT"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="modifyTime" column="modify_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,name,title,
+        enable,create_time,modify_time
+    </sql>
+</mapper>
