@@ -1,4 +1,7 @@
-
+security:
+  ignore:
+    urls:
+      - "/auth-api/login"
 spring:
   application:
     name: ecycle-gateway
