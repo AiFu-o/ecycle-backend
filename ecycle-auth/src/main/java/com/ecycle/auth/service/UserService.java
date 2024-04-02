@@ -1,6 +1,5 @@
 package com.ecycle.auth.service;
 
-import com.ecycle.auth.config.CustomUserDetails;
 import com.ecycle.auth.model.User;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -10,5 +9,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
 * @createDate 2024-01-24 14:21:05
 */
 public interface UserService extends IService<User> {
-    CustomUserDetails findByUsername(String username);
+    User findByUsername(String username);
 }

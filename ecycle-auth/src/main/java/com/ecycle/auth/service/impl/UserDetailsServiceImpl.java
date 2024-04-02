@@ -1,8 +1,8 @@
 package com.ecycle.auth.service.impl;
 
-import com.ecycle.auth.config.CustomUserDetails;
+import com.ecycle.auth.context.UserInfo;
+import com.ecycle.auth.model.User;
 import com.ecycle.auth.service.UserService;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -26,9 +26,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        CustomUserDetails userDetails = userService.findByUsername(username);
-        List<GrantedAuthority> auths = new ArrayList<>();
-        userDetails.setAuthorities(auths);
-        return userDetails;
+        User user = userService.findByUsername(username);
+        List<String> authorities = new ArrayList<>();
+        return new UserInfo(user, authorities);
     }
 }

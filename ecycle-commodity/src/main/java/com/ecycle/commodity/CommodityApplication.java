@@ -13,7 +13,6 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 @SpringBootApplication
 @MapperScan("com.ecycle.commodity.mapper")
 @EnableFeignClients
-@EnableDiscoveryClient
 public class CommodityApplication {
     public static void main(String[] args) {
         SpringApplication.run(CommodityApplication.class, args);

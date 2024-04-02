@@ -1,7 +1,6 @@
 package com.ecycle.auth.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.ecycle.auth.config.CustomUserDetails;
 import com.ecycle.auth.model.User;
 import com.ecycle.auth.service.UserService;
 import com.ecycle.auth.mapper.UserMapper;
@@ -17,7 +16,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
     implements UserService{
 
     @Override
-    public CustomUserDetails findByUsername(String username) {
+    public User findByUsername(String username) {
         return baseMapper.findByUsername(username);
     }
 }

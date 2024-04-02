@@ -6,11 +6,11 @@
 
     <resultMap id="BaseResultMap" type="com.ecycle.auth.model.UserRole">
             <id property="id" column="id" jdbcType="VARCHAR"/>
-            <result property="roleId" column="role_id" jdbcType="VARCHAR"/>
             <result property="userId" column="user_id" jdbcType="VARCHAR"/>
+            <result property="roleId" column="role_id" jdbcType="VARCHAR"/>
     </resultMap>
 
     <sql id="Base_Column_List">
-        id,role_id,user_id
+        id,user_id,role_id
     </sql>
 </mapper>

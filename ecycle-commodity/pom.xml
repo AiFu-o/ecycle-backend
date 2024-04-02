@@ -9,10 +9,14 @@
         <version>0.0.1-SNAPSHOT</version>
     </parent>
 
-    <groupId>com.ecycle.product</groupId>
+    <groupId>com.ecycle</groupId>
     <artifactId>ecycle-commodity</artifactId>
 
     <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-openfeign</artifactId>

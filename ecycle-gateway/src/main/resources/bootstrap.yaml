@@ -1,8 +1,11 @@
+
 spring:
   application:
     name: ecycle-gateway
   profiles:
     active: dev
+  main:
+    web-application-type: reactive
   cloud:
     nacos:
       server-addr: localhost:8848
@@ -10,3 +13,19 @@ spring:
         file-extension: yaml
         server-addr: 127.0.0.1:8848
     gateway:
+      discovery:
+        locator:
+          enabled: true
+      routes:
+        - id: ecycle-commodity
+          uri: lb://ecycle-commodity
+          predicates:
+            - Path= /commodity-api/**
+          filters:
+            - StripPrefix=1
+        - id: ecycle-auth
+          uri: lb://ecycle-auth
+          predicates:
+            - Path= /auth-api/**
+          filters:
+            - StripPrefix=1

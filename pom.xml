@@ -27,6 +27,7 @@
         <module>ecycle-auth</module>
         <module>ecycle-gateway</module>
         <module>ecycle-commodity</module>
+        <module>ecycle-common</module>
     </modules>
 
     <repositories>
@@ -140,6 +141,16 @@
             <dependency>
                 <groupId>com.ecycle</groupId>
                 <artifactId>ecycle-gateway</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.ecycle</groupId>
+                <artifactId>ecycle-common</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.ecycle</groupId>
+                <artifactId>ecycle-commodity</artifactId>
                 <version>${project.version}</version>
             </dependency>
         </dependencies>

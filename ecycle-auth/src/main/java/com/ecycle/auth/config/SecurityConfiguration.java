@@ -1,40 +1,30 @@
 package com.ecycle.auth.config;
 
+import com.ecycle.auth.config.filter.UsernameAuthenticationFilter;
 import com.ecycle.auth.config.handler.CustomLogoutSuccessHandler;
-import com.ecycle.auth.service.impl.UserDetailsServiceImpl;
-import com.nimbusds.jose.jwk.JWKSet;
-import com.nimbusds.jose.jwk.RSAKey;
-import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
-import com.nimbusds.jose.jwk.source.JWKSource;
-import com.nimbusds.jose.proc.SecurityContext;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.config.Customizer;
-import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
+import org.springframework.core.annotation.Order;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.ProviderManager;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import javax.annotation.Resource;
-import java.security.KeyPair;
-import java.security.KeyPairGenerator;
-import java.security.interfaces.RSAPrivateKey;
-import java.security.interfaces.RSAPublicKey;
-import java.util.UUID;
 
 /**
  * @author wangweichen
  * @Date 2024/1/31
  * @Description 认证配置
  */
-@Configuration
 @EnableWebSecurity
+@Configuration
 public class SecurityConfiguration {
 
     @Resource
@@ -44,15 +34,16 @@ public class SecurityConfiguration {
     private UserDetailsService userDetailsService;
 
     @Bean
-    public SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
+    @Order(0)
+    public SecurityFilterChain passwordLoginFilterChain(HttpSecurity http) throws Exception {
+        http.csrf().disable();
+        http.cors().disable();
         http.authorizeHttpRequests(authorize -> authorize
-                        .antMatchers(("/**")).permitAll()
-                )
-                .httpBasic(Customizer.withDefaults())
-                .formLogin(Customizer.withDefaults());
-        http.authorizeHttpRequests().and().csrf().disable();
-        http.userDetailsService(userDetailsService);
-        http.logout().logoutSuccessHandler(customLogoutSuccessHandler);
+                .antMatchers(("/login")).permitAll()
+                .anyRequest().authenticated()
+        );
+        UsernameAuthenticationFilter filter = new UsernameAuthenticationFilter(authenticationManager());
+        http.addFilterAt(filter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 
@@ -61,4 +52,13 @@ public class SecurityConfiguration {
         return new BCryptPasswordEncoder();
     }
 
+
+    @Bean
+    public AuthenticationManager authenticationManager() {
+        DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
+        authenticationProvider.setUserDetailsService(userDetailsService);
+        authenticationProvider.setPasswordEncoder(passwordEncoder());
+
+        return new ProviderManager(authenticationProvider);
+    }
 }

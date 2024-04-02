@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 /**
 * @author wangweichen
 * @description 针对表【ecycle_role】的数据库操作Service实现
-* @createDate 2024-01-29 08:59:13
+* @createDate 2024-04-01 10:15:14
 */
 @Service
 public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role>
