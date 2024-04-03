@@ -1,7 +1,8 @@
 package com.ecycle.auth.config;
 
-import com.ecycle.auth.config.filter.UsernameAuthenticationFilter;
-import com.ecycle.auth.config.handler.CustomLogoutSuccessHandler;
+import com.ecycle.auth.filter.UsernameAuthenticationFilter;
+import com.ecycle.auth.handler.CustomLogoutSuccessHandler;
+import com.ecycle.auth.provider.WxAuthenticationProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
@@ -28,21 +29,21 @@ import javax.annotation.Resource;
 public class SecurityConfiguration {
 
     @Resource
-    private CustomLogoutSuccessHandler customLogoutSuccessHandler;
+    private UserDetailsService userDetailsService;
 
     @Resource
-    private UserDetailsService userDetailsService;
+    private WxAuthenticationProvider wxAuthenticationProvider;
 
     @Bean
     @Order(0)
-    public SecurityFilterChain passwordLoginFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain jwtFilterChain(HttpSecurity http) throws Exception {
         http.csrf().disable();
         http.cors().disable();
         http.authorizeHttpRequests(authorize -> authorize
                 .antMatchers(("/login")).permitAll()
                 .anyRequest().authenticated()
         );
-        UsernameAuthenticationFilter filter = new UsernameAuthenticationFilter(authenticationManager());
+        UsernameAuthenticationFilter filter = new UsernameAuthenticationFilter(passwordAuthenticationManager());
         http.addFilterAt(filter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
@@ -54,11 +55,16 @@ public class SecurityConfiguration {
 
 
     @Bean
-    public AuthenticationManager authenticationManager() {
+    public AuthenticationManager passwordAuthenticationManager() {
         DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
         authenticationProvider.setUserDetailsService(userDetailsService);
         authenticationProvider.setPasswordEncoder(passwordEncoder());
 
         return new ProviderManager(authenticationProvider);
+    }
+
+    @Bean
+    public AuthenticationManager wxAuthenticationManager() {
+        return new ProviderManager(wxAuthenticationProvider);
     }
 }

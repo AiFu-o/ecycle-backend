@@ -57,6 +57,11 @@ public interface TokenConstants {
     String F_USERNAME = "username";
 
     /**
+     * openId
+     */
+    String F_OPEN_ID = "openId";
+
+    /**
      * 权限
      */
     String F_AUTHORITIES = "authorities";

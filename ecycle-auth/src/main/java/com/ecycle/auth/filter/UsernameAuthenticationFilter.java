@@ -1,4 +1,4 @@
-package com.ecycle.auth.config.filter;
+package com.ecycle.auth.filter;
 
 import com.ecycle.auth.context.UserInfo;
 import com.ecycle.common.constants.TokenConstants;
