@@ -24,11 +24,13 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role>
 
     @Override
     public Boolean hasRoleByCode(String code) {
+        // TODO 缺角色判断的处理
         return false;
     }
 
     @Override
     public Boolean hasRoleById(UUID id) {
+        // TODO 缺角色判断的处理
         return false;
     }
 }
