@@ -5,10 +5,13 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
+import java.util.UUID;
+
 import lombok.Data;
 
 /**
  * 
+ * @author wangweichen
  * @TableName ecycle_authority
  */
 @TableName(value ="ecycle_authority")
@@ -18,7 +21,7 @@ public class Authority implements Serializable {
      * id
      */
     @TableId
-    private String id;
+    private UUID id;
 
     /**
      * 权限类型

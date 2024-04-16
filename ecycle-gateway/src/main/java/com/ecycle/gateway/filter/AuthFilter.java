@@ -75,6 +75,7 @@ public class AuthFilter implements GlobalFilter, Ordered, TokenConstants {
         return token;
     }
 
+
     private Boolean matches(String str, List<String> urls) {
         if (StringUtils.isEmpty(str) || urls.isEmpty()) {
             return false;

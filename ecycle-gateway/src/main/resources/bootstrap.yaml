@@ -32,3 +32,9 @@ spring:
             - Path= /auth-api/**
           filters:
             - StripPrefix=1
+        - id: ecycle-storage
+          uri: lb://ecycle-storage
+          predicates:
+            - Path= /storage-api/**
+          filters:
+            - StripPrefix=1

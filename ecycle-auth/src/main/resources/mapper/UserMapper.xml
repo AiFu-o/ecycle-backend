@@ -20,7 +20,4 @@
         age,sex,create_time,
         modify_time
     </sql>
-    <select id="findByUsername" resultType="com.ecycle.auth.model.User">
-        SELECT * FROM ecycle_user WHERE username = #{username};
-    </select>
 </mapper>

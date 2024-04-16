@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
+import java.util.UUID;
+
 import lombok.Data;
 
 /**
@@ -15,20 +17,20 @@ import lombok.Data;
 @Data
 public class UserRole implements Serializable {
     /**
-     * 
+     * id
      */
     @TableId
-    private String id;
+    private UUID id;
 
     /**
-     * 
+     * 用户 id
      */
-    private String userId;
+    private UUID userId;
 
     /**
-     * 
+     * 角色 id
      */
-    private String roleId;
+    private UUID roleId;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;

@@ -6,6 +6,8 @@ import com.ecycle.auth.service.RoleService;
 import com.ecycle.auth.mapper.RoleMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 /**
 * @author wangweichen
 * @description 针对表【ecycle_role】的数据库操作Service实现
@@ -15,6 +17,20 @@ import org.springframework.stereotype.Service;
 public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role>
     implements RoleService{
 
+    @Override
+    public Role findByCode(String code) {
+        return super.baseMapper.findByCode(code);
+    }
+
+    @Override
+    public Boolean hasRoleByCode(String code) {
+        return false;
+    }
+
+    @Override
+    public Boolean hasRoleById(UUID id) {
+        return false;
+    }
 }
 
 

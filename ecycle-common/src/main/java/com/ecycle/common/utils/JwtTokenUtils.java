@@ -4,6 +4,7 @@ import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 import java.util.Date;
 import java.util.Map;
+import java.util.UUID;
 
 import com.ecycle.common.constants.TokenConstants;
 import io.jsonwebtoken.Claims;
@@ -12,9 +13,14 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SecureDigestAlgorithm;
 import io.jsonwebtoken.security.SecurityException;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.http.server.reactive.ServerHttpRequest;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author wangweichen
@@ -34,10 +40,10 @@ public class JwtTokenUtils implements TokenConstants {
      * @param claims 数据
      * @return 令牌
      */
-    public static String createToken(String userId, Map<String, Object> claims) {
+    public static String createToken(UUID userId, Map<String, Object> claims) {
         Date now = new Date();
         return Jwts.builder()
-                .subject(userId)
+                .subject(userId.toString())
                 .issuedAt(new Date())
                 .expiration(new Date(now.getTime() + EXPIRATION_SECONDS * 1000))
                 .claims(claims)
@@ -69,12 +75,12 @@ public class JwtTokenUtils implements TokenConstants {
      * @param token 令牌
      * @return 用户ID
      */
-    public static String getUserId(String token) {
+    public static UUID getUserId(String token) {
         Claims claims = parseToken(token);
         if (null == claims) {
             return null;
         }
-        return claims.getSubject();
+        return UUID.fromString(claims.getSubject());
     }
 
     /**
@@ -86,6 +92,31 @@ public class JwtTokenUtils implements TokenConstants {
      */
     public static String getValue(Claims claims, String key) {
         return claims.get(key).toString();
+    }
+
+    public static String getToken() {
+        ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder
+                .getRequestAttributes();
+        HttpServletRequest request = requestAttributes.getRequest();
+        String token = request.getHeader(AUTHENTICATION);
+        // 如果前端设置了令牌前缀，则裁剪掉前缀
+        if (StringUtils.isNotEmpty(token) && token.startsWith(PREFIX)) {
+            token = token.replaceFirst(PREFIX, StringUtils.EMPTY);
+        }
+        return token;
+    }
+
+    /**
+     * 获取当前用户 id
+     *
+     * @return userId
+     */
+    public static UUID getCurrentUserId() {
+        String token = getToken();
+        if (StringUtils.isEmpty(token)) {
+            throw new NullPointerException("令牌不能为空");
+        }
+        return getUserId(token);
     }
 
 }

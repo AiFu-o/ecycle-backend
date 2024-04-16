@@ -7,10 +7,13 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.UUID;
+
 import lombok.Data;
 
 /**
  * 商品
+ * @author wangweichen
  * @TableName ecycle_commodity
  */
 @TableName(value ="ecycle_commodity")
@@ -20,12 +23,12 @@ public class Commodity implements Serializable {
      * id
      */
     @TableId
-    private String id;
+    private UUID id;
 
     /**
      * 商品名称
      */
-    private String name;
+    private UUID name;
 
     /**
      * 商品描述
@@ -35,7 +38,7 @@ public class Commodity implements Serializable {
     /**
      * 商品种类
      */
-    private String categoryId;
+    private UUID categoryId;
 
     /**
      * 
@@ -50,12 +53,12 @@ public class Commodity implements Serializable {
     /**
      * 创建人id
      */
-    private String creatorId;
+    private UUID creatorId;
 
     /**
      * 附件 id
      */
-    private String belongId;
+    private UUID belongId;
 
     /**
      * 浏览量

@@ -5,30 +5,33 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
+import java.util.UUID;
+
 import lombok.Data;
 
 /**
  * 
+ * @author wangweichen
  * @TableName ecycle_role_authority
  */
 @TableName(value ="ecycle_role_authority")
 @Data
 public class RoleAuthority implements Serializable {
     /**
-     * 
+     * id
      */
     @TableId
-    private String id;
+    private UUID id;
 
     /**
-     * 
+     * 角色 id
      */
-    private String roleId;
+    private UUID roleId;
 
     /**
-     * 
+     * 身份 id
      */
-    private String authorityId;
+    private UUID authorityId;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;

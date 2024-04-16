@@ -28,6 +28,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * @author wangweichen
@@ -51,7 +52,7 @@ public class UsernameAuthenticationFilter extends BasicAuthenticationFilter impl
 
         String token = header.replace(PREFIX, "");
 
-        String userId = JwtTokenUtils.getUserId(token);
+        UUID userId = JwtTokenUtils.getUserId(token);
         if(null == userId){
             chain.doFilter(request, response);
             return;

@@ -28,6 +28,7 @@
         <module>ecycle-gateway</module>
         <module>ecycle-commodity</module>
         <module>ecycle-common</module>
+        <module>ecycle-storage</module>
     </modules>
 
     <repositories>
@@ -45,6 +46,12 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
+            <optional>true</optional>
+        </dependency>
+
         <!--spring-cloud-->
         <dependency>
             <groupId>org.springframework.cloud</groupId>

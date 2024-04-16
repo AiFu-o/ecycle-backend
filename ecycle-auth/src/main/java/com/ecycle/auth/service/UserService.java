@@ -1,7 +1,9 @@
 package com.ecycle.auth.service;
 
+import com.ecycle.auth.model.Role;
 import com.ecycle.auth.model.User;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.ecycle.auth.model.UserRole;
 
 /**
 * @author wangweichen
@@ -9,5 +11,28 @@ import com.baomidou.mybatisplus.extension.service.IService;
 * @createDate 2024-01-24 14:21:05
 */
 public interface UserService extends IService<User> {
+
+    /**
+     * 根据用户名查找用户
+     *
+     * @param username 用户名
+     * @return user
+     */
     User findByUsername(String username);
+
+    /**
+     * 给用户添加角色
+     *
+     * @param role 角色
+     * @param user 用户
+     */
+    void addRole(Role role, User user);
+
+    /**
+     * 根据角色编号给用户添加角色
+     *
+     * @param roleCode 角色编号
+     * @param user 用户
+     */
+    void addRoleByCode(String roleCode, User user);
 }

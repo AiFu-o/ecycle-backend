@@ -14,6 +14,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.UUID;
 
 /**
  * @author wangweichen
@@ -25,8 +26,8 @@ import java.util.Date;
 @TableName("ecycle_user")
 public class User implements Serializable {
 
-    @TableId(type = IdType.ASSIGN_UUID)
-    private String id;
+    @TableId
+    private UUID id;
 
     private String username;
 

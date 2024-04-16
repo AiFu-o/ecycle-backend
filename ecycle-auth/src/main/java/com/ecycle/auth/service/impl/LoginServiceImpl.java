@@ -82,7 +82,7 @@ public class LoginServiceImpl implements LoginService, TokenConstants {
         if (StringUtils.isNotEmpty(user.getOpenId())) {
             map.put(F_OPEN_ID, user.getOpenId());
         }
-        String userId = user.getId();
+        UUID userId = user.getId();
         String token = JwtTokenUtils.createToken(userId, map);
         Claims claims = JwtTokenUtils.parseToken(token);
         if (null == claims) {

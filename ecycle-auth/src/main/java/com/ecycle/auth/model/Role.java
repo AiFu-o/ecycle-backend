@@ -6,10 +6,13 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.UUID;
+
 import lombok.Data;
 
 /**
  * 
+ * @author wangweichen
  * @TableName ecycle_role
  */
 @TableName(value ="ecycle_role")
@@ -19,7 +22,7 @@ public class Role implements Serializable {
      * id
      */
     @TableId
-    private String id;
+    private UUID id;
 
     /**
      * 编号

@@ -6,8 +6,8 @@
 
     <resultMap id="BaseResultMap" type="com.ecycle.commodity.model.CommodityCategory">
             <id property="id" column="id" jdbcType="VARCHAR"/>
-            <result property="name" column="name" jdbcType="INTEGER"/>
-            <result property="title" column="title" jdbcType="INTEGER"/>
+            <result property="name" column="name" jdbcType="VARCHAR"/>
+            <result property="title" column="title" jdbcType="VARCHAR"/>
             <result property="enable" column="enable" jdbcType="TINYINT"/>
             <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
             <result property="modifyTime" column="modify_time" jdbcType="TIMESTAMP"/>

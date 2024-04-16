@@ -6,6 +6,8 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.UUID;
+
 import lombok.Data;
 
 /**
@@ -19,17 +21,17 @@ public class CommodityCategory implements Serializable {
      * id
      */
     @TableId
-    private String id;
+    private UUID id;
 
     /**
      * 名称
      */
-    private Integer name;
+    private String name;
 
     /**
      * 标题
      */
-    private Integer title;
+    private String title;
 
     /**
      * 是否启用
