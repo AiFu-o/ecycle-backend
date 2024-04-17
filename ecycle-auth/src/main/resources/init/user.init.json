@@ -1,0 +1,14 @@
+[
+  {
+    "name": "普通用户",
+    "code": "normalUser"
+  },
+  {
+    "name": "系统管理员",
+    "code": "admin"
+  },
+  {
+    "name": "回收商",
+    "code": "provider"
+  }
+]

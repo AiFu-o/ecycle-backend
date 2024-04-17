@@ -6,10 +6,11 @@
 
     <resultMap id="BaseResultMap" type="com.ecycle.auth.model.Authority">
             <id property="id" column="id" jdbcType="VARCHAR"/>
+            <result property="name" column="name" jdbcType="VARCHAR"/>
             <result property="type" column="type" jdbcType="VARCHAR"/>
     </resultMap>
 
     <sql id="Base_Column_List">
-        id,type
+        id,name,type
     </sql>
 </mapper>

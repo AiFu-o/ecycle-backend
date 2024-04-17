@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.UUID;
 
 /**
 * @author wangweichen
@@ -23,6 +24,13 @@ public interface RoleMapper extends BaseMapper<Role> {
      */
     @Select("select * from ecycle_role where code = #{code}")
     Role findByCode(@Param("code") String code);
+
+    /**
+     * 判断是否有角色编号
+     * @param codes 编号
+     * @return 角色编号
+     */
+    List<String> hasRoleCodes(@Param("codes") List<String> codes);
 
 }
 

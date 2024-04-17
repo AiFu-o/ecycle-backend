@@ -1,7 +1,12 @@
 package com.ecycle.auth.mapper;
 
+import com.ecycle.auth.model.Role;
 import com.ecycle.auth.model.RoleAuthority;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Select;
+
+import java.util.List;
+import java.util.UUID;
 
 /**
 * @author wangweichen

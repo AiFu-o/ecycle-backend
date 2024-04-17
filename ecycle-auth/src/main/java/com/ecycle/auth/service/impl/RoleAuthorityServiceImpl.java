@@ -1,10 +1,14 @@
 package com.ecycle.auth.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.ecycle.auth.model.Role;
 import com.ecycle.auth.model.RoleAuthority;
 import com.ecycle.auth.service.RoleAuthorityService;
 import com.ecycle.auth.mapper.RoleAuthorityMapper;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.UUID;
 
 /**
 * @author wangweichen
@@ -14,7 +18,6 @@ import org.springframework.stereotype.Service;
 @Service
 public class RoleAuthorityServiceImpl extends ServiceImpl<RoleAuthorityMapper, RoleAuthority>
     implements RoleAuthorityService{
-
 }
 
 

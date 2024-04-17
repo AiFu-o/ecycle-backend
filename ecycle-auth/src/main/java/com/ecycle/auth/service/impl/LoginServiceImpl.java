@@ -1,10 +1,10 @@
 package com.ecycle.auth.service.impl;
 
-import com.alibaba.fastjson.JSONObject;
-import com.ecycle.auth.config.properties.WxMpProperties;
 import com.ecycle.auth.context.UserInfo;
+import com.ecycle.auth.exception.UserException;
 import com.ecycle.auth.model.User;
 import com.ecycle.auth.service.LoginService;
+import com.ecycle.auth.service.UserInfoService;
 import com.ecycle.auth.service.UserService;
 import com.ecycle.auth.service.WxService;
 import com.ecycle.common.constants.TokenConstants;
@@ -13,22 +13,18 @@ import com.ecycle.common.utils.JwtTokenUtils;
 import io.jsonwebtoken.Claims;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.Resource;
-import java.util.Objects;
-import java.util.Map;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -50,13 +46,10 @@ public class LoginServiceImpl implements LoginService, TokenConstants {
     private UserService userService;
 
     @Resource
-    private RedisTemplate<String, Object> redisTemplate;
-
-    @Resource
     private WxService wxService;
 
     @Resource
-    private WxMpProperties wxMpProperties;
+    private UserInfoService userInfoService;
 
     @Override
     public RestResponse<String> doLogin(String username, String password) {
@@ -67,8 +60,6 @@ public class LoginServiceImpl implements LoginService, TokenConstants {
             throw new AuthenticationServiceException("登录失败");
         }
         UserInfo userInfo = (UserInfo) authenticate.getPrincipal();
-
-
         String token = createToken(userInfo, userInfo.getUser());
         return RestResponse.success(token);
     }
@@ -91,12 +82,13 @@ public class LoginServiceImpl implements LoginService, TokenConstants {
         userInfo.setToken(token);
         userInfo.setLoginTime(claims.getIssuedAt().getTime());
         userInfo.setExpireTime(claims.getExpiration().getTime());
-        redisTemplate.opsForValue().set(REDIS_PREFIX + userId, userInfo);
+
+        userInfoService.saveCurrentUserInfo(userId, userInfo);
         return token;
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public RestResponse<String> doWxMiniAppLogin(Map<String, String> requestParams) {
         if (!requestParams.containsKey("jsCode") || StringUtils.isEmpty(requestParams.get("jsCode"))) {
             throw new NullPointerException("jsCode is not empty!");
@@ -107,7 +99,7 @@ public class LoginServiceImpl implements LoginService, TokenConstants {
         }
 
         String accessToken = wxService.getAccessToken();
-        if(StringUtils.isEmpty(accessToken)){
+        if (StringUtils.isEmpty(accessToken)) {
             throw new NullPointerException("accessToken is not empty!");
         }
 

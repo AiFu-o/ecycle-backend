@@ -13,4 +13,11 @@
     <sql id="Base_Column_List">
         id,user_id,role_id
     </sql>
+
+    <select id="findRolesByUserId" resultType="com.ecycle.auth.model.Role">
+        SELECT role.*
+        FROM ecycle_user_role userRole
+                 LEFT JOIN ecycle_role role ON role.id = userRole.role_id
+        WHERE userRole.user_id = #{userId}
+    </select>
 </mapper>

@@ -3,7 +3,9 @@ package com.ecycle.auth.service;
 import com.ecycle.auth.model.Role;
 import com.baomidou.mybatisplus.extension.service.IService;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.context.event.EventListener;
 
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -12,6 +14,13 @@ import java.util.UUID;
  * @createDate 2024-04-01 10:15:14
  */
 public interface RoleService extends IService<Role> {
+
+    /**
+     * 角色初始
+     */
+    void initRole();
+
+    List<Role> findRolesByUserId(UUID userId);
 
     /**
      * 根据编号获取角色
@@ -27,14 +36,6 @@ public interface RoleService extends IService<Role> {
      * @param code 角色编号
      * @return 是否有此角色
      */
-    Boolean hasRoleByCode(String code);
-
-    /**
-     * 根据角色id判断用户是否有此角色
-     *
-     * @param id 角色 id
-     * @return 是否有此角色
-     */
-    Boolean hasRoleById(UUID id);
+    Boolean hasRole(String code);
 
 }

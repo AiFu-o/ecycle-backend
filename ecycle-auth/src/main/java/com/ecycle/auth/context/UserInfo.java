@@ -1,5 +1,6 @@
 package com.ecycle.auth.context;
 
+import com.ecycle.auth.model.Role;
 import com.ecycle.auth.model.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -22,15 +23,15 @@ import java.util.stream.Collectors;
  * @Description 用户信息缓存数据结构
  */
 @Data
-//@JsonDeserialize(using = CustomUserInfoDeserializer.class)
 public class UserInfo implements UserDetails {
 
     public UserInfo(){
 
     }
 
-    public UserInfo(User user, List<String> authorities){
+    public UserInfo(User user, List<String> authorities, List<String> roles) {
         this.user = user;
+        this.roles = roles;
         this.authorities = authorities.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList());
     }
 
@@ -56,11 +57,11 @@ public class UserInfo implements UserDetails {
      */
     private Long expireTime;
 
-    private Collection<? extends GrantedAuthority> authorities;
+    private List<? extends GrantedAuthority> authorities;
 
     @Override
     @JsonIgnore
-    public Collection<? extends GrantedAuthority> getAuthorities() {
+    public List<? extends GrantedAuthority> getAuthorities() {
         return this.authorities;
     }
 

@@ -1,7 +1,7 @@
 package com.ecycle.auth.service;
 
-import com.ecycle.auth.model.RoleAuthority;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.ecycle.auth.model.RoleAuthority;
 
 /**
 * @author wangweichen

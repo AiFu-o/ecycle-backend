@@ -1,7 +1,11 @@
 package com.ecycle.auth.service;
 
+import com.ecycle.auth.model.Role;
 import com.ecycle.auth.model.UserRole;
 import com.baomidou.mybatisplus.extension.service.IService;
+
+import java.util.List;
+import java.util.UUID;
 
 /**
 * @author wangweichen
@@ -10,4 +14,11 @@ import com.baomidou.mybatisplus.extension.service.IService;
 */
 public interface UserRoleService extends IService<UserRole> {
 
+    /**
+     * 获取用户的所有角色
+     *
+     * @param userId 用户 id
+     * @return 角色
+     */
+    List<Role> findRolesByUserId(UUID userId);
 }

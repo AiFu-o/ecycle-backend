@@ -1,5 +1,6 @@
 package com.ecycle.auth.service;
 
+import com.ecycle.auth.context.UserInfo;
 import com.ecycle.common.context.RestResponse;
 
 import java.util.Map;
@@ -17,7 +18,6 @@ public interface LoginService {
      * @return Result<String> token
      */
     RestResponse<String> doLogin(String username, String password);
-
 
     /**
      * 微信小程序登录

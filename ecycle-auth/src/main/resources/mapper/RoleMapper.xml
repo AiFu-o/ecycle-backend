@@ -17,4 +17,10 @@
         id,code,name,
         desc,create_time,modify_time
     </sql>
+    <select id="hasRoleCodes" resultType="java.lang.String">
+        select code from ecycle_role where code IN
+        <foreach item='code' collection='codes' open='(' separator=',' close=')'>
+            #{code}
+        </foreach>
+    </select>
 </mapper>

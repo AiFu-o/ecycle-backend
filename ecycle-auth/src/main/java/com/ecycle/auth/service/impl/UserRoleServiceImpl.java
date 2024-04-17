@@ -1,11 +1,14 @@
 package com.ecycle.auth.service.impl;
 
-import com.baomidou.mybatisplus.extension.service.IService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.ecycle.auth.model.Role;
 import com.ecycle.auth.model.UserRole;
 import com.ecycle.auth.mapper.UserRoleMapper;
 import com.ecycle.auth.service.UserRoleService;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.UUID;
 
 /**
 * @author wangweichen
@@ -15,6 +18,11 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserRoleServiceImpl extends ServiceImpl<UserRoleMapper, UserRole>
     implements UserRoleService {
+
+    @Override
+    public List<Role> findRolesByUserId(UUID userId) {
+        return baseMapper.findRolesByUserId(userId);
+    }
 
 }
 
