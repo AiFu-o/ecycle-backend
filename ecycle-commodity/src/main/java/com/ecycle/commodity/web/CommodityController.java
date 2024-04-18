@@ -1,6 +1,7 @@
 package com.ecycle.commodity.web;
 
 import com.baomidou.mybatisplus.extension.conditions.query.QueryChainWrapper;
+import com.ecycle.commodity.exception.CommodityException;
 import com.ecycle.commodity.model.Commodity;
 import com.ecycle.commodity.model.CommodityCategory;
 import com.ecycle.commodity.service.CommodityCategoryService;
@@ -32,24 +33,62 @@ public class CommodityController {
     @Resource
     private CommodityCategoryService categoryService;
 
-    @PostMapping("/save")
-    public RestResponse<String> create(@RequestBody Commodity commodity) {
-        if (null == commodity.getId()) {
-            commodity.setId(UUID.randomUUID().toString());
-        }
-        commodityService.save(commodity);
-        return RestResponse.success(commodity.getId());
+    @GetMapping("/load/{id}")
+    public RestResponse<Commodity> load(@PathVariable(name = "id") UUID id) {
+        return RestResponse.success(commodityService.getById(id));
     }
 
-    @PutMapping("/save")
-    public RestResponse<String> update(@RequestBody Commodity body) {
-        commodityService.updateById(body);
-        return RestResponse.success(body.getId());
+    @PutMapping("/shelve/{id}")
+    public RestResponse<Boolean> shelveProduct(@PathVariable(name = "id") UUID id) {
+        try {
+            commodityService.shelveProduct(id);
+        } catch (CommodityException e) {
+            return RestResponse.validfail(e.getMessage());
+        }
+        return RestResponse.success(true);
+    }
+
+    @PutMapping("/shelveOff/{id}")
+    public RestResponse<Boolean> shelveOffProduct(@PathVariable(name = "id") UUID id) {
+        try {
+            commodityService.shelveOffProduct(id);
+        } catch (CommodityException e) {
+            return RestResponse.validfail(e.getMessage());
+        }
+        return RestResponse.success(true);
+    }
+
+    @PostMapping("/publish")
+    public RestResponse<UUID> publish(@RequestBody Commodity commodity) {
+        UUID id;
+        try {
+            id = commodityService.publish(commodity);
+        } catch (CommodityException e) {
+            return RestResponse.validfail(e.getMessage());
+        }
+        return RestResponse.success(id);
+    }
+
+    @PutMapping("/edit")
+    public RestResponse<UUID> edit(@RequestBody Commodity commodity) {
+        UUID id;
+        try {
+            id = commodityService.edit(commodity);
+        } catch (CommodityException e) {
+            return RestResponse.validfail(e.getMessage());
+        }
+        return RestResponse.success(id);
     }
 
     @PostMapping("/pageQueryAll")
     public RestResponse<PageQueryResponse> pageQueryAll(@RequestBody CommodityQueryRequest body) {
         PageQueryResponse result = commodityService.pageQueryAll(body);
+        return RestResponse.success(result);
+    }
+
+    @PostMapping("/pageQueryMineAll")
+    public RestResponse<PageQueryResponse> pageQueryMineAll(@RequestBody CommodityQueryRequest body) {
+        PageQueryResponse result = commodityService.pageQueryMineAll(body);
         return RestResponse.success(result);
     }
 

@@ -114,6 +114,9 @@ public class LoginServiceImpl implements LoginService, TokenConstants {
 
         userService.save(user);
 
+        // 给普通用户的权限
+        userService.addRoleByCode("normalUser", user);
+
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(telephone, openId);
         Authentication authenticate = wxAuthenticationManager.authenticate(authenticationToken);
         //如果认证没通过，给出对应的提示

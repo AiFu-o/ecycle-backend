@@ -9,6 +9,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.UUID;
 
+import com.ecycle.commodity.constant.CommodityStatus;
 import lombok.Data;
 
 /**
@@ -28,7 +29,7 @@ public class Commodity implements Serializable {
     /**
      * 商品名称
      */
-    private UUID name;
+    private String name;
 
     /**
      * 商品描述
@@ -68,7 +69,7 @@ public class Commodity implements Serializable {
     /**
      * 商品状态
      */
-    private Integer status;
+    private CommodityStatus status;
 
     /**
      * 成交价
