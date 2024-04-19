@@ -8,6 +8,8 @@
             <id property="id" column="id" jdbcType="VARCHAR"/>
             <result property="name" column="name" jdbcType="VARCHAR"/>
             <result property="title" column="title" jdbcType="VARCHAR"/>
+            <result property="serviceChargeType" column="service_charge_type" jdbcType="VARCHAR"/>
+            <result property="serviceChargeSetting" column="service_charge_setting" jdbcType="DECIMAL"/>
             <result property="enable" column="enable" jdbcType="TINYINT"/>
             <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
             <result property="modifyTime" column="modify_time" jdbcType="TIMESTAMP"/>
@@ -15,6 +17,7 @@
 
     <sql id="Base_Column_List">
         id,name,title,
+        service_charge_type,service_charge_setting,
         enable,create_time,modify_time
     </sql>
 </mapper>

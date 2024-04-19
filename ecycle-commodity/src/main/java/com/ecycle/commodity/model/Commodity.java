@@ -76,6 +76,11 @@ public class Commodity implements Serializable {
      */
     private BigDecimal dealPrice;
 
+    /**
+     * 服务费
+     */
+    private BigDecimal serviceCharge;
+
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
 

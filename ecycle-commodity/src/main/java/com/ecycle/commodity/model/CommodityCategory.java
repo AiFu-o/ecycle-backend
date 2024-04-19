@@ -5,9 +5,11 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.UUID;
 
+import com.ecycle.commodity.constant.ServiceChargeType;
 import lombok.Data;
 
 /**
@@ -47,6 +49,16 @@ public class CommodityCategory implements Serializable {
      * 修改时间
      */
     private Date modifyTime;
+
+    /**
+     * 服务费类型
+     */
+    private ServiceChargeType serviceChargeType;
+
+    /**
+     * 服务费设置
+     */
+    private BigDecimal serviceChargeSetting;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;

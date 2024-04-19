@@ -3,8 +3,11 @@ package com.ecycle.commodity.service.impl;
 import com.baomidou.mybatisplus.extension.conditions.query.QueryChainWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ecycle.commodity.constant.CommodityStatus;
+import com.ecycle.commodity.constant.ServiceChargeType;
 import com.ecycle.commodity.exception.CommodityException;
 import com.ecycle.commodity.model.Commodity;
+import com.ecycle.commodity.model.CommodityCategory;
+import com.ecycle.commodity.service.CommodityCategoryService;
 import com.ecycle.commodity.service.CommodityService;
 import com.ecycle.commodity.mapper.CommodityMapper;
 import com.ecycle.commodity.service.feign.AuthFeignService;
@@ -17,6 +20,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.UUID;
 
 /**
@@ -31,10 +36,13 @@ public class CommodityServiceImpl extends ServiceImpl<CommodityMapper, Commodity
     @Resource
     private AuthFeignService authFeignService;
 
+    @Resource
+    private CommodityCategoryService categoryService;
+
     @Override
     public PageQueryResponse pageQueryAll(CommodityQueryRequest body) {
         QueryChainWrapper<Commodity> queryChainWrapper = super.query();
-        if(StringUtils.isNotEmpty(body.getName())){
+        if (StringUtils.isNotEmpty(body.getName())) {
             queryChainWrapper.like("name", "%" + body.getName() + "%");
         }
         queryChainWrapper.orderByAsc("create_time");
@@ -47,6 +55,8 @@ public class CommodityServiceImpl extends ServiceImpl<CommodityMapper, Commodity
     @Transactional(rollbackFor = Exception.class)
     public UUID publish(Commodity commodity) {
         hasPublishAuth();
+        validateData(commodity);
+
         UUID id = UUID.randomUUID();
         if(null != commodity.getId()){
             id = commodity.getId();
@@ -58,6 +68,7 @@ public class CommodityServiceImpl extends ServiceImpl<CommodityMapper, Commodity
             throw new CommodityException("用户未登录");
         }
         commodity.setCreatorId(userId);
+
         save(commodity);
         return id;
     }
@@ -66,13 +77,14 @@ public class CommodityServiceImpl extends ServiceImpl<CommodityMapper, Commodity
     @Transactional(rollbackFor = Exception.class)
     public UUID edit(Commodity commodity) {
         hasPublishAuth();
+        validateData(commodity);
+
         Commodity historyEntity = load(commodity.getId());
         if(null == commodity.getStatus() || commodity.getStatus() == CommodityStatus.SOLD){
             throw new CommodityException("商品状态异常");
         }
         historyEntity.setDesc(commodity.getDesc());
         historyEntity.setName(commodity.getName());
-        historyEntity.setCategoryId(commodity.getCategoryId());
         updateById(historyEntity);
         return historyEntity.getId();
     }
@@ -130,6 +142,15 @@ public class CommodityServiceImpl extends ServiceImpl<CommodityMapper, Commodity
             throw new CommodityException("找不到商品");
         }
         return commodity;
+    }
+
+    private void validateData(Commodity commodity){
+        if(StringUtils.isEmpty(commodity.getName())){
+            throw new CommodityException("商品名称不能为空");
+        }
+        if(StringUtils.isEmpty(commodity.getDesc())){
+            throw new CommodityException("商品描述不能为空");
+        }
     }
 
 }

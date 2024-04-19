@@ -29,6 +29,8 @@
         <module>ecycle-commodity</module>
         <module>ecycle-common</module>
         <module>ecycle-storage</module>
+        <module>ecycle-biddingOrder</module>
+        <module>ecycle-pay</module>
     </modules>
 
     <repositories>
