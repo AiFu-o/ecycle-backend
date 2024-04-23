@@ -1,7 +1,6 @@
 package com.ecycle.storage.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.ecycle.common.utils.JwtTokenUtils;
 import com.ecycle.storage.config.properties.AttachmentProperties;
 import com.ecycle.storage.exception.AttachmentException;
 import com.ecycle.storage.model.AttachmentInfo;
@@ -11,12 +10,10 @@ import com.ecycle.storage.mapper.AttachmentInfoMapper;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.Assert;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.UUID;
 
 /**

@@ -13,7 +13,6 @@ import com.ecycle.commodity.service.BiddingOrderService;
 import com.ecycle.commodity.service.CommodityCategoryService;
 import com.ecycle.commodity.service.CommodityService;
 import com.ecycle.commodity.web.info.CreateOrderRequest;
-import com.ecycle.common.utils.JwtTokenUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

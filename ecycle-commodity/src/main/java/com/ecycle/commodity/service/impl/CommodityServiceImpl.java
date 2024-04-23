@@ -3,25 +3,20 @@ package com.ecycle.commodity.service.impl;
 import com.baomidou.mybatisplus.extension.conditions.query.QueryChainWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ecycle.commodity.constant.CommodityStatus;
-import com.ecycle.commodity.constant.ServiceChargeType;
 import com.ecycle.commodity.exception.CommodityException;
 import com.ecycle.commodity.model.Commodity;
-import com.ecycle.commodity.model.CommodityCategory;
 import com.ecycle.commodity.service.CommodityCategoryService;
 import com.ecycle.commodity.service.CommodityService;
 import com.ecycle.commodity.mapper.CommodityMapper;
 import com.ecycle.commodity.service.feign.AuthFeignService;
 import com.ecycle.commodity.web.info.CommodityQueryRequest;
 import com.ecycle.common.context.PageQueryResponse;
-import com.ecycle.common.utils.JwtTokenUtils;
 import com.ecycle.common.utils.MybatisUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.UUID;
 
 /**

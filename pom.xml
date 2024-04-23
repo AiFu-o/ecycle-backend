@@ -29,7 +29,6 @@
         <module>ecycle-commodity</module>
         <module>ecycle-common</module>
         <module>ecycle-storage</module>
-        <module>ecycle-biddingOrder</module>
         <module>ecycle-pay</module>
     </modules>
 
@@ -53,7 +52,6 @@
             <artifactId>spring-boot-configuration-processor</artifactId>
             <optional>true</optional>
         </dependency>
-
         <!--spring-cloud-->
         <dependency>
             <groupId>org.springframework.cloud</groupId>
@@ -171,6 +169,12 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.8.1</version>
+                <configuration>
+                    <!--指定项目源码jdk的版本-->
+                    <source>11</source>
+                    <!--指定项目编译后的jdk的版本-->
+                    <target>11</target>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
