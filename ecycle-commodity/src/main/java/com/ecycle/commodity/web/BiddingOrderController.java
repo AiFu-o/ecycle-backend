@@ -61,4 +61,16 @@ public class BiddingOrderController {
 
     }
 
+    @PutMapping("/sell/{orderId}")
+    public RestResponse<Boolean> createOrder(@PathVariable(name = "orderId") UUID orderId) {
+        try {
+            return RestResponse.success(biddingOrderService.sell(orderId));
+        } catch (BiddingOrderException e) {
+            return RestResponse.validfail(e.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return RestResponse.validfail("未知异常");
+        }
+    }
+
 }

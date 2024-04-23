@@ -17,12 +17,14 @@
             <result property="status" column="status" jdbcType="INTEGER"/>
             <result property="dealPrice" column="deal_price" jdbcType="DECIMAL"/>
             <result property="serviceCharge" column="service_charge" jdbcType="DECIMAL"/>
+            <result property="addressId" column="address_id" jdbcType="VARCHAR"/>
     </resultMap>
 
     <sql id="Base_Column_List">
-        id,name,desc,
+        id,`name`,`desc`,
         category_id,create_time,modify_time,
         creator_id,belong_id,page_views,
-        status,deal_price,service_charge
+        `status`,deal_price,service_charge,
+        addressId
     </sql>
 </mapper>

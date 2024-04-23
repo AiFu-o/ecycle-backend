@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
@@ -14,10 +15,11 @@ import lombok.Data;
 
 /**
  * 商品
+ *
  * @author wangweichen
  * @TableName ecycle_commodity
  */
-@TableName(value ="ecycle_commodity")
+@TableName(value = "ecycle_commodity")
 @Data
 public class Commodity implements Serializable {
     /**
@@ -42,12 +44,12 @@ public class Commodity implements Serializable {
     private UUID categoryId;
 
     /**
-     * 
+     *
      */
     private Date createTime;
 
     /**
-     * 
+     *
      */
     private Date modifyTime;
 
@@ -81,6 +83,11 @@ public class Commodity implements Serializable {
      */
     private BigDecimal serviceCharge;
 
+    /**
+     * 地址
+     */
+    private UUID addressId;
+
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
 
@@ -97,16 +104,18 @@ public class Commodity implements Serializable {
         }
         Commodity other = (Commodity) that;
         return (this.getId() == null ? other.getId() == null : this.getId().equals(other.getId()))
-            && (this.getName() == null ? other.getName() == null : this.getName().equals(other.getName()))
-            && (this.getDesc() == null ? other.getDesc() == null : this.getDesc().equals(other.getDesc()))
-            && (this.getCategoryId() == null ? other.getCategoryId() == null : this.getCategoryId().equals(other.getCategoryId()))
-            && (this.getCreateTime() == null ? other.getCreateTime() == null : this.getCreateTime().equals(other.getCreateTime()))
-            && (this.getModifyTime() == null ? other.getModifyTime() == null : this.getModifyTime().equals(other.getModifyTime()))
-            && (this.getCreatorId() == null ? other.getCreatorId() == null : this.getCreatorId().equals(other.getCreatorId()))
-            && (this.getBelongId() == null ? other.getBelongId() == null : this.getBelongId().equals(other.getBelongId()))
-            && (this.getPageViews() == null ? other.getPageViews() == null : this.getPageViews().equals(other.getPageViews()))
-            && (this.getStatus() == null ? other.getStatus() == null : this.getStatus().equals(other.getStatus()))
-            && (this.getDealPrice() == null ? other.getDealPrice() == null : this.getDealPrice().equals(other.getDealPrice()));
+                && (this.getName() == null ? other.getName() == null : this.getName().equals(other.getName()))
+                && (this.getDesc() == null ? other.getDesc() == null : this.getDesc().equals(other.getDesc()))
+                && (this.getCategoryId() == null ? other.getCategoryId() == null : this.getCategoryId().equals(other.getCategoryId()))
+                && (this.getCreateTime() == null ? other.getCreateTime() == null : this.getCreateTime().equals(other.getCreateTime()))
+                && (this.getModifyTime() == null ? other.getModifyTime() == null : this.getModifyTime().equals(other.getModifyTime()))
+                && (this.getCreatorId() == null ? other.getCreatorId() == null : this.getCreatorId().equals(other.getCreatorId()))
+                && (this.getBelongId() == null ? other.getBelongId() == null : this.getBelongId().equals(other.getBelongId()))
+                && (this.getPageViews() == null ? other.getPageViews() == null : this.getPageViews().equals(other.getPageViews()))
+                && (this.getStatus() == null ? other.getStatus() == null : this.getStatus().equals(other.getStatus()))
+                && (this.getDealPrice() == null ? other.getDealPrice() == null : this.getDealPrice().equals(other.getDealPrice()))
+                && (this.getServiceCharge() == null ? other.getServiceCharge() == null : this.getServiceCharge().equals(other.getServiceCharge()))
+                && (this.getAddressId() == null ? other.getAddressId() == null : this.getAddressId().equals(other.getAddressId()));
     }
 
     @Override
@@ -124,6 +133,8 @@ public class Commodity implements Serializable {
         result = prime * result + ((getPageViews() == null) ? 0 : getPageViews().hashCode());
         result = prime * result + ((getStatus() == null) ? 0 : getStatus().hashCode());
         result = prime * result + ((getDealPrice() == null) ? 0 : getDealPrice().hashCode());
+        result = prime * result + ((getServiceCharge() == null) ? 0 : getServiceCharge().hashCode());
+        result = prime * result + ((getAddressId() == null) ? 0 : getAddressId().hashCode());
         return result;
     }
 
@@ -144,6 +155,8 @@ public class Commodity implements Serializable {
         sb.append(", pageViews=").append(pageViews);
         sb.append(", status=").append(status);
         sb.append(", dealPrice=").append(dealPrice);
+        sb.append(", serviceCharge=").append(serviceCharge);
+        sb.append(", addressId=").append(addressId);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
         return sb.toString();

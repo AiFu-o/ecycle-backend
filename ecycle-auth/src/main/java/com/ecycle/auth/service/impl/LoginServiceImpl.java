@@ -60,11 +60,11 @@ public class LoginServiceImpl implements LoginService, TokenConstants {
             throw new AuthenticationServiceException("登录失败");
         }
         UserInfo userInfo = (UserInfo) authenticate.getPrincipal();
-        String token = createToken(userInfo, userInfo.getUser());
+        String token = createToken(userInfo, userInfo.getUser(), false);
         return RestResponse.success(token);
     }
 
-    private String createToken(UserInfo userInfo, User user) {
+    private String createToken(UserInfo userInfo, User user, Boolean permanentValidity) {
         Map<String, Object> map = new HashMap<>();
         map.put(F_USER, user);
         map.put(F_USERNAME, user.getUsername());
@@ -74,16 +74,18 @@ public class LoginServiceImpl implements LoginService, TokenConstants {
             map.put(F_OPEN_ID, user.getOpenId());
         }
         UUID userId = user.getId();
-        String token = JwtTokenUtils.createToken(userId, map);
+        String token = JwtTokenUtils.createToken(userId, map, permanentValidity);
         Claims claims = JwtTokenUtils.parseToken(token);
         if (null == claims) {
             throw new NullPointerException();
         }
         userInfo.setToken(token);
         userInfo.setLoginTime(claims.getIssuedAt().getTime());
-        userInfo.setExpireTime(claims.getExpiration().getTime());
+        if(!permanentValidity){
+            userInfo.setExpireTime(claims.getExpiration().getTime());
+        }
 
-        userInfoService.saveCurrentUserInfo(userId, userInfo);
+        userInfoService.saveCurrentUserInfo(userId, userInfo, permanentValidity);
         return token;
     }
 
@@ -125,7 +127,7 @@ public class LoginServiceImpl implements LoginService, TokenConstants {
         }
         UserInfo userInfo = (UserInfo) authenticate.getPrincipal();
 
-        String token = createToken(userInfo, userInfo.getUser());
+        String token = createToken(userInfo, userInfo.getUser(), true);
         return RestResponse.success(token);
     }
 

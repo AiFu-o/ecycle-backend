@@ -24,9 +24,12 @@ public class UserInfoServiceImpl implements UserInfoService {
     private RedisTemplate<String, Object> redisTemplate;
 
     @Override
-    public void saveCurrentUserInfo(UUID userId, UserInfo userInfo) {
-        Long expireTime = userInfo.getExpireTime();
-        redisTemplate.opsForValue().set(TokenConstants.REDIS_PREFIX + userId, userInfo, TokenConstants.EXPIRATION_SECONDS, TimeUnit.SECONDS);
+    public void saveCurrentUserInfo(UUID userId, UserInfo userInfo, Boolean permanentValidity) {
+        if(permanentValidity){
+            redisTemplate.opsForValue().set(TokenConstants.REDIS_PREFIX + userId, userInfo);
+        } else {
+            redisTemplate.opsForValue().set(TokenConstants.REDIS_PREFIX + userId, userInfo, TokenConstants.EXPIRATION_SECONDS, TimeUnit.SECONDS);
+        }
     }
 
     @Override
@@ -54,4 +57,16 @@ public class UserInfoServiceImpl implements UserInfoService {
         }
         redisTemplate.opsForValue().getOperations().expire(TokenConstants.REDIS_PREFIX + userId, TokenConstants.EXPIRATION_SECONDS, TimeUnit.SECONDS);
     }
+
+    @Override
+    public void delCurrentUserInfo() {
+        UUID userId;
+        try {
+            userId = JwtTokenUtils.getCurrentUserId();
+        } catch (Exception e) {
+            throw new UserException("用户未登录");
+        }
+        redisTemplate.delete(TokenConstants.REDIS_PREFIX + userId);
+    }
+
 }

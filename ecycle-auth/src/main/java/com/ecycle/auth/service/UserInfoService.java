@@ -17,9 +17,9 @@ public interface UserInfoService {
      *
      * @param userId   用户 id
      * @param userInfo 用户信息
+     * @param permanentValidity 是否长期有效
      */
-    void saveCurrentUserInfo(UUID userId, UserInfo userInfo);
-
+    void saveCurrentUserInfo(UUID userId, UserInfo userInfo, Boolean permanentValidity);
 
     /**
      * 从 redis 获取当前用户信息
@@ -33,4 +33,8 @@ public interface UserInfoService {
      */
     void refreshCurrentUserInfoTime();
 
+    /**
+     * 删除当前用户信息
+     */
+    void delCurrentUserInfo();
 }

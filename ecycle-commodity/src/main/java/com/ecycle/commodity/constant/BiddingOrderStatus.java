@@ -17,6 +17,11 @@ public enum BiddingOrderStatus {
     BIDDING("BIDDING","竞价中"),
 
     /**
+     * 竞价失败
+     */
+    BIDDING_ERROR("BIDDING_ERROR","竞价失败"),
+
+    /**
      * 待支付
      */
     PENDING_PAYMENT("PENDING_PAYMENT","待支付"),
@@ -49,7 +54,12 @@ public enum BiddingOrderStatus {
     /**
      * 已完成
      */
-    COMPLETED("COMPLETED","已完成");
+    COMPLETED("COMPLETED","已完成"),
+
+    /**
+     * 已取消
+     */
+    CANCEL("CANCEL","已取消");
 
     @EnumValue
     private final String value;

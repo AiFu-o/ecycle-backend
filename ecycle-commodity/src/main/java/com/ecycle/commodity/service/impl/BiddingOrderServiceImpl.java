@@ -13,6 +13,7 @@ import com.ecycle.commodity.service.BiddingOrderService;
 import com.ecycle.commodity.service.CommodityCategoryService;
 import com.ecycle.commodity.service.CommodityService;
 import com.ecycle.commodity.web.info.CreateOrderRequest;
+import com.ecycle.common.utils.JwtTokenUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,6 +21,8 @@ import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.Instant;
+import java.util.Date;
+import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 
@@ -49,7 +52,7 @@ public class BiddingOrderServiceImpl extends ServiceImpl<BiddingOrderMapper, Bid
         }
 
         UUID userId = JwtTokenUtils.getCurrentUserId();
-        if(null == userId){
+        if (null == userId) {
             throw new BiddingOrderException("用户未登录");
         }
 
@@ -84,10 +87,10 @@ public class BiddingOrderServiceImpl extends ServiceImpl<BiddingOrderMapper, Bid
 
         BiddingOrder biddingOrder = getById(orderId);
         UUID userId = JwtTokenUtils.getCurrentUserId();
-        if(null == userId){
+        if (null == userId) {
             throw new BiddingOrderException("用户未登录");
         }
-        if(biddingOrder.getCreatorId() != userId){
+        if (biddingOrder.getCreatorId() != userId) {
             throw new BiddingOrderException("只能修改自己的出价");
         }
         Commodity commodity = commodityService.getById(biddingOrder.getCommodityId());
@@ -98,6 +101,30 @@ public class BiddingOrderServiceImpl extends ServiceImpl<BiddingOrderMapper, Bid
         biddingOrder.setServiceChargeReceivable(serviceCharge);
 
         updateById(biddingOrder);
+        return true;
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public Boolean sell(UUID orderId) {
+        BiddingOrder biddingOrder = getById(orderId);
+        BiddingOrderStatus biddingOrderStatus = biddingOrder.getStatus();
+        if(biddingOrderStatus != BiddingOrderStatus.BIDDING){
+            throw new BiddingOrderException("竞价状态异常");
+        }
+        biddingOrder.setConfirmTime(new Date());
+        biddingOrder.setStatus(BiddingOrderStatus.PENDING_PAYMENT);
+        updateById(biddingOrder);
+
+        List<BiddingOrder> otherBindings = baseMapper.getOtherBiddingByCommodityId(biddingOrder.getCommodityId());
+        for (BiddingOrder otherBidding: otherBindings){
+            if(otherBidding.getStatus() != BiddingOrderStatus.BIDDING){
+                throw new BiddingOrderException("订单状态异常");
+            }
+            // 其他的竞价设置为竞价失败
+            otherBidding.setStatus(BiddingOrderStatus.BIDDING_ERROR);
+            updateById(otherBidding);
+        }
         return true;
     }
 
@@ -112,25 +139,25 @@ public class BiddingOrderServiceImpl extends ServiceImpl<BiddingOrderMapper, Bid
         return String.format("%s-%d-%03d", "SGD", timestampSeconds, randomNumber);
     }
 
-    private BigDecimal mathServiceCharge(Commodity commodity, BigDecimal price){
+    private BigDecimal mathServiceCharge(Commodity commodity, BigDecimal price) {
         CommodityCategory category = categoryService.getById(commodity.getCategoryId());
-        if(null == category){
+        if (null == category) {
             throw new CommodityException("找不到商品类型");
         }
 
         ServiceChargeType type = category.getServiceChargeType();
 
-        if(null == type){
+        if (null == type) {
             throw new CommodityException("找不到服务费类型");
         }
 
         BigDecimal serviceChargeSetting = category.getServiceChargeSetting();
 
-        if(null == serviceChargeSetting || BigDecimal.ZERO.compareTo(serviceChargeSetting) <= 0){
+        if (null == serviceChargeSetting || BigDecimal.ZERO.compareTo(serviceChargeSetting) <= 0) {
             throw new CommodityException("找不到服务费设置");
         }
 
-        if(type == ServiceChargeType.RATIO_PAYMENT){
+        if (type == ServiceChargeType.RATIO_PAYMENT) {
             return price.multiply(serviceChargeSetting).setScale(2, RoundingMode.HALF_UP);
         } else {
             return serviceChargeSetting;

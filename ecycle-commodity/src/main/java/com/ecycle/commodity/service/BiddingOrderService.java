@@ -28,4 +28,11 @@ public interface BiddingOrderService extends IService<BiddingOrder> {
      * @return 是否修改成功
      */
     Boolean updateCommodityAmount(UUID orderId, BigDecimal commodityAmount);
+
+    /**
+     * 卖家确认出价 出售
+     * @param orderId 订单 id
+     * @return 是否出售成功
+     */
+    Boolean sell(UUID orderId);
 }

@@ -8,6 +8,7 @@ import java.util.UUID;
 
 import com.ecycle.common.constants.TokenConstants;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
@@ -38,17 +39,18 @@ public class JwtTokenUtils implements TokenConstants {
      * 从数据声明生成令牌
      *
      * @param claims 数据
+     * @param permanentValidity 是否长期有效
      * @return 令牌
      */
-    public static String createToken(UUID userId, Map<String, Object> claims) {
+    public static String createToken(UUID userId, Map<String, Object> claims, Boolean permanentValidity) {
         Date now = new Date();
-        return Jwts.builder()
-                .subject(userId.toString())
-                .issuedAt(new Date())
-                .expiration(new Date(now.getTime() + EXPIRATION_SECONDS * 1000))
-                .claims(claims)
-                .signWith(SECRET_KEY, ALGORITHM)
-                .compact();
+        JwtBuilder builder = Jwts.builder().subject(userId.toString())
+                .issuedAt(new Date()).claims(claims)
+                .signWith(SECRET_KEY, ALGORITHM);
+        if (!permanentValidity) {
+            builder.expiration(new Date(now.getTime() + EXPIRATION_SECONDS * 1000));
+        }
+        return builder.compact();
     }
 
     /**
