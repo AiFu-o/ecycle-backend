@@ -121,8 +121,8 @@ public class BiddingOrderServiceImpl extends ServiceImpl<BiddingOrderMapper, Bid
             if(otherBidding.getStatus() != BiddingOrderStatus.BIDDING){
                 throw new BiddingOrderException("订单状态异常");
             }
-            // 其他的竞价设置为竞价失败
-            otherBidding.setStatus(BiddingOrderStatus.BIDDING_ERROR);
+            // 其他的竞价设置为已关闭
+            otherBidding.setStatus(BiddingOrderStatus.CLOSED);
             updateById(otherBidding);
         }
         return true;

@@ -27,7 +27,7 @@
     <select id="getOtherBiddingByCommodityId" resultType="com.ecycle.commodity.model.BiddingOrder">
         SELECT *
         FROM ecycle_bidding_order
-        WHERE status != 'CANCEL'
+        WHERE status != 'CLOSED'
           AND commodity_id = #{commodityId};
     </select>
 </mapper>
