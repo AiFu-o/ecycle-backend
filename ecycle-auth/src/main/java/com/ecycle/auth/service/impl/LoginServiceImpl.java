@@ -1,7 +1,6 @@
 package com.ecycle.auth.service.impl;
 
-import com.ecycle.auth.context.UserInfo;
-import com.ecycle.auth.exception.UserException;
+import com.ecycle.common.context.UserInfo;
 import com.ecycle.auth.model.User;
 import com.ecycle.auth.service.LoginService;
 import com.ecycle.auth.service.UserInfoService;
@@ -13,7 +12,6 @@ import com.ecycle.common.utils.JwtTokenUtils;
 import io.jsonwebtoken.Claims;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -53,41 +51,42 @@ public class LoginServiceImpl implements LoginService, TokenConstants {
 
     @Override
     public RestResponse<String> doLogin(String username, String password) {
-        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username, password);
-        Authentication authenticate = passwordAuthenticationManager.authenticate(authenticationToken);
-        //如果认证没通过，给出对应的提示
-        if (Objects.isNull(authenticate)) {
-            throw new AuthenticationServiceException("登录失败");
-        }
-        UserInfo userInfo = (UserInfo) authenticate.getPrincipal();
-        String token = createToken(userInfo, userInfo.getUser(), false);
-        return RestResponse.success(token);
+//        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username, password);
+//        Authentication authenticate = passwordAuthenticationManager.authenticate(authenticationToken);
+//        //如果认证没通过，给出对应的提示
+//        if (Objects.isNull(authenticate)) {
+//            throw new AuthenticationServiceException("登录失败");
+//        }
+//        UserInfo userInfo = (UserInfo) authenticate.getPrincipal();
+//        String token = createToken(userInfo, userInfo.getUser(), false);
+//        return RestResponse.success(token);
+        return null;
     }
-
-    private String createToken(UserInfo userInfo, User user, Boolean permanentValidity) {
-        Map<String, Object> map = new HashMap<>();
-        map.put(F_USER, user);
-        map.put(F_USERNAME, user.getUsername());
-        map.put(F_AUTHORITIES, userInfo.getAuthorities());
-        map.put(F_ROLES, userInfo.getRoles());
-        if (StringUtils.isNotEmpty(user.getOpenId())) {
-            map.put(F_OPEN_ID, user.getOpenId());
-        }
-        UUID userId = user.getId();
-        String token = JwtTokenUtils.createToken(userId, map, permanentValidity);
-        Claims claims = JwtTokenUtils.parseToken(token);
-        if (null == claims) {
-            throw new NullPointerException();
-        }
-        userInfo.setToken(token);
-        userInfo.setLoginTime(claims.getIssuedAt().getTime());
-        if(!permanentValidity){
-            userInfo.setExpireTime(claims.getExpiration().getTime());
-        }
-
-        userInfoService.saveCurrentUserInfo(userId, userInfo, permanentValidity);
-        return token;
-    }
+//
+//    private String createToken(UserInfo userInfo, User user, Boolean permanentValidity) {
+//        Map<String, Object> map = new HashMap<>();
+//        map.put(F_USER, user);
+//        map.put(F_USERNAME, user.getUsername());
+//        map.put(F_AUTHORITIES, userInfo.getAuthorities());
+//        map.put(F_ROLES, userInfo.getRoles());
+//        if (StringUtils.isNotEmpty(user.getOpenId())) {
+//            map.put(F_OPEN_ID, user.getOpenId());
+//        }
+//        UUID userId = user.getId();
+//        String token = JwtTokenUtils.createToken(userId, map, permanentValidity);
+//        Claims claims = JwtTokenUtils.parseToken(token);
+//        if (null == claims) {
+//            throw new NullPointerException();
+//        }
+//        userInfo.setToken(token);
+//        userInfo.setLoginTime(claims.getIssuedAt().getTime());
+//        if(!permanentValidity){
+//            userInfo.setExpireTime(claims.getExpiration().getTime());
+//        }
+//
+//        userInfoService.saveCurrentUserInfo(userId, userInfo, permanentValidity);
+//        return token;
+//    }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -127,8 +126,8 @@ public class LoginServiceImpl implements LoginService, TokenConstants {
         }
         UserInfo userInfo = (UserInfo) authenticate.getPrincipal();
 
-        String token = createToken(userInfo, userInfo.getUser(), true);
-        return RestResponse.success(token);
+//        String token = createToken(userInfo, userInfo.getUser(), true);
+        return null;
     }
 
 }

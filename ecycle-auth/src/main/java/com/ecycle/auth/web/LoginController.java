@@ -22,13 +22,13 @@ public class LoginController {
     @Resource
     private LoginService loginService;
 
-    @PostMapping("/login")
-    public RestResponse<String> login(@RequestBody Map<String, String> credentials) {
-        String username = credentials.get("username");
-        String password = credentials.get("password");
-
-        return loginService.doLogin(username, password);
-    }
+//    @PostMapping("/login")
+//    public RestResponse<String> login(@RequestBody Map<String, String> credentials) {
+//        String username = credentials.get("username");
+//        String password = credentials.get("password");
+//
+//        return loginService.doLogin(username, password);
+//    }
 
     @PostMapping("/wx-mini-app/login")
     public RestResponse<String> wxMiniAppLogin(@RequestBody Map<String, String> requestParams) {

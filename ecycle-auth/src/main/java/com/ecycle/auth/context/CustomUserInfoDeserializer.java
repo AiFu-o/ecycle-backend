@@ -1,7 +1,7 @@
 package com.ecycle.auth.context;
 
 import com.ecycle.auth.model.User;
-import com.fasterxml.jackson.core.JacksonException;
+import com.ecycle.common.context.UserInfo;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationContext;
@@ -27,12 +27,8 @@ public class CustomUserInfoDeserializer extends JsonDeserializer<UserInfo> {
         ObjectMapper mapper = (ObjectMapper) jsonParser.getCodec();
         ObjectNode root = mapper.readTree(jsonParser);
 
-        userInfo.setToken(root.get("token").asText());
-        userInfo.setLoginTime(root.get("loginTime").asLong());
-        userInfo.setExpireTime(root.get("expireTime").asLong());
-
-        User user = mapper.treeToValue(root.get("user"), User.class);
-        userInfo.setUser(user);
+//        User user = mapper.treeToValue(root.get("user"), User.class);
+//        userInfo.setUser(user);
 
         return userInfo;
     }

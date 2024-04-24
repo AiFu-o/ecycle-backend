@@ -58,7 +58,8 @@ public class CommodityServiceImpl extends ServiceImpl<CommodityMapper, Commodity
         }
         commodity.setId(id);
         commodity.setStatus(CommodityStatus.SELLING);
-        UUID userId = JwtTokenUtils.getCurrentUserId();
+        UUID userId = null;
+//                JwtTokenUtils.getCurrentUserId();
         if(null == userId){
             throw new CommodityException("用户未登录");
         }
@@ -112,7 +113,8 @@ public class CommodityServiceImpl extends ServiceImpl<CommodityMapper, Commodity
         if(StringUtils.isNotEmpty(body.getName())){
             queryChainWrapper.like("name", "%" + body.getName() + "%");
         }
-        UUID userId = JwtTokenUtils.getCurrentUserId();
+        UUID userId = null;
+//        JwtTokenUtils.getCurrentUserId();
         if(null == userId){
             throw new CommodityException("用户未登录");
         }

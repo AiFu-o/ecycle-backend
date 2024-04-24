@@ -15,16 +15,4 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 @Configuration
 public class Autoconfiguration {
 
-    @Bean
-    public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory redisConnectionFactory) {
-        RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
-        redisTemplate.setConnectionFactory(redisConnectionFactory);
-        // 设置 key 的序列化器
-        redisTemplate.setKeySerializer(new StringRedisSerializer());
-        // 设置 value 的序列化器
-        redisTemplate.setValueSerializer(new GenericJackson2JsonRedisSerializer());
-        redisTemplate.afterPropertiesSet();
-        return redisTemplate;
-    }
-
 }

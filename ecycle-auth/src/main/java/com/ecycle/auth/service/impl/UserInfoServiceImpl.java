@@ -1,6 +1,6 @@
 package com.ecycle.auth.service.impl;
 
-import com.ecycle.auth.context.UserInfo;
+import com.ecycle.common.context.UserInfo;
 import com.ecycle.auth.exception.UserException;
 import com.ecycle.auth.service.UserInfoService;
 import com.ecycle.common.constants.TokenConstants;

@@ -2,7 +2,9 @@ package com.ecycle.auth.config;
 
 import com.ecycle.auth.filter.UsernameAuthenticationFilter;
 import com.ecycle.auth.handler.CustomLogoutSuccessHandler;
+import com.ecycle.auth.handler.LoginSuccessHandler;
 import com.ecycle.auth.provider.WxAuthenticationProvider;
+import com.ecycle.common.handler.CustomAuthenticationEntryPoint;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
@@ -24,15 +26,21 @@ import javax.annotation.Resource;
  * @Date 2024/1/31
  * @Description 认证配置
  */
-@EnableWebSecurity
 @Configuration
+@EnableWebSecurity
 public class SecurityConfiguration {
 
     @Resource
     private UserDetailsService userDetailsService;
 
     @Resource
+    private LoginSuccessHandler loginSuccessHandler;
+
+    @Resource
     private WxAuthenticationProvider wxAuthenticationProvider;
+
+    @Resource
+    private CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
 
     @Bean
     @Order(0)
@@ -43,7 +51,10 @@ public class SecurityConfiguration {
                 .antMatchers(("/login")).permitAll()
                 .anyRequest().authenticated()
         );
-        UsernameAuthenticationFilter filter = new UsernameAuthenticationFilter(passwordAuthenticationManager());
+        http.exceptionHandling().authenticationEntryPoint(customAuthenticationEntryPoint);
+        UsernameAuthenticationFilter filter = new UsernameAuthenticationFilter();
+        filter.setAuthenticationSuccessHandler(loginSuccessHandler);
+        filter.setAuthenticationManager(passwordAuthenticationManager());
         http.addFilterAt(filter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }

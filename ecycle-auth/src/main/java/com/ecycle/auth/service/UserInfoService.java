@@ -1,10 +1,7 @@
 package com.ecycle.auth.service;
 
-import com.ecycle.auth.context.UserInfo;
-import com.ecycle.auth.model.User;
-import com.ecycle.common.context.RestResponse;
+import com.ecycle.common.context.UserInfo;
 
-import java.util.Map;
 import java.util.UUID;
 
 /**
