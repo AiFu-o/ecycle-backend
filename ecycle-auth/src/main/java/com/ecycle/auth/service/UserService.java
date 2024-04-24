@@ -4,6 +4,7 @@ import com.ecycle.auth.model.Role;
 import com.ecycle.auth.model.User;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.ecycle.auth.model.UserRole;
+import com.ecycle.common.context.UserInfo;
 
 /**
 * @author wangweichen
@@ -35,4 +36,29 @@ public interface UserService extends IService<User> {
      * @param user 用户
      */
     void addRoleByCode(String roleCode, User user);
+
+    /**
+     * 根据openId查找用户
+     *
+     * @param openId openId
+     * @return user
+     */
+    User findByOpenId(String openId);
+
+    /**
+     * 微信小程序第一次登录自动创建用户
+     *
+     * @param openId openId
+     * @param phoneNumber 手机号
+     * @return user
+     */
+    User createWxFirstLoginUser(String phoneNumber, String openId);
+
+    /**
+     * 生成 userInfo
+     *
+     * @param user 用户
+     * @return userInfo
+     */
+    UserInfo buildUserInfo(User user);
 }

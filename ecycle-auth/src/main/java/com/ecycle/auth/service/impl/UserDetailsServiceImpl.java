@@ -33,19 +33,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userService.findByUsername(username);
-        List<? extends GrantedAuthority> authorities = new ArrayList<>();
-        List<String> roleCodes = new ArrayList<>();
-        List<Role> roles = roleService.findRolesByUserId(user.getId());
-        if (null != roles) {
-            for (Role role : roles) {
-                roleCodes.add(role.getName());
-            }
-        }
-        UserInfo userInfo = new UserInfo();
-        userInfo.setPassword(user.getPassword());
-        userInfo.setUsername(user.getUsername());
-        userInfo.setRoles(roleCodes);
-        userInfo.setAuthorities(authorities);
-        return userInfo;
+        return userService.buildUserInfo(user);
     }
 }

@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * @author wangweichen
  * @Date 2024/4/1
- * @Description TODO
+ * @Description 用户名密码登录
  */
 public class UsernameAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
 

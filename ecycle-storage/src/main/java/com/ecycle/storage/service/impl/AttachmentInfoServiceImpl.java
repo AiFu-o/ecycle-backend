@@ -1,6 +1,7 @@
 package com.ecycle.storage.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.ecycle.common.utils.CurrentUserInfoUtils;
 import com.ecycle.storage.config.properties.AttachmentProperties;
 import com.ecycle.storage.exception.AttachmentException;
 import com.ecycle.storage.model.AttachmentInfo;
@@ -51,7 +52,7 @@ public class AttachmentInfoServiceImpl extends ServiceImpl<AttachmentInfoMapper,
         attachmentInfo.setFileType(fileType);
         attachmentInfo.setSize(file.getSize());
 
-        UUID currentUserId = JwtTokenUtils.getCurrentUserId();
+        UUID currentUserId = CurrentUserInfoUtils.getCurrentUserId();
         attachmentInfo.setCreatorId(currentUserId);
         if (StringUtils.isNotEmpty(category)) {
             attachmentInfo.setCategory(category);

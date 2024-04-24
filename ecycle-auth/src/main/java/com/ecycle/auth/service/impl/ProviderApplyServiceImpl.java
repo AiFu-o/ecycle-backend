@@ -11,7 +11,7 @@ import com.ecycle.auth.service.ProviderApplyService;
 import com.ecycle.auth.service.UserService;
 import com.ecycle.auth.web.info.ProviderApplyQueryRequest;
 import com.ecycle.common.context.PageQueryResponse;
-import com.ecycle.common.utils.JwtTokenUtils;
+import com.ecycle.common.utils.CurrentUserInfoUtils;
 import com.ecycle.common.utils.MybatisUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
@@ -64,7 +64,7 @@ public class ProviderApplyServiceImpl extends ServiceImpl<ProviderApplyMapper, P
     private void validateSaveData(ProviderApply apply) {
         UUID userId;
         try {
-            userId = JwtTokenUtils.getCurrentUserId();
+            userId = CurrentUserInfoUtils.getCurrentUserId();
         } catch (Exception e) {
             throw new ProviderApplyException("找不到小程序用户", e);
         }
@@ -140,7 +140,7 @@ public class ProviderApplyServiceImpl extends ServiceImpl<ProviderApplyMapper, P
     public PageQueryResponse pageQueryMineAll(ProviderApplyQueryRequest body) {
         UUID userId;
         try {
-            userId = JwtTokenUtils.getCurrentUserId();
+            userId = CurrentUserInfoUtils.getCurrentUserId();
         } catch (Exception e) {
             throw new ProviderApplyException("找不到小程序用户", e);
         }

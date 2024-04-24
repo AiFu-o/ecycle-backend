@@ -13,7 +13,7 @@ import com.ecycle.commodity.service.BiddingOrderService;
 import com.ecycle.commodity.service.CommodityCategoryService;
 import com.ecycle.commodity.service.CommodityService;
 import com.ecycle.commodity.web.info.CreateOrderRequest;
-import com.ecycle.common.utils.JwtTokenUtils;
+import com.ecycle.common.utils.CurrentUserInfoUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -51,7 +51,7 @@ public class BiddingOrderServiceImpl extends ServiceImpl<BiddingOrderMapper, Bid
             throw new BiddingOrderException("商品价格不能为空");
         }
 
-        UUID userId = JwtTokenUtils.getCurrentUserId();
+        UUID userId = CurrentUserInfoUtils.getCurrentUserId();
         if (null == userId) {
             throw new BiddingOrderException("用户未登录");
         }
@@ -86,7 +86,7 @@ public class BiddingOrderServiceImpl extends ServiceImpl<BiddingOrderMapper, Bid
         }
 
         BiddingOrder biddingOrder = getById(orderId);
-        UUID userId = JwtTokenUtils.getCurrentUserId();
+        UUID userId = CurrentUserInfoUtils.getCurrentUserId();
         if (null == userId) {
             throw new BiddingOrderException("用户未登录");
         }

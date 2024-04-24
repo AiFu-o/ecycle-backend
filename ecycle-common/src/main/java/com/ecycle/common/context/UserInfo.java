@@ -22,6 +22,8 @@ public class UserInfo implements UserDetails {
 
     private String password;
 
+    private String openId;
+
     private String telephone;
 
     /**

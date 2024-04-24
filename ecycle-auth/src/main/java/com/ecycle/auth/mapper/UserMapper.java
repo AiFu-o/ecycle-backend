@@ -21,6 +21,14 @@ public interface UserMapper extends BaseMapper<User> {
      */
     @Select("SELECT * FROM ecycle_user WHERE username = #{username}")
     User findByUsername(@Param("username") String username);
+
+    /**
+     * 根据openId查找用户
+     * @param openId openId
+     * @return user
+     */
+    @Select("SELECT * FROM ecycle_user WHERE open_id = #{openId}")
+    User findByOpenId(String openId);
 }
 
 
