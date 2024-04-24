@@ -3,15 +3,12 @@ package com.ecycle.auth.service.impl;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.ecycle.auth.context.UserInfo;
-import com.ecycle.auth.exception.RoleException;
 import com.ecycle.auth.mapper.RoleMapper;
 import com.ecycle.auth.model.Role;
-import com.ecycle.auth.service.LoginService;
 import com.ecycle.auth.service.RoleService;
-import com.ecycle.auth.service.UserInfoService;
 import com.ecycle.auth.service.UserRoleService;
-import com.ecycle.common.utils.JwtTokenUtils;
+import com.ecycle.common.context.UserInfo;
+import com.ecycle.common.utils.CurrentUserInfoUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -40,9 +37,6 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role>
 
     @Resource
     private UserRoleService userRoleService;
-
-    @Resource
-    private UserInfoService userInfoService;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -104,8 +98,12 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role>
 
     @Override
     public Boolean hasRole(String code) {
-        UserInfo userInfo = userInfoService.getCurrentUserInfo();
-        List<String> roles = userInfo.getRoles();
+        UserInfo userInfo = CurrentUserInfoUtils.getCurrentUserInfo();
+        List<String> roles;
+        if (userInfo == null) {
+            return false;
+        }
+        roles = userInfo.getRoles();
         return !roles.isEmpty() && roles.contains(code);
     }
 

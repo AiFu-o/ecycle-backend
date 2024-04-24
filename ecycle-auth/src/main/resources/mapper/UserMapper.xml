@@ -8,6 +8,7 @@
             <id property="id" column="id" jdbcType="VARCHAR"/>
             <result property="username" column="username" jdbcType="VARCHAR"/>
             <result property="password" column="password" jdbcType="VARCHAR"/>
+            <result property="telephone" column="telephone" jdbcType="VARCHAR"/>
             <result property="openId" column="openId" jdbcType="VARCHAR"/>
             <result property="age" column="age" jdbcType="INTEGER"/>
             <result property="sex" column="sex" jdbcType="VARCHAR"/>
@@ -17,7 +18,7 @@
 
     <sql id="Base_Column_List">
         id,username,password,openId,
-        age,sex,create_time,
-        modify_time
+        age,sex,telephone,
+        create_time,modify_time
     </sql>
 </mapper>

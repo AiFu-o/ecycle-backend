@@ -1,4 +1,4 @@
-package com.ecycle.gateway.config.properties;
+package com.ecycle.common.config.properties;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
