@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ecycle.pay.mapper.PayRefundRecordMapper">
+
+    <resultMap id="BaseResultMap" type="com.ecycle.pay.model.PayRefundRecord">
+            <id property="id" column="id" jdbcType="VARCHAR"/>
+            <result property="transactionId" column="transaction_id" jdbcType="INTEGER"/>
+            <result property="billCode" column="bill_code" jdbcType="INTEGER"/>
+            <result property="status" column="status" jdbcType="VARCHAR"/>
+            <result property="amount" column="amount" jdbcType="INTEGER"/>
+            <result property="payOrderId" column="pay_order_Id" jdbcType="VARCHAR"/>
+            <result property="refundReason" column="refund_reason" jdbcType="VARCHAR"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="refundTime" column="refund_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,transaction_id,bill_code,
+        status,amount,pay_order_Id,
+        refund_reason,create_time,refund_time
+    </sql>
+</mapper>
