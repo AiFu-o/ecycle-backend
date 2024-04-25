@@ -105,6 +105,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         userInfo.setUsername(user.getUsername());
         userInfo.setRoles(roleCodes);
         userInfo.setAuthorities(authorities);
+        userInfo.setPassword(user.getPassword());
         if(StringUtils.isNotEmpty(user.getOpenId())){
             userInfo.setOpenId(user.getOpenId());
         }
