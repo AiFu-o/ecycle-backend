@@ -48,6 +48,20 @@ public class BiddingOrderController {
 
     }
 
+    @PutMapping("/close/{orderId}")
+    public RestResponse<Boolean> close(@PathVariable(name = "orderId") UUID orderId) {
+        try {
+            return RestResponse.success(biddingOrderService.close(orderId));
+        } catch (BiddingOrderException e) {
+            log.error(e);
+            return RestResponse.validfail(e.getMessage());
+        } catch (Exception e) {
+            log.error(e);
+            return RestResponse.validfail("未知异常");
+        }
+
+    }
+
     @PostMapping("/updateCommodityAmount/{orderId}")
     public RestResponse<Boolean> createOrder(@PathVariable(name = "orderId") UUID orderId,
                                              @RequestParam(name = "commodityAmount") BigDecimal commodityAmount) {
@@ -87,7 +101,11 @@ public class BiddingOrderController {
             log.error(e);
             return RestResponse.validfail("未知异常");
         }
+    }
 
+    @PutMapping("/service-charge/success-callBack/{orderId}")
+    public void serviceChargeSuccessCallBack(@PathVariable(name = "orderId") UUID orderId) {
+        biddingOrderService.serviceChargeSuccess(orderId);
     }
 
 }

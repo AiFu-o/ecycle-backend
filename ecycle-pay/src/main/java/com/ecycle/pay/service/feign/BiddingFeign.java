@@ -11,10 +11,14 @@ import java.util.UUID;
  * @Date 2024/4/26
  * @Description TODO
  */
-@FeignClient(value = "ecycle-commodity")
-public interface CommodityFeign {
+@FeignClient(value = "ecycle-bidding")
+public interface BiddingFeign {
 
-    @PutMapping("/order/service-charge/success-callBack/{orderId}")
+    /**
+     * 服务费支付成功
+     * @param orderId 订单 id
+     */
+    @PutMapping("/bidding/service-charge/success-callBack/{orderId}")
     void serviceChargeSuccessCallBack(@PathVariable(name = "orderId") UUID orderId);
 
 }

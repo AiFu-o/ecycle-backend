@@ -112,11 +112,11 @@ public class BiddingOrderServiceImpl extends ServiceImpl<BiddingOrderMapper, Bid
     @Override
     public RestResponse<String> payServiceCharge(UUID orderId) {
         UUID userId = CurrentUserInfoUtils.getCurrentUserId();
-        if(null == userId){
+        if (null == userId) {
             throw new BiddingOrderException("订单异常");
         }
         BiddingOrder biddingOrder = getById(orderId);
-        if(!userId.equals(biddingOrder.getCreatorId())){
+        if (!userId.equals(biddingOrder.getCreatorId())) {
             throw new BiddingOrderException("无法支付其他人的订单");
         }
         BiddingOrderStatus biddingOrderStatus = biddingOrder.getStatus();
@@ -147,10 +147,42 @@ public class BiddingOrderServiceImpl extends ServiceImpl<BiddingOrderMapper, Bid
                 throw new BiddingOrderException("订单状态异常");
             }
             // 其他的竞价设置为已关闭
-            otherBidding.setStatus(BiddingOrderStatus.CLOSED);
-            updateById(otherBidding);
+            close(otherBidding);
         }
         return true;
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public Boolean close(UUID orderId) {
+        BiddingOrder order = getById(orderId);
+        if (order.getStatus() == BiddingOrderStatus.PENDING_VISIT ||
+                order.getStatus() == BiddingOrderStatus.VISITED) {
+            throw new BiddingOrderException("请联系管理员进行退款");
+        }
+        close(order);
+        return true;
+    }
+
+    private void close(BiddingOrder order) {
+        if (order.getStatus() == BiddingOrderStatus.PENDING_REVIEW ||
+                order.getStatus() == BiddingOrderStatus.REFUNDED ||
+                order.getStatus() == BiddingOrderStatus.COMPLETED) {
+            throw new BiddingOrderException("订单已完成");
+        }
+        if(order.getStatus() == BiddingOrderStatus.CLOSED){
+            throw new BiddingOrderException("订单已关闭，不可重复关闭");
+        }
+        order.setStatus(BiddingOrderStatus.CLOSED);
+        updateById(order);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void serviceChargeSuccess(UUID orderId) {
+        BiddingOrder biddingOrder = getById(generateBillCode());
+        biddingOrder.setServiceChargeReceived(biddingOrder.getServiceChargeReceivable());
+        biddingOrder.setStatus(BiddingOrderStatus.PENDING_VISIT);
     }
 
     private String generateBillCode() {
@@ -187,6 +219,14 @@ public class BiddingOrderServiceImpl extends ServiceImpl<BiddingOrderMapper, Bid
         } else {
             return serviceChargeSetting;
         }
+    }
+
+    public BiddingOrder getById(UUID id) {
+        BiddingOrder biddingOrder = super.getById(id);
+        if (null == biddingOrder) {
+            throw new BiddingOrderException("找不到订单");
+        }
+        return biddingOrder;
     }
 
 }

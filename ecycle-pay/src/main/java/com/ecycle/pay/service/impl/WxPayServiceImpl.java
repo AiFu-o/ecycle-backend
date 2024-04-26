@@ -13,7 +13,7 @@ import com.ecycle.pay.exception.WxPayStatusException;
 import com.ecycle.pay.model.PayOrder;
 import com.ecycle.pay.service.PayOrderService;
 import com.ecycle.pay.service.WxPayService;
-import com.ecycle.pay.service.feign.CommodityFeign;
+import com.ecycle.pay.service.feign.BiddingFeign;
 import com.ecycle.pay.web.info.WxCallBackResponse;
 import com.wechat.pay.java.core.Config;
 import com.wechat.pay.java.core.RSAAutoCertificateConfig;
@@ -45,7 +45,7 @@ import java.util.*;
 public class WxPayServiceImpl implements WxPayService {
 
     @Resource
-    private CommodityFeign commodityFeign;
+    private BiddingFeign biddingFeign;
 
     @Resource
     private WxConfiguration wxConfiguration;
@@ -137,7 +137,7 @@ public class WxPayServiceImpl implements WxPayService {
         updatePayOrder(transaction, payOrder);
 
         // 回调商品服务
-        commodityFeign.serviceChargeSuccessCallBack(payOrder.getOrderId());
+        biddingFeign.serviceChargeSuccessCallBack(payOrder.getOrderId());
         log.info("{} 支付成功", payOrder.getBillCode());
     }
 

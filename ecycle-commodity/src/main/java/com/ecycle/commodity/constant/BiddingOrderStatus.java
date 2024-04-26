@@ -27,11 +27,6 @@ public enum BiddingOrderStatus {
     PAYMENT_ERROR("PAYMENT_ERROR","支付失败"),
 
     /**
-     * 支付成功
-     */
-    PAYMENT_SUCCESS("PAYMENT_SUCCESS","支付成功"),
-
-    /**
      * 待上门
      */
     PENDING_VISIT("PENDING_VISIT","待上门"),

@@ -4,6 +4,7 @@ import com.ecycle.commodity.model.BiddingOrder;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.ecycle.commodity.web.info.CreateOrderRequest;
 import com.ecycle.common.context.RestResponse;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.UUID;
@@ -43,4 +44,17 @@ public interface BiddingOrderService extends IService<BiddingOrder> {
      * @return 是否出售成功
      */
     Boolean sell(UUID orderId);
+
+    /**
+     * 回收商关闭出价订单
+     * @param orderId 订单 id
+     * @return 是否关闭成功
+     */
+    Boolean close(UUID orderId);
+
+    /**
+     * 服务费支付成功
+     * @param orderId 订单 id
+     */
+    void serviceChargeSuccess(UUID orderId);
 }
