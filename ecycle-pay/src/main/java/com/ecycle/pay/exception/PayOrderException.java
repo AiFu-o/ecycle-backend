@@ -5,8 +5,8 @@ package com.ecycle.pay.exception;
  * @Date 2024/4/25
  * @Description TODO
  */
-public class PayRecordException extends RuntimeException{
-    public PayRecordException(String message){
+public class PayOrderException extends RuntimeException{
+    public PayOrderException(String message){
         super(message);
     }
 }

@@ -1,9 +1,9 @@
 package com.ecycle.pay.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.ecycle.pay.model.PayRefundRecord;
-import com.ecycle.pay.service.PayRefundRecordService;
-import com.ecycle.pay.mapper.PayRefundRecordMapper;
+import com.ecycle.pay.model.PayRefundOrder;
+import com.ecycle.pay.service.PayRefundOrderService;
+import com.ecycle.pay.mapper.PayRefundOrderMapper;
 import org.springframework.stereotype.Service;
 
 /**
@@ -12,8 +12,8 @@ import org.springframework.stereotype.Service;
 * @createDate 2024-04-25 09:22:16
 */
 @Service
-public class PayRefundRecordServiceImpl extends ServiceImpl<PayRefundRecordMapper, PayRefundRecord>
-    implements PayRefundRecordService {
+public class PayRefundOrderServiceImpl extends ServiceImpl<PayRefundOrderMapper, PayRefundOrder>
+    implements PayRefundOrderService {
 
 }
 

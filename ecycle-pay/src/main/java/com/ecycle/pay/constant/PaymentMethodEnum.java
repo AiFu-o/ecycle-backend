@@ -5,27 +5,25 @@ import lombok.Getter;
 
 /**
  * @author wangweichen
- * @Description 订单类型
+ * @Date 2024/4/26
+ * @Description TODO
  */
 @Getter
-public enum OrderTypeEnum {
+public enum PaymentMethodEnum {
 
     /**
-     * 服务费
+     * 微信支付
      */
-    SERVICE_CHARGE("SERVICE_CHARGE", "服务费", "FWF");
+    WX_PAY("WX_PAY", "微信支付");
 
     @EnumValue
     private final String value;
 
     private final String name;
 
-    private final String billCodeEnum;
-
-    OrderTypeEnum(String value, String name, String billCodeEnum) {
+    PaymentMethodEnum(String value, String name) {
         this.value = value;
         this.name = name;
-        this.billCodeEnum = billCodeEnum;
     }
 
 }

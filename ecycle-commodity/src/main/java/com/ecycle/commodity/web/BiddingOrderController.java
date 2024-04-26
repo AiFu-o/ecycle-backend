@@ -39,9 +39,10 @@ public class BiddingOrderController {
         try {
             return RestResponse.success(biddingOrderService.createOrder(request));
         } catch (BiddingOrderException e) {
+            log.error(e);
             return RestResponse.validfail(e.getMessage());
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(e);
             return RestResponse.validfail("未知异常");
         }
 
@@ -53,9 +54,10 @@ public class BiddingOrderController {
         try {
             return RestResponse.success(biddingOrderService.updateCommodityAmount(orderId, commodityAmount));
         } catch (BiddingOrderException e) {
+            log.error(e);
             return RestResponse.validfail(e.getMessage());
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(e);
             return RestResponse.validfail("未知异常");
         }
 
@@ -66,11 +68,26 @@ public class BiddingOrderController {
         try {
             return RestResponse.success(biddingOrderService.sell(orderId));
         } catch (BiddingOrderException e) {
+            log.error(e);
             return RestResponse.validfail(e.getMessage());
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(e);
             return RestResponse.validfail("未知异常");
         }
+    }
+
+    @PutMapping("/payServiceCharge/{orderId}")
+    public RestResponse<String> payServiceCharge(@PathVariable(name = "orderId") UUID orderId) {
+        try {
+            return biddingOrderService.payServiceCharge(orderId);
+        } catch (BiddingOrderException e) {
+            log.error(e);
+            return RestResponse.validfail(e.getMessage());
+        } catch (Exception e) {
+            log.error(e);
+            return RestResponse.validfail("未知异常");
+        }
+
     }
 
 }

@@ -12,7 +12,9 @@ import com.ecycle.commodity.model.CommodityCategory;
 import com.ecycle.commodity.service.BiddingOrderService;
 import com.ecycle.commodity.service.CommodityCategoryService;
 import com.ecycle.commodity.service.CommodityService;
+import com.ecycle.commodity.service.feign.PayFeignService;
 import com.ecycle.commodity.web.info.CreateOrderRequest;
+import com.ecycle.common.context.RestResponse;
 import com.ecycle.common.utils.CurrentUserInfoUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -40,6 +42,9 @@ public class BiddingOrderServiceImpl extends ServiceImpl<BiddingOrderMapper, Bid
 
     @Resource
     private CommodityCategoryService categoryService;
+
+    @Resource
+    private PayFeignService payFeignService;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -105,11 +110,31 @@ public class BiddingOrderServiceImpl extends ServiceImpl<BiddingOrderMapper, Bid
     }
 
     @Override
+    public RestResponse<String> payServiceCharge(UUID orderId) {
+        UUID userId = CurrentUserInfoUtils.getCurrentUserId();
+        if(null == userId){
+            throw new BiddingOrderException("订单异常");
+        }
+        BiddingOrder biddingOrder = getById(orderId);
+        if(!userId.equals(biddingOrder.getCreatorId())){
+            throw new BiddingOrderException("无法支付其他人的订单");
+        }
+        BiddingOrderStatus biddingOrderStatus = biddingOrder.getStatus();
+        if (!(biddingOrderStatus == BiddingOrderStatus.PENDING_PAYMENT ||
+                biddingOrderStatus == BiddingOrderStatus.PAYMENT_ERROR)) {
+            throw new BiddingOrderException("竞价状态异常");
+        }
+        BigDecimal receivable = biddingOrder.getServiceChargeReceivable();
+        Integer amount = receivable.multiply(new BigDecimal("100")).intValue();
+        return payFeignService.serviceChargePrePay(orderId, amount);
+    }
+
+    @Override
     @Transactional(rollbackFor = Exception.class)
     public Boolean sell(UUID orderId) {
         BiddingOrder biddingOrder = getById(orderId);
         BiddingOrderStatus biddingOrderStatus = biddingOrder.getStatus();
-        if(biddingOrderStatus != BiddingOrderStatus.BIDDING){
+        if (biddingOrderStatus != BiddingOrderStatus.BIDDING) {
             throw new BiddingOrderException("竞价状态异常");
         }
         biddingOrder.setConfirmTime(new Date());
@@ -117,8 +142,8 @@ public class BiddingOrderServiceImpl extends ServiceImpl<BiddingOrderMapper, Bid
         updateById(biddingOrder);
 
         List<BiddingOrder> otherBindings = baseMapper.getOtherBiddingByCommodityId(biddingOrder.getCommodityId());
-        for (BiddingOrder otherBidding: otherBindings){
-            if(otherBidding.getStatus() != BiddingOrderStatus.BIDDING){
+        for (BiddingOrder otherBidding : otherBindings) {
+            if (otherBidding.getStatus() != BiddingOrderStatus.BIDDING) {
                 throw new BiddingOrderException("订单状态异常");
             }
             // 其他的竞价设置为已关闭

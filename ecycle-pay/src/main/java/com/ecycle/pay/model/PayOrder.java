@@ -3,25 +3,34 @@ package com.ecycle.pay.model;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+
 import java.io.Serializable;
 import java.util.Date;
 import java.util.UUID;
 
+import com.baomidou.mybatisplus.annotation.Version;
+import com.ecycle.pay.constant.OrderTypeEnum;
+import com.ecycle.pay.constant.PaymentMethodEnum;
+import com.ecycle.pay.constant.PaymentStatus;
 import lombok.Data;
 
 /**
- * 支付流水
+ * 支付订单
+ *
  * @author wangweichen
  * @TableName ecycle_pay_records
  */
-@TableName(value ="ecycle_pay_record")
+@TableName(value = "ecycle_pay_record")
 @Data
-public class PayRecord implements Serializable {
+public class PayOrder implements Serializable {
     /**
      * id
      */
     @TableId
     private UUID id;
+
+    @Version
+    private Integer version;
 
     /**
      * 订单号
@@ -31,7 +40,7 @@ public class PayRecord implements Serializable {
     /**
      * 订单类型
      */
-    private String orderType;
+    private OrderTypeEnum orderType;
 
     /**
      * 订单 id
@@ -46,7 +55,7 @@ public class PayRecord implements Serializable {
     /**
      * 支付方式
      */
-    private String paymentMethod;
+    private PaymentMethodEnum paymentMethod;
 
     /**
      * 支付金额
@@ -61,7 +70,7 @@ public class PayRecord implements Serializable {
     /**
      * 支付状态
      */
-    private String status;
+    private PaymentStatus status;
 
     /**
      * 创建时间
@@ -72,6 +81,11 @@ public class PayRecord implements Serializable {
      * 支付时间
      */
     private Date payTime;
+
+    /**
+     * 创建人
+     */
+    private UUID creatorId;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
@@ -87,18 +101,19 @@ public class PayRecord implements Serializable {
         if (getClass() != that.getClass()) {
             return false;
         }
-        PayRecord other = (PayRecord) that;
+        PayOrder other = (PayOrder) that;
         return (this.getId() == null ? other.getId() == null : this.getId().equals(other.getId()))
-            && (this.getBillCode() == null ? other.getBillCode() == null : this.getBillCode().equals(other.getBillCode()))
-            && (this.getOrderType() == null ? other.getOrderType() == null : this.getOrderType().equals(other.getOrderType()))
-            && (this.getOrderId() == null ? other.getOrderId() == null : this.getOrderId().equals(other.getOrderId()))
-            && (this.getTransactionId() == null ? other.getTransactionId() == null : this.getTransactionId().equals(other.getTransactionId()))
-            && (this.getPaymentMethod() == null ? other.getPaymentMethod() == null : this.getPaymentMethod().equals(other.getPaymentMethod()))
-            && (this.getAmount() == null ? other.getAmount() == null : this.getAmount().equals(other.getAmount()))
-            && (this.getRefundAmount() == null ? other.getRefundAmount() == null : this.getRefundAmount().equals(other.getRefundAmount()))
-            && (this.getStatus() == null ? other.getStatus() == null : this.getStatus().equals(other.getStatus()))
-            && (this.getCreateTime() == null ? other.getCreateTime() == null : this.getCreateTime().equals(other.getCreateTime()))
-            && (this.getPayTime() == null ? other.getPayTime() == null : this.getPayTime().equals(other.getPayTime()));
+                && (this.getBillCode() == null ? other.getBillCode() == null : this.getBillCode().equals(other.getBillCode()))
+                && (this.getOrderType() == null ? other.getOrderType() == null : this.getOrderType().equals(other.getOrderType()))
+                && (this.getOrderId() == null ? other.getOrderId() == null : this.getOrderId().equals(other.getOrderId()))
+                && (this.getTransactionId() == null ? other.getTransactionId() == null : this.getTransactionId().equals(other.getTransactionId()))
+                && (this.getPaymentMethod() == null ? other.getPaymentMethod() == null : this.getPaymentMethod().equals(other.getPaymentMethod()))
+                && (this.getAmount() == null ? other.getAmount() == null : this.getAmount().equals(other.getAmount()))
+                && (this.getRefundAmount() == null ? other.getRefundAmount() == null : this.getRefundAmount().equals(other.getRefundAmount()))
+                && (this.getStatus() == null ? other.getStatus() == null : this.getStatus().equals(other.getStatus()))
+                && (this.getCreateTime() == null ? other.getCreateTime() == null : this.getCreateTime().equals(other.getCreateTime()))
+                && (this.getPayTime() == null ? other.getPayTime() == null : this.getPayTime().equals(other.getPayTime()))
+                && (this.getCreatorId() == null ? other.getCreatorId() == null : this.getCreatorId().equals(other.getCreatorId()));
     }
 
     @Override
@@ -116,6 +131,7 @@ public class PayRecord implements Serializable {
         result = prime * result + ((getStatus() == null) ? 0 : getStatus().hashCode());
         result = prime * result + ((getCreateTime() == null) ? 0 : getCreateTime().hashCode());
         result = prime * result + ((getPayTime() == null) ? 0 : getPayTime().hashCode());
+        result = prime * result + ((getCreatorId() == null) ? 0 : getCreatorId().hashCode());
         return result;
     }
 
@@ -136,6 +152,7 @@ public class PayRecord implements Serializable {
         sb.append(", status=").append(status);
         sb.append(", createTime=").append(createTime);
         sb.append(", payTime=").append(payTime);
+        sb.append(", creatorId=").append(creatorId);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
         return sb.toString();

@@ -3,6 +3,7 @@ package com.ecycle.commodity.service;
 import com.ecycle.commodity.model.BiddingOrder;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.ecycle.commodity.web.info.CreateOrderRequest;
+import com.ecycle.common.context.RestResponse;
 
 import java.math.BigDecimal;
 import java.util.UUID;
@@ -28,6 +29,13 @@ public interface BiddingOrderService extends IService<BiddingOrder> {
      * @return 是否修改成功
      */
     Boolean updateCommodityAmount(UUID orderId, BigDecimal commodityAmount);
+
+    /**
+     * 服务费预付单
+     * @param orderId 竞价订单 id
+     * @return 生成预付单需的参数
+     */
+    RestResponse<String> payServiceCharge(UUID orderId);
 
     /**
      * 卖家确认出价 出售
