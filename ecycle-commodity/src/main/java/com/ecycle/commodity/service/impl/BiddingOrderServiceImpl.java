@@ -183,6 +183,7 @@ public class BiddingOrderServiceImpl extends ServiceImpl<BiddingOrderMapper, Bid
         BiddingOrder biddingOrder = getById(orderId);
         biddingOrder.setServiceChargeReceived(biddingOrder.getServiceChargeReceivable());
         biddingOrder.setStatus(BiddingOrderStatus.PENDING_VISIT);
+        updateById(biddingOrder);
     }
 
     private String generateBillCode() {
