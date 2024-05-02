@@ -39,10 +39,10 @@ public class BiddingOrderController {
         try {
             return RestResponse.success(biddingOrderService.createOrder(request));
         } catch (BiddingOrderException e) {
-            log.error(e);
+            log.error(e.getMessage(), e);
             return RestResponse.validfail(e.getMessage());
         } catch (Exception e) {
-            log.error(e);
+            log.error("未知异常", e);
             return RestResponse.validfail("未知异常");
         }
 
@@ -53,10 +53,10 @@ public class BiddingOrderController {
         try {
             return RestResponse.success(biddingOrderService.close(orderId));
         } catch (BiddingOrderException e) {
-            log.error(e);
+            log.error(e.getMessage(), e);
             return RestResponse.validfail(e.getMessage());
         } catch (Exception e) {
-            log.error(e);
+            log.error("未知异常", e);
             return RestResponse.validfail("未知异常");
         }
 
@@ -68,10 +68,10 @@ public class BiddingOrderController {
         try {
             return RestResponse.success(biddingOrderService.updateCommodityAmount(orderId, commodityAmount));
         } catch (BiddingOrderException e) {
-            log.error(e);
+            log.error(e.getMessage(), e);
             return RestResponse.validfail(e.getMessage());
         } catch (Exception e) {
-            log.error(e);
+            log.error("未知异常", e);
             return RestResponse.validfail("未知异常");
         }
 
@@ -82,10 +82,10 @@ public class BiddingOrderController {
         try {
             return RestResponse.success(biddingOrderService.sell(orderId));
         } catch (BiddingOrderException e) {
-            log.error(e);
+            log.error(e.getMessage(), e);
             return RestResponse.validfail(e.getMessage());
         } catch (Exception e) {
-            log.error(e);
+            log.error("未知异常", e);
             return RestResponse.validfail("未知异常");
         }
     }
@@ -95,10 +95,10 @@ public class BiddingOrderController {
         try {
             return biddingOrderService.payServiceCharge(orderId);
         } catch (BiddingOrderException e) {
-            log.error(e);
+            log.error(e.getMessage(), e);
             return RestResponse.validfail(e.getMessage());
         } catch (Exception e) {
-            log.error(e);
+            log.error("未知异常", e);
             return RestResponse.validfail("未知异常");
         }
     }

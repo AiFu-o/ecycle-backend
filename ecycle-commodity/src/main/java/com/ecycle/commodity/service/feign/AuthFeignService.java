@@ -1,5 +1,6 @@
 package com.ecycle.commodity.service.feign;
 
+import com.ecycle.common.filter.HeaderInterceptor;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -8,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
  * @author wangweichen
  * auth 服务访问层
  */
-@FeignClient(value = "ecycle-auth")
+@FeignClient(value = "ecycle-auth", configuration = HeaderInterceptor.class)
 public interface AuthFeignService {
 
     /**

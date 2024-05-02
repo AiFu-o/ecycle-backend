@@ -15,7 +15,6 @@ import org.springframework.stereotype.Component;
 @Data
 public class WxConfiguration {
     private String appId;
-    private String appSecret;
     private String merchantId;
     private String payNotifyUrl;
     private String refundNotifyUrl;

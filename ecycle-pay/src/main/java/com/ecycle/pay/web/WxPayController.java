@@ -1,6 +1,8 @@
 package com.ecycle.pay.web;
 
+import com.alibaba.fastjson.JSONObject;
 import com.alibaba.nacos.shaded.com.google.gson.Gson;
+import com.alibaba.nacos.shaded.com.google.gson.GsonBuilder;
 import com.ecycle.common.context.RestResponse;
 import com.ecycle.pay.constant.OrderTypeEnum;
 import com.ecycle.pay.exception.WxPayException;
@@ -22,7 +24,7 @@ import java.util.UUID;
  */
 @RestController
 @Log4j2
-@RequestMapping("wx-pay")
+@RequestMapping("/wx-pay")
 public class WxPayController {
 
     @Resource
@@ -39,13 +41,13 @@ public class WxPayController {
                                                   @RequestParam("amount") Integer amount) {
         try {
             PrepayWithRequestPaymentResponse response = wxPayService.prepay(OrderTypeEnum.SERVICE_CHARGE, orderId, amount);
-            Gson gson = new Gson();
+            Gson gson = new GsonBuilder().disableHtmlEscaping().create();
             return RestResponse.success(gson.toJson(response));
         } catch (WxPayException | WxPayStatusException e) {
-            log.error(e);
+            log.error(e.getMessage(), e);
             return RestResponse.validfail(e.getMessage());
         } catch (Exception e) {
-            log.error(e);
+            log.error(e.getMessage(), e);
             return RestResponse.validfail("未知异常");
         }
     }

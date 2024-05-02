@@ -23,7 +23,7 @@ public enum PaymentStatus {
     /**
      * 支付成功
      */
-    SUCCESS("SUCCESS", "未支付"),
+    SUCCESS("SUCCESS", "支付成功"),
     /**
      * 已关闭
      */

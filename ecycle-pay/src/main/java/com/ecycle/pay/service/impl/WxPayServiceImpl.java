@@ -32,6 +32,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -148,7 +150,8 @@ public class WxPayServiceImpl implements WxPayService {
 
         for (PayOrder payOrder : payOrders) {
             // 支付中的先去查询支付状态
-            if (payOrder.getStatus() == PaymentStatus.PAYING) {
+            if (payOrder.getStatus() == PaymentStatus.PAYING ||
+                    payOrder.getStatus() == PaymentStatus.NOT_PAY) {
                 Transaction transaction = queryWxOrderByBillCode(payOrder.getBillCode());
                 // 如果是支付成功 走支付成功的逻辑
                 if (transaction.getTradeState() == Transaction.TradeStateEnum.SUCCESS) {
@@ -209,6 +212,7 @@ public class WxPayServiceImpl implements WxPayService {
         String billCode = buildBillCode(orderType);
         payOrder.setBillCode(billCode);
         payOrder.setCreatorId(currentUser.getUserId());
+        payOrder.setStatus(PaymentStatus.NOT_PAY);
         return payOrder;
     }
 
@@ -227,17 +231,12 @@ public class WxPayServiceImpl implements WxPayService {
         if (null == wxPayConfig) {
             wxPayConfig = new RSAAutoCertificateConfig.Builder()
                     .merchantId(wxConfiguration.getMerchantId())
-                    .privateKeyFromPath(getPrivateKeyFromPath())
+                    .privateKeyFromPath(wxConfiguration.getPrivateKeyFilePath())
                     .merchantSerialNumber(wxConfiguration.getMerchantSerialNumber())
                     .apiV3Key(wxConfiguration.getApiV3Key())
                     .build();
         }
         return wxPayConfig;
-    }
-
-    private String getPrivateKeyFromPath() {
-        ClassPathResource classPathResource = new ClassPathResource(wxConfiguration.getPrivateKeyFilePath());
-        return classPathResource.getPath();
     }
 
     private RequestParam getRequestParam(Map<String, String> headers, String body) {

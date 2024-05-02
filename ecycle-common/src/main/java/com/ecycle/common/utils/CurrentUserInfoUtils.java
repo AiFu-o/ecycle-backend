@@ -27,10 +27,10 @@ public class CurrentUserInfoUtils {
         }
         request = requestAttributes.getRequest();
         HttpSession session = request.getSession();
-        if(null == session.getAttribute("sessionAttr:SPRING_SECURITY_CONTEXT")){
+        if(null == session.getAttribute("SPRING_SECURITY_CONTEXT")){
             return null;
         }
-        SecurityContextImpl context = (SecurityContextImpl) session.getAttribute("sessionAttr:SPRING_SECURITY_CONTEXT");
+        SecurityContextImpl context = (SecurityContextImpl) session.getAttribute("SPRING_SECURITY_CONTEXT");
         return (UserInfo) context.getAuthentication().getPrincipal();
     }
 

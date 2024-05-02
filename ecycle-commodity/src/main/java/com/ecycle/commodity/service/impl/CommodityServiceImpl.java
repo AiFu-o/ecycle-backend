@@ -11,6 +11,7 @@ import com.ecycle.commodity.mapper.CommodityMapper;
 import com.ecycle.commodity.service.feign.AuthFeignService;
 import com.ecycle.commodity.web.info.CommodityQueryRequest;
 import com.ecycle.common.context.PageQueryResponse;
+import com.ecycle.common.utils.CurrentUserInfoUtils;
 import com.ecycle.common.utils.MybatisUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
@@ -58,8 +59,7 @@ public class CommodityServiceImpl extends ServiceImpl<CommodityMapper, Commodity
         }
         commodity.setId(id);
         commodity.setStatus(CommodityStatus.SELLING);
-        UUID userId = null;
-//                JwtTokenUtils.getCurrentUserId();
+        UUID userId = CurrentUserInfoUtils.getCurrentUserId();
         if(null == userId){
             throw new CommodityException("用户未登录");
         }
@@ -79,7 +79,7 @@ public class CommodityServiceImpl extends ServiceImpl<CommodityMapper, Commodity
         if(null == commodity.getStatus() || commodity.getStatus() == CommodityStatus.SOLD){
             throw new CommodityException("商品状态异常");
         }
-        historyEntity.setDesc(commodity.getDesc());
+        historyEntity.setInfo(commodity.getInfo());
         historyEntity.setName(commodity.getName());
         updateById(historyEntity);
         return historyEntity.getId();
@@ -113,8 +113,7 @@ public class CommodityServiceImpl extends ServiceImpl<CommodityMapper, Commodity
         if(StringUtils.isNotEmpty(body.getName())){
             queryChainWrapper.like("name", "%" + body.getName() + "%");
         }
-        UUID userId = null;
-//        JwtTokenUtils.getCurrentUserId();
+        UUID userId = CurrentUserInfoUtils.getCurrentUserId();
         if(null == userId){
             throw new CommodityException("用户未登录");
         }
@@ -127,7 +126,8 @@ public class CommodityServiceImpl extends ServiceImpl<CommodityMapper, Commodity
 
     private void hasPublishAuth(){
         // TODO 先暂时用角色 以后改成权限项控制接口
-        Boolean hasRole = authFeignService.hasRole("normalUser");
+        Boolean hasRole = true;
+        // authFeignService.hasRole("normalUser");
         if(!hasRole){
             throw new CommodityException("暂无权限");
         }
@@ -145,7 +145,7 @@ public class CommodityServiceImpl extends ServiceImpl<CommodityMapper, Commodity
         if(StringUtils.isEmpty(commodity.getName())){
             throw new CommodityException("商品名称不能为空");
         }
-        if(StringUtils.isEmpty(commodity.getDesc())){
+        if(StringUtils.isEmpty(commodity.getInfo())){
             throw new CommodityException("商品描述不能为空");
         }
     }

@@ -1,6 +1,7 @@
 package com.ecycle.common.config;
 
 import com.ecycle.common.config.properties.IgnoreWhiteProperties;
+import com.ecycle.common.filter.NoAuthRequestMatcher;
 import com.ecycle.common.handler.CustomAuthenticationEntryPoint;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.context.annotation.Bean;
@@ -9,8 +10,11 @@ import org.springframework.core.annotation.Order;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import org.springframework.security.web.util.matcher.RequestMatcher;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author wangweichen
@@ -28,6 +32,9 @@ public class CommonSecurityConfiguration {
     @Resource
     private CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
 
+    @Resource
+    private NoAuthRequestMatcher noAuthRequestMatcher;
+
     @Bean
     @Order(0)
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -35,6 +42,7 @@ public class CommonSecurityConfiguration {
         http.cors().disable();
         http.formLogin().disable();
         http.authorizeHttpRequests(authorize -> {
+            authorize.requestMatchers(noAuthRequestMatcher).permitAll();
             if (null != ignoreWhiteProperties.getUrls() && ignoreWhiteProperties.getUrls().size() > 0) {
                 for (String url : ignoreWhiteProperties.getUrls()) {
                     authorize.antMatchers((url)).permitAll();

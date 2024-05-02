@@ -7,7 +7,7 @@
     <resultMap id="BaseResultMap" type="com.ecycle.commodity.model.Commodity">
             <id property="id" column="id" jdbcType="VARCHAR"/>
             <result property="name" column="name" jdbcType="VARCHAR"/>
-            <result property="desc" column="desc" jdbcType="VARCHAR"/>
+            <result property="info" column="info" jdbcType="VARCHAR"/>
             <result property="categoryId" column="category_id" jdbcType="VARCHAR"/>
             <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
             <result property="modifyTime" column="modify_time" jdbcType="TIMESTAMP"/>
@@ -15,16 +15,19 @@
             <result property="belongId" column="belong_id" jdbcType="VARCHAR"/>
             <result property="pageViews" column="page_views" jdbcType="INTEGER"/>
             <result property="status" column="status" jdbcType="INTEGER"/>
-            <result property="dealPrice" column="deal_price" jdbcType="DECIMAL"/>
+            <result property="amount" column="amount" jdbcType="DECIMAL"/>
+            <result property="price" column="price" jdbcType="DECIMAL"/>
+            <result property="quantity" column="quantity" jdbcType="DECIMAL"/>
             <result property="serviceCharge" column="service_charge" jdbcType="DECIMAL"/>
             <result property="addressId" column="address_id" jdbcType="VARCHAR"/>
     </resultMap>
 
     <sql id="Base_Column_List">
-        id,`name`,`desc`,
+        id,`name`,info,
         category_id,create_time,modify_time,
         creator_id,belong_id,page_views,
-        `status`,deal_price,service_charge,
+        `status`,amount,price,
+        quantity,service_charge,
         addressId
     </sql>
 </mapper>

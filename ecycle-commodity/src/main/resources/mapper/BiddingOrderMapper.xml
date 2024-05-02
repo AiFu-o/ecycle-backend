@@ -28,6 +28,7 @@
         SELECT *
         FROM ecycle_bidding_order
         WHERE status != 'CLOSED'
+          AND id != #{orderId}
           AND commodity_id = #{commodityId};
     </select>
 </mapper>

@@ -9,7 +9,7 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
  * @author wangweichen
  */
 @SpringBootApplication
-@MapperScan("com.ecycle.storage.mapper")
+@MapperScan("com.ecycle.pay.mapper")
 @EnableFeignClients
 public class StorageApplication {
     public static void main(String[] args) {

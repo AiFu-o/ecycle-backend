@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: ecycle-pay
+  profiles:
+    active: dev
+  cloud:
+    nacos:
+      server-addr: localhost:8848
+      config:
+        file-extension: yaml

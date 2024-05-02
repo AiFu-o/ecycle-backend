@@ -95,7 +95,7 @@ public class BiddingOrderServiceImpl extends ServiceImpl<BiddingOrderMapper, Bid
         if (null == userId) {
             throw new BiddingOrderException("用户未登录");
         }
-        if (biddingOrder.getCreatorId() != userId) {
+        if (!biddingOrder.getCreatorId().equals(userId)) {
             throw new BiddingOrderException("只能修改自己的出价");
         }
         Commodity commodity = commodityService.getById(biddingOrder.getCommodityId());
@@ -141,7 +141,7 @@ public class BiddingOrderServiceImpl extends ServiceImpl<BiddingOrderMapper, Bid
         biddingOrder.setStatus(BiddingOrderStatus.PENDING_PAYMENT);
         updateById(biddingOrder);
 
-        List<BiddingOrder> otherBindings = baseMapper.getOtherBiddingByCommodityId(biddingOrder.getCommodityId());
+        List<BiddingOrder> otherBindings = baseMapper.getOtherBiddingByCommodityId(biddingOrder.getCommodityId(), orderId);
         for (BiddingOrder otherBidding : otherBindings) {
             if (otherBidding.getStatus() != BiddingOrderStatus.BIDDING) {
                 throw new BiddingOrderException("订单状态异常");
@@ -180,7 +180,7 @@ public class BiddingOrderServiceImpl extends ServiceImpl<BiddingOrderMapper, Bid
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void serviceChargeSuccess(UUID orderId) {
-        BiddingOrder biddingOrder = getById(generateBillCode());
+        BiddingOrder biddingOrder = getById(orderId);
         biddingOrder.setServiceChargeReceived(biddingOrder.getServiceChargeReceivable());
         biddingOrder.setStatus(BiddingOrderStatus.PENDING_VISIT);
     }
@@ -210,7 +210,7 @@ public class BiddingOrderServiceImpl extends ServiceImpl<BiddingOrderMapper, Bid
 
         BigDecimal serviceChargeSetting = category.getServiceChargeSetting();
 
-        if (null == serviceChargeSetting || BigDecimal.ZERO.compareTo(serviceChargeSetting) <= 0) {
+        if (null == serviceChargeSetting || BigDecimal.ZERO.compareTo(serviceChargeSetting) >= 0) {
             throw new CommodityException("找不到服务费设置");
         }
 

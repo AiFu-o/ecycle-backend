@@ -70,4 +70,5 @@ public interface TokenConstants {
      * 角色
      */
     String F_ROLES = "roles";
+    String NO_AUTH_HEADER_NAME = "8752b8b2-0c75-4716-bdd7-5d54b9a35c9c";
 }

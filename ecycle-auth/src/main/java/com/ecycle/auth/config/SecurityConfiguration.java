@@ -8,6 +8,7 @@ import com.ecycle.auth.handler.CustomizeAuthenticationFailureHandler;
 import com.ecycle.auth.handler.LoginSuccessHandler;
 import com.ecycle.auth.handler.WxAuthAuthenticationSuccessHandler;
 import com.ecycle.auth.provider.WxAuthenticationProvider;
+import com.ecycle.common.filter.NoAuthRequestMatcher;
 import com.ecycle.common.handler.CustomAuthenticationEntryPoint;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -25,6 +26,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.session.ConcurrentSessionControlAuthenticationStrategy;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.security.web.session.ConcurrentSessionFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
@@ -64,6 +66,9 @@ public class SecurityConfiguration {
     @Resource
     private SessionRegistry sessionRegistry;
 
+    @Resource
+    private NoAuthRequestMatcher noAuthRequestMatcher;
+
     @Bean
     @Order(0)
     public SecurityFilterChain wxFilterChain(HttpSecurity http) throws Exception {
@@ -88,6 +93,7 @@ public class SecurityConfiguration {
         http.csrf().disable();
         http.cors().disable();
         http.authorizeRequests()
+                .requestMatchers(noAuthRequestMatcher).permitAll()
                 .antMatchers(("/login")).permitAll()
                 .anyRequest().authenticated();
         http.exceptionHandling().authenticationEntryPoint(customAuthenticationEntryPoint);
