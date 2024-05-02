@@ -70,6 +70,12 @@ public class WxPayServiceImpl implements WxPayService {
             throw new PayOrderException("找不到订单: " + transaction.getOutTradeNo());
         }
 
+        if(payOrder.getStatus() == PaymentStatus.SUCCESS ||
+                payOrder.getStatus() == PaymentStatus.REFUND ||
+                payOrder.getStatus() == PaymentStatus.PART_REFUND){
+            return WxCallBackResponse.success("支付成功");
+        }
+
         paySuccess(transaction, payOrder);
         return WxCallBackResponse.success("支付成功");
     }
