@@ -47,7 +47,11 @@ public class CommodityServiceImpl extends ServiceImpl<CommodityMapper, Commodity
         queryChainWrapper.orderByAsc("create_time");
 
         MybatisUtils<Commodity> mybatisUtils = new MybatisUtils<>();
-        return mybatisUtils.pageQuery(queryChainWrapper, body);
+        PageQueryResponse response = mybatisUtils.pageQuery(queryChainWrapper, body);
+
+        // 因为浏览量是可能存在 redis 里的所以从 redis 取一下
+        putQueryPageViews((List<Commodity>) response.getDataList());
+        return response;
     }
 
     @Override
@@ -124,7 +128,11 @@ public class CommodityServiceImpl extends ServiceImpl<CommodityMapper, Commodity
         queryChainWrapper.orderByAsc("create_time");
 
         MybatisUtils<Commodity> mybatisUtils = new MybatisUtils<>();
-        return mybatisUtils.pageQuery(queryChainWrapper, body);
+        PageQueryResponse response = mybatisUtils.pageQuery(queryChainWrapper, body);
+
+        // 因为浏览量是可能存在 redis 里的所以从 redis 取一下
+        putQueryPageViews((List<Commodity>) response.getDataList());
+        return response;
     }
 
     @Override
@@ -162,6 +170,16 @@ public class CommodityServiceImpl extends ServiceImpl<CommodityMapper, Commodity
                 baseMapper.saveCommoditiesPageViews(id, pageViews);
             }
             redisTemplate.delete(commoditiesKeys);
+        }
+    }
+
+    private void putQueryPageViews(List<Commodity> commodities) {
+        for (Commodity commodity : commodities) {
+            String key = commodity.getId().toString() + PAGE_VIEWS_REDIS_KEY;
+            Object redisPageViews = redisTemplate.opsForValue().get(key);
+            if(null != redisPageViews){
+                commodity.setPageViews((Integer) redisPageViews);
+            }
         }
     }
 
