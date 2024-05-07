@@ -38,6 +38,11 @@ public class CommodityController {
         return RestResponse.success(commodityService.getById(id));
     }
 
+    @GetMapping("/load-info/{id}")
+    public RestResponse<Commodity> loadInfo(@PathVariable(name = "id") UUID id) {
+        return RestResponse.success(commodityService.loadInfo(id));
+    }
+
     @PutMapping("/shelve/{id}")
     public RestResponse<Boolean> shelveProduct(@PathVariable(name = "id") UUID id) {
         try {

@@ -80,6 +80,10 @@ public class BiddingOrderServiceImpl extends ServiceImpl<BiddingOrderMapper, Bid
         biddingOrder.setServiceChargeReceivable(serviceCharge);
         biddingOrder.setCommodityId(commodity.getId());
         save(biddingOrder);
+
+        // 更新最新价格
+        commodity.setAmount(commodityAmount);
+        commodityService.updateById(commodity);
         return biddingOrder.getId();
     }
 
@@ -106,6 +110,10 @@ public class BiddingOrderServiceImpl extends ServiceImpl<BiddingOrderMapper, Bid
         biddingOrder.setServiceChargeReceivable(serviceCharge);
 
         updateById(biddingOrder);
+
+        // 更新最新价格
+        commodity.setAmount(commodityAmount);
+        commodityService.updateById(commodity);
         return true;
     }
 
@@ -175,6 +183,12 @@ public class BiddingOrderServiceImpl extends ServiceImpl<BiddingOrderMapper, Bid
         }
         order.setStatus(BiddingOrderStatus.CLOSED);
         updateById(order);
+
+        // 更新最新出价
+        BigDecimal amount = baseMapper.getHighestAmount(order.getCommodityId());
+        Commodity commodity = commodityService.getById(order.getCommodityId());
+        commodity.setAmount(amount);
+        commodityService.updateById(commodity);
     }
 
     @Override

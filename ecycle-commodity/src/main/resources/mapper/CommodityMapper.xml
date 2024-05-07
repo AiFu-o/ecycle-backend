@@ -30,4 +30,7 @@
         quantity,service_charge,
         addressId
     </sql>
+    <update id="saveCommoditiesPageViews">
+        UPDATE ecycle_commodity SET page_views = #{pageViews} WHERE id = #{id};
+    </update>
 </mapper>

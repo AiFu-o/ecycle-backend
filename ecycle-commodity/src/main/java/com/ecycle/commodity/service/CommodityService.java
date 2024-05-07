@@ -54,4 +54,16 @@ public interface CommodityService extends IService<Commodity> {
      * @return 分页返回结果
      */
     PageQueryResponse pageQueryMineAll(CommodityQueryRequest body);
+
+    /**
+     * 获取商品详情 增加浏览量（慎用）
+     * @param id 商品 id
+     * @return 商品信息
+     */
+    Commodity loadInfo(UUID id);
+
+    /**
+     * 将浏览量数据持久化到数据库（定时任务每天晚上 12点执行，也可以手动调用）
+     */
+    void saveCommoditiesPageViews();
 }

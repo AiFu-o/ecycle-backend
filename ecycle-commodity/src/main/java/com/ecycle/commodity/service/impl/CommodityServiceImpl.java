@@ -8,16 +8,19 @@ import com.ecycle.commodity.model.Commodity;
 import com.ecycle.commodity.service.CommodityCategoryService;
 import com.ecycle.commodity.service.CommodityService;
 import com.ecycle.commodity.mapper.CommodityMapper;
-import com.ecycle.commodity.service.feign.AuthFeignService;
 import com.ecycle.commodity.web.info.CommodityQueryRequest;
 import com.ecycle.common.context.PageQueryResponse;
 import com.ecycle.common.utils.CurrentUserInfoUtils;
 import com.ecycle.common.utils.MybatisUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -30,10 +33,10 @@ public class CommodityServiceImpl extends ServiceImpl<CommodityMapper, Commodity
         implements CommodityService {
 
     @Resource
-    private AuthFeignService authFeignService;
+    private CommodityCategoryService categoryService;
 
     @Resource
-    private CommodityCategoryService categoryService;
+    private RedisTemplate<String, Object> redisTemplate;
 
     @Override
     public PageQueryResponse pageQueryAll(CommodityQueryRequest body) {
@@ -54,13 +57,13 @@ public class CommodityServiceImpl extends ServiceImpl<CommodityMapper, Commodity
         validateData(commodity);
 
         UUID id = UUID.randomUUID();
-        if(null != commodity.getId()){
+        if (null != commodity.getId()) {
             id = commodity.getId();
         }
         commodity.setId(id);
         commodity.setStatus(CommodityStatus.SELLING);
         UUID userId = CurrentUserInfoUtils.getCurrentUserId();
-        if(null == userId){
+        if (null == userId) {
             throw new CommodityException("用户未登录");
         }
         commodity.setCreatorId(userId);
@@ -76,7 +79,7 @@ public class CommodityServiceImpl extends ServiceImpl<CommodityMapper, Commodity
         validateData(commodity);
 
         Commodity historyEntity = load(commodity.getId());
-        if(null == commodity.getStatus() || commodity.getStatus() == CommodityStatus.SOLD){
+        if (null == commodity.getStatus() || commodity.getStatus() == CommodityStatus.SOLD) {
             throw new CommodityException("商品状态异常");
         }
         historyEntity.setInfo(commodity.getInfo());
@@ -89,7 +92,7 @@ public class CommodityServiceImpl extends ServiceImpl<CommodityMapper, Commodity
     @Transactional(rollbackFor = Exception.class)
     public void shelveProduct(UUID id) {
         Commodity commodity = load(id);
-        if(null == commodity.getStatus() || commodity.getStatus() == CommodityStatus.SOLD){
+        if (null == commodity.getStatus() || commodity.getStatus() == CommodityStatus.SOLD) {
             throw new CommodityException("商品状态异常");
         }
         commodity.setStatus(CommodityStatus.SELLING);
@@ -100,7 +103,7 @@ public class CommodityServiceImpl extends ServiceImpl<CommodityMapper, Commodity
     @Transactional(rollbackFor = Exception.class)
     public void shelveOffProduct(UUID id) {
         Commodity commodity = load(id);
-        if(null == commodity.getStatus() || commodity.getStatus() == CommodityStatus.SOLD){
+        if (null == commodity.getStatus() || commodity.getStatus() == CommodityStatus.SOLD) {
             throw new CommodityException("商品状态异常");
         }
         commodity.setStatus(CommodityStatus.OFF_SHELF);
@@ -110,11 +113,11 @@ public class CommodityServiceImpl extends ServiceImpl<CommodityMapper, Commodity
     @Override
     public PageQueryResponse pageQueryMineAll(CommodityQueryRequest body) {
         QueryChainWrapper<Commodity> queryChainWrapper = super.query();
-        if(StringUtils.isNotEmpty(body.getName())){
+        if (StringUtils.isNotEmpty(body.getName())) {
             queryChainWrapper.like("name", "%" + body.getName() + "%");
         }
         UUID userId = CurrentUserInfoUtils.getCurrentUserId();
-        if(null == userId){
+        if (null == userId) {
             throw new CommodityException("用户未登录");
         }
         queryChainWrapper.eq("creator_id", userId);
@@ -124,28 +127,66 @@ public class CommodityServiceImpl extends ServiceImpl<CommodityMapper, Commodity
         return mybatisUtils.pageQuery(queryChainWrapper, body);
     }
 
-    private void hasPublishAuth(){
+    @Override
+    public Commodity loadInfo(UUID id) {
+        // 增加浏览量
+        Commodity commodity = load(id);
+        addPageViews(commodity);
+        return commodity;
+    }
+
+    private final String PAGE_VIEWS_REDIS_KEY = "_PAGE_VIEWS";
+
+    private void addPageViews(Commodity commodity) {
+        String key = commodity.getId().toString() + PAGE_VIEWS_REDIS_KEY;
+        Integer pageViews;
+        Object redisPageViews = redisTemplate.opsForValue().get(key);
+        if (null != redisPageViews) {
+            pageViews = (Integer) redisPageViews;
+        } else {
+            pageViews = commodity.getPageViews();
+        }
+        pageViews++;
+        redisTemplate.opsForValue().set(key, pageViews);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    @Scheduled(cron = "0 0 0 * * *")
+    public void saveCommoditiesPageViews() {
+        Set<String> commoditiesKeys = redisTemplate.keys("*" + PAGE_VIEWS_REDIS_KEY);
+        if (commoditiesKeys != null) {
+            for (String commoditiesKey : commoditiesKeys) {
+                UUID id = UUID.fromString(commoditiesKey.substring(0, 32));
+                Integer pageViews = (Integer) redisTemplate.opsForValue().get(commoditiesKey);
+                baseMapper.saveCommoditiesPageViews(id, pageViews);
+            }
+            redisTemplate.delete(commoditiesKeys);
+        }
+    }
+
+    private void hasPublishAuth() {
         // TODO 先暂时用角色 以后改成权限项控制接口
         Boolean hasRole = true;
         // authFeignService.hasRole("normalUser");
-        if(!hasRole){
+        if (!hasRole) {
             throw new CommodityException("暂无权限");
         }
     }
 
-    private Commodity load(UUID id){
+    private Commodity load(UUID id) {
         Commodity commodity = getById(id);
-        if(null == commodity){
+        if (null == commodity) {
             throw new CommodityException("找不到商品");
         }
         return commodity;
     }
 
-    private void validateData(Commodity commodity){
-        if(StringUtils.isEmpty(commodity.getName())){
+    private void validateData(Commodity commodity) {
+        if (StringUtils.isEmpty(commodity.getName())) {
             throw new CommodityException("商品名称不能为空");
         }
-        if(StringUtils.isEmpty(commodity.getInfo())){
+        if (StringUtils.isEmpty(commodity.getInfo())) {
             throw new CommodityException("商品描述不能为空");
         }
     }

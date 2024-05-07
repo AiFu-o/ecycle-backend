@@ -4,6 +4,7 @@ import com.ecycle.commodity.model.BiddingOrder;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Param;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 
@@ -24,6 +25,13 @@ public interface BiddingOrderMapper extends BaseMapper<BiddingOrder> {
      */
     List<BiddingOrder> getOtherBiddingByCommodityId(@Param("commodityId") UUID commodityId,
                                                     @Param("orderId") UUID orderId);
+
+    /**
+     * 获取商品最高出价
+     * @param commodityId 商品 id
+     * @return 最高出价
+     */
+    BigDecimal getHighestAmount(@Param("commodityId") UUID commodityId);
 }
 
 

@@ -74,7 +74,7 @@ public class Commodity implements Serializable {
     private CommodityStatus status;
 
     /**
-     * 成交价
+     * 商品金额
      */
     private BigDecimal amount;
 

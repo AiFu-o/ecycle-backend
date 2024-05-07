@@ -31,4 +31,10 @@
           AND id != #{orderId}
           AND commodity_id = #{commodityId};
     </select>
+    <select id="getHighestAmount" resultType="java.math.BigDecimal">
+        SELECT IFNULL(MAX(commodity_amount), 0)
+        FROM ecycle_bidding_order
+        WHERE status != 'CLOSED'
+          AND commodity_id = #{commodityId};
+    </select>
 </mapper>

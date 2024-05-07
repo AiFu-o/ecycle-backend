@@ -2,6 +2,9 @@ package com.ecycle.commodity.mapper;
 
 import com.ecycle.commodity.model.Commodity;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.UUID;
 
 /**
 * @author wangweichen
@@ -11,6 +14,13 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 */
 public interface CommodityMapper extends BaseMapper<Commodity> {
 
+    /**
+     * 将浏览量持久化到数据库
+     * @param id 商品 id
+     * @param pageViews 浏览量
+     */
+    void saveCommoditiesPageViews(@Param("id") UUID id,
+                                  @Param("pageViews") Integer pageViews);
 }
 
 
