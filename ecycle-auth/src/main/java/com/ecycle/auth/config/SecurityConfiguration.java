@@ -3,10 +3,7 @@ package com.ecycle.auth.config;
 import com.ecycle.auth.filter.CustomConcurrentSessionFilter;
 import com.ecycle.auth.filter.UsernameAuthenticationFilter;
 import com.ecycle.auth.filter.WxAuthenticationFilter;
-import com.ecycle.auth.handler.CustomLogoutSuccessHandler;
-import com.ecycle.auth.handler.CustomizeAuthenticationFailureHandler;
-import com.ecycle.auth.handler.LoginSuccessHandler;
-import com.ecycle.auth.handler.WxAuthAuthenticationSuccessHandler;
+import com.ecycle.auth.handler.*;
 import com.ecycle.auth.provider.WxAuthenticationProvider;
 import com.ecycle.common.filter.NoAuthRequestMatcher;
 import com.ecycle.common.handler.CustomAuthenticationEntryPoint;
@@ -69,6 +66,9 @@ public class SecurityConfiguration {
     @Resource
     private NoAuthRequestMatcher noAuthRequestMatcher;
 
+    @Resource
+    private LogoutHandler logoutHandler;
+
     @Bean
     @Order(0)
     public SecurityFilterChain wxFilterChain(HttpSecurity http) throws Exception {
@@ -106,7 +106,8 @@ public class SecurityConfiguration {
         CustomConcurrentSessionFilter concurrentSessionFilter = new CustomConcurrentSessionFilter(sessionRegistry) ;
         http.addFilterAt(concurrentSessionFilter, ConcurrentSessionFilter.class);
         http.addFilterAt(filter, UsernamePasswordAuthenticationFilter.class);
-        http.logout().logoutUrl("/logout").invalidateHttpSession(true)
+        http.logout().logoutUrl("/logout")
+                .addLogoutHandler(logoutHandler).invalidateHttpSession(true)
                 .permitAll();
         return http.build();
     }

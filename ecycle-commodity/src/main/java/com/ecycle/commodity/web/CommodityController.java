@@ -6,7 +6,9 @@ import com.ecycle.commodity.model.Commodity;
 import com.ecycle.commodity.model.CommodityCategory;
 import com.ecycle.commodity.service.CommodityCategoryService;
 import com.ecycle.commodity.service.CommodityService;
+import com.ecycle.commodity.service.CommodityViewRecordService;
 import com.ecycle.commodity.web.info.CommodityQueryRequest;
+import com.ecycle.common.context.PageQueryRequest;
 import com.ecycle.common.context.PageQueryResponse;
 import com.ecycle.common.context.RestResponse;
 import lombok.extern.log4j.Log4j2;
@@ -32,6 +34,9 @@ public class CommodityController {
 
     @Resource
     private CommodityCategoryService categoryService;
+
+    @Resource
+    private CommodityViewRecordService commodityViewRecordService;
 
     @GetMapping("/load/{id}")
     public RestResponse<Commodity> load(@PathVariable(name = "id") UUID id) {
@@ -102,4 +107,17 @@ public class CommodityController {
         QueryChainWrapper<CommodityCategory> query = categoryService.query();
         return RestResponse.success(query.list());
     }
+
+    @PostMapping("/view-record/queryAll")
+    public RestResponse<PageQueryResponse> viewRecordQueryAll(@RequestBody PageQueryRequest body) {
+        PageQueryResponse result = commodityViewRecordService.queryAll(body);
+        return RestResponse.success(result);
+    }
+
+    @GetMapping("/view-record/count")
+    public RestResponse<Integer> viewRecordQueryAll() {
+        Integer result = commodityViewRecordService.queryCount();
+        return RestResponse.success(result);
+    }
+
 }

@@ -11,7 +11,9 @@ import java.util.Date;
 import java.util.UUID;
 
 import com.ecycle.commodity.constant.CommodityStatus;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
 
 /**
  * 商品
@@ -44,13 +46,15 @@ public class Commodity implements Serializable {
     private UUID categoryId;
 
     /**
-     *
+     * 创建时间
      */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date createTime;
 
     /**
-     *
+     * 修改时间
      */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date modifyTime;
 
     /**
@@ -62,6 +66,11 @@ public class Commodity implements Serializable {
      * 附件 id
      */
     private UUID belongId;
+
+    /**
+     * 封面附件 id
+     */
+    private UUID coverFileId;
 
     /**
      * 浏览量

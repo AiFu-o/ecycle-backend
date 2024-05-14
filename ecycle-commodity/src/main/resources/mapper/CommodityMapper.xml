@@ -20,6 +20,7 @@
             <result property="quantity" column="quantity" jdbcType="DECIMAL"/>
             <result property="serviceCharge" column="service_charge" jdbcType="DECIMAL"/>
             <result property="addressId" column="address_id" jdbcType="VARCHAR"/>
+            <result property="coverFileId" column="cover_file_id" jdbcType="VARCHAR"/>
     </resultMap>
 
     <sql id="Base_Column_List">
@@ -28,7 +29,7 @@
         creator_id,belong_id,page_views,
         `status`,amount,price,
         quantity,service_charge,
-        addressId
+        address_id,cover_file_id
     </sql>
     <update id="saveCommoditiesPageViews">
         UPDATE ecycle_commodity SET page_views = #{pageViews} WHERE id = #{id};

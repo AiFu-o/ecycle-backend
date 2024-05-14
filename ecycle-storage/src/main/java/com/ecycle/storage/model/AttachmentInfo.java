@@ -46,7 +46,7 @@ public class AttachmentInfo implements Serializable {
     /**
      * 文件描述
      */
-    private String desc;
+    private String info;
 
     /**
      * belongId
@@ -73,71 +73,4 @@ public class AttachmentInfo implements Serializable {
      */
     private String protocol;
 
-    @TableField(exist = false)
-    private static final long serialVersionUID = 1L;
-
-    @Override
-    public boolean equals(Object that) {
-        if (this == that) {
-            return true;
-        }
-        if (that == null) {
-            return false;
-        }
-        if (getClass() != that.getClass()) {
-            return false;
-        }
-        AttachmentInfo other = (AttachmentInfo) that;
-        return (this.getId() == null ? other.getId() == null : this.getId().equals(other.getId()))
-            && (this.getCategory() == null ? other.getCategory() == null : this.getCategory().equals(other.getCategory()))
-            && (this.getFileName() == null ? other.getFileName() == null : this.getFileName().equals(other.getFileName()))
-            && (this.getFileType() == null ? other.getFileType() == null : this.getFileType().equals(other.getFileType()))
-            && (this.getSize() == null ? other.getSize() == null : this.getSize().equals(other.getSize()))
-            && (this.getDesc() == null ? other.getDesc() == null : this.getDesc().equals(other.getDesc()))
-            && (this.getBelongId() == null ? other.getBelongId() == null : this.getBelongId().equals(other.getBelongId()))
-            && (this.getCreateTime() == null ? other.getCreateTime() == null : this.getCreateTime().equals(other.getCreateTime()))
-            && (this.getCreatorId() == null ? other.getCreatorId() == null : this.getCreatorId().equals(other.getCreatorId()))
-            && (this.getAddress() == null ? other.getAddress() == null : this.getAddress().equals(other.getAddress()))
-            && (this.getProtocol() == null ? other.getProtocol() == null : this.getProtocol().equals(other.getProtocol()));
-    }
-
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((getId() == null) ? 0 : getId().hashCode());
-        result = prime * result + ((getCategory() == null) ? 0 : getCategory().hashCode());
-        result = prime * result + ((getFileName() == null) ? 0 : getFileName().hashCode());
-        result = prime * result + ((getFileType() == null) ? 0 : getFileType().hashCode());
-        result = prime * result + ((getSize() == null) ? 0 : getSize().hashCode());
-        result = prime * result + ((getDesc() == null) ? 0 : getDesc().hashCode());
-        result = prime * result + ((getBelongId() == null) ? 0 : getBelongId().hashCode());
-        result = prime * result + ((getCreateTime() == null) ? 0 : getCreateTime().hashCode());
-        result = prime * result + ((getCreatorId() == null) ? 0 : getCreatorId().hashCode());
-        result = prime * result + ((getAddress() == null) ? 0 : getAddress().hashCode());
-        result = prime * result + ((getProtocol() == null) ? 0 : getProtocol().hashCode());
-        return result;
-    }
-
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(getClass().getSimpleName());
-        sb.append(" [");
-        sb.append("Hash = ").append(hashCode());
-        sb.append(", id=").append(id);
-        sb.append(", category=").append(category);
-        sb.append(", fileName=").append(fileName);
-        sb.append(", fileType=").append(fileType);
-        sb.append(", size=").append(size);
-        sb.append(", desc=").append(desc);
-        sb.append(", belongId=").append(belongId);
-        sb.append(", createTime=").append(createTime);
-        sb.append(", creatorId=").append(creatorId);
-        sb.append(", address=").append(address);
-        sb.append(", protocol=").append(protocol);
-        sb.append(", serialVersionUID=").append(serialVersionUID);
-        sb.append("]");
-        return sb.toString();
-    }
 }

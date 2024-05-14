@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ecycle.commodity.mapper.CommodityViewRecordMapper">
+
+    <resultMap id="BaseResultMap" type="com.ecycle.commodity.model.CommodityViewRecord">
+            <id property="id" column="id" jdbcType="VARCHAR"/>
+            <result property="userId" column="user_id" jdbcType="VARCHAR"/>
+            <result property="commodityId" column="commodity_id" jdbcType="VARCHAR"/>
+            <result property="viewTime" column="view_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,user_id,commodity_id,
+        view_time
+    </sql>
+    <select id="findByUserIdAndCommodityId" resultType="com.ecycle.commodity.model.CommodityViewRecord">
+        SELECT *
+        FROM ecycle_commodity_view_record
+        WHERE commodity_id = #{commodityId}
+          AND user_id = #{userId}
+    </select>
+    <select id="queryMineAll" resultType="com.ecycle.commodity.web.info.ViewRecordQueryResponse">
+        SELECT a.view_time AS viewTime, b.*
+        FROM ecycle_commodity_view_record a
+                 LEFT JOIN ecycle_commodity b on b.id = a.commodity_id
+        WHERE view_time >= DATE_SUB(NOW(), INTERVAL 30 DAY)
+            AND user_id = #{userId}
+    </select>
+    <select id="queryCount" resultType="java.lang.Integer">
+        SELECT count(id)
+        FROM ecycle_commodity_view_record
+        WHERE view_time >= DATE_SUB(NOW(), INTERVAL 30 DAY)
+          AND user_id = #{userId}
+    </select>
+</mapper>

@@ -6,19 +6,52 @@
 
     <resultMap id="BaseResultMap" type="com.ecycle.auth.model.User">
             <id property="id" column="id" jdbcType="VARCHAR"/>
+            <result property="nickName" column="nick_name" jdbcType="VARCHAR"/>
             <result property="username" column="username" jdbcType="VARCHAR"/>
             <result property="password" column="password" jdbcType="VARCHAR"/>
             <result property="telephone" column="telephone" jdbcType="VARCHAR"/>
             <result property="openId" column="openId" jdbcType="VARCHAR"/>
             <result property="age" column="age" jdbcType="INTEGER"/>
             <result property="sex" column="sex" jdbcType="VARCHAR"/>
+            <result property="profile" column="profile" jdbcType="VARCHAR"/>
             <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
             <result property="modifyTime" column="modify_time" jdbcType="TIMESTAMP"/>
     </resultMap>
 
     <sql id="Base_Column_List">
-        id,username,password,openId,
-        age,sex,telephone,
+        id,username,`password`,openId,
+        age,sex,telephone,nick_name,`profile`
         create_time,modify_time
     </sql>
+    <select id="queryManageUser" resultType="com.ecycle.auth.web.info.UserInfoResponse">
+        SELECT user.username,
+        user.nick_name,
+        user.profile,
+        user.id,
+        user.age,
+        user.create_time,
+        user.modify_time,
+        user.sex,
+        user.telephone
+        FROM ecycle_user user
+        LEFT JOIN ecycle_user_role userRole ON user.id = userRole.user_id
+        LEFT JOIN ecycle_role role on role.id = userRole.role_id
+        WHERE role.code = 'admin'
+        <if test="params.input != null and params.input != ''">
+            AND user.username LIKE CONCAT('%',#{params.input},'')
+        </if>
+    </select>
+    <select id="findInfoById" resultType="com.ecycle.auth.web.info.UserInfoResponse">
+        SELECT user.username,
+               user.nick_name,
+               user.profile,
+               user.id,
+               user.age,
+               user.create_time,
+               user.modify_time,
+               user.sex,
+               user.telephone
+        FROM ecycle_user user
+        WHERE user.id = #{id}
+    </select>
 </mapper>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ecycle.commodity.mapper.CommodityFavoriteMapper">
+
+    <resultMap id="BaseResultMap" type="com.ecycle.commodity.model.CommodityFavorite">
+            <id property="id" column="id" jdbcType="VARCHAR"/>
+            <result property="userId" column="user_id" jdbcType="VARCHAR"/>
+            <result property="commodityId" column="commodity_id" jdbcType="VARCHAR"/>
+            <result property="favoriteTime" column="favorite_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,user_id,commodity_id,
+        favorite_time
+    </sql>
+</mapper>

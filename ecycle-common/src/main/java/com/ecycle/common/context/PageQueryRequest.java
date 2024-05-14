@@ -16,5 +16,5 @@ public class PageQueryRequest {
 
     private Long pageIndex;
 
-    private Boolean isPage;
+    private Boolean isPage = false;
 }

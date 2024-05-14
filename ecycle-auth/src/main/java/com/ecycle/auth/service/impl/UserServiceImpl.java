@@ -9,6 +9,7 @@ import com.ecycle.auth.service.RoleService;
 import com.ecycle.auth.service.UserRoleService;
 import com.ecycle.auth.service.UserService;
 import com.ecycle.auth.mapper.UserMapper;
+import com.ecycle.auth.web.info.UserInfoResponse;
 import com.ecycle.common.context.UserInfo;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.core.GrantedAuthority;
@@ -51,7 +52,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void addRole(Role role, User user) {
-        if(roleService.hasRole(role.getCode())){
+        if (roleService.hasRole(role.getCode())) {
             throw new UserException("用户已有该角色不能重复创建");
         }
         Assert.notNull(role, "role is not null");
@@ -77,13 +78,13 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public User createWxFirstLoginUser(String phoneNumber, String openId) {
+    public User createWxFirstLoginUser(String openId) {
         User user = new User();
         user.setId(UUID.randomUUID());
-        user.setUsername(phoneNumber);
-        // 随便生成个密码就不让他用密码登录暂时
+        user.setNickName("普通用户");
+        user.setUsername(openId);
+        // 随便生成个密码就不让他用密码登录
         user.setPassword(passwordEncoder.encode(UUID.randomUUID().toString()));
-        user.setTelephone(phoneNumber);
         user.setOpenId(openId);
         save(user);
         addRoleByCode("normalUser", user);
@@ -91,7 +92,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
     }
 
     @Override
-    public UserInfo buildUserInfo(User user){
+    public UserInfo buildUserInfo(User user) {
         UserInfo userInfo = new UserInfo();
         userInfo.setUserId(user.getId());
         List<? extends GrantedAuthority> authorities = new ArrayList<>();
@@ -106,14 +107,20 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         userInfo.setRoles(roleCodes);
         userInfo.setAuthorities(authorities);
         userInfo.setPassword(user.getPassword());
-        if(StringUtils.isNotEmpty(user.getOpenId())){
+        if (StringUtils.isNotEmpty(user.getOpenId())) {
             userInfo.setOpenId(user.getOpenId());
         }
-        if(StringUtils.isNotEmpty(user.getTelephone())){
+        if (StringUtils.isNotEmpty(user.getTelephone())) {
             userInfo.setTelephone(user.getTelephone());
         }
         return userInfo;
     }
+
+    @Override
+    public UserInfoResponse findInfoById(UUID id) {
+        return userMapper.findInfoById(id);
+    }
+
 }
 
 

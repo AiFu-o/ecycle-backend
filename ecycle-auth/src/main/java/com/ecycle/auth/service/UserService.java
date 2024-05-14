@@ -3,8 +3,10 @@ package com.ecycle.auth.service;
 import com.ecycle.auth.model.Role;
 import com.ecycle.auth.model.User;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.ecycle.auth.model.UserRole;
+import com.ecycle.auth.web.info.UserInfoResponse;
 import com.ecycle.common.context.UserInfo;
+
+import java.util.UUID;
 
 /**
 * @author wangweichen
@@ -49,10 +51,9 @@ public interface UserService extends IService<User> {
      * 微信小程序第一次登录自动创建用户
      *
      * @param openId openId
-     * @param phoneNumber 手机号
      * @return user
      */
-    User createWxFirstLoginUser(String phoneNumber, String openId);
+    User createWxFirstLoginUser(String openId);
 
     /**
      * 生成 userInfo
@@ -61,4 +62,12 @@ public interface UserService extends IService<User> {
      * @return userInfo
      */
     UserInfo buildUserInfo(User user);
+
+    /**
+     * 获取用户信息给前端
+     *
+     * @param id 用户 id
+     * @return 用户信息
+     */
+    UserInfoResponse findInfoById(UUID id);
 }

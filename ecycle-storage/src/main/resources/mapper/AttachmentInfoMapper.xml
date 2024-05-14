@@ -10,7 +10,7 @@
             <result property="fileName" column="file_name" jdbcType="VARCHAR"/>
             <result property="fileType" column="file_type" jdbcType="VARCHAR"/>
             <result property="size" column="size" jdbcType="BIGINT"/>
-            <result property="desc" column="desc" jdbcType="VARCHAR"/>
+            <result property="info" column="info" jdbcType="VARCHAR"/>
             <result property="belongId" column="belong_id" jdbcType="VARCHAR"/>
             <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
             <result property="creatorId" column="creator_id" jdbcType="VARCHAR"/>
@@ -20,7 +20,7 @@
 
     <sql id="Base_Column_List">
         id,category,file_name,
-        file_type,size,desc,
+        file_type,size,info,
         belong_id,create_time,creator_id,
         address,protocol
     </sql>

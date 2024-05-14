@@ -39,4 +39,12 @@ public interface AttachmentInfoService extends IService<AttachmentInfo> {
      * @throws IOException 如果在向文件中插入数据时发生I/O错误，则抛出IOException
      */
     UUID insertFiles(MultipartFile[] files, UUID belongId, String category, Boolean anonymous) throws IOException;
+
+
+    /**
+     * 获取文件流
+     * @param attachmentInfo 文件
+     * @return 文件流
+     */
+    InputStream getInputStream(AttachmentInfo attachmentInfo);
 }

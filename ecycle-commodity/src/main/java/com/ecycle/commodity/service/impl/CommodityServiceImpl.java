@@ -8,6 +8,7 @@ import com.ecycle.commodity.model.Commodity;
 import com.ecycle.commodity.service.CommodityCategoryService;
 import com.ecycle.commodity.service.CommodityService;
 import com.ecycle.commodity.mapper.CommodityMapper;
+import com.ecycle.commodity.service.CommodityViewRecordService;
 import com.ecycle.commodity.web.info.CommodityQueryRequest;
 import com.ecycle.common.context.PageQueryResponse;
 import com.ecycle.common.utils.CurrentUserInfoUtils;
@@ -34,6 +35,9 @@ public class CommodityServiceImpl extends ServiceImpl<CommodityMapper, Commodity
 
     @Resource
     private CommodityCategoryService categoryService;
+
+    @Resource
+    private CommodityViewRecordService viewRecordService;
 
     @Resource
     private RedisTemplate<String, Object> redisTemplate;
@@ -88,6 +92,8 @@ public class CommodityServiceImpl extends ServiceImpl<CommodityMapper, Commodity
         }
         historyEntity.setInfo(commodity.getInfo());
         historyEntity.setName(commodity.getName());
+        historyEntity.setCoverFileId(commodity.getCoverFileId());
+        historyEntity.setCategoryId(commodity.getCategoryId());
         updateById(historyEntity);
         return historyEntity.getId();
     }
@@ -139,13 +145,15 @@ public class CommodityServiceImpl extends ServiceImpl<CommodityMapper, Commodity
     public Commodity loadInfo(UUID id) {
         // 增加浏览量
         Commodity commodity = load(id);
-        addPageViews(commodity);
+        Integer pageViews = addPageViews(commodity);
+        commodity.setPageViews(pageViews);
+        viewRecordService.addRecord(id);
         return commodity;
     }
 
     private final String PAGE_VIEWS_REDIS_KEY = "_PAGE_VIEWS";
 
-    private void addPageViews(Commodity commodity) {
+    private Integer addPageViews(Commodity commodity) {
         String key = commodity.getId().toString() + PAGE_VIEWS_REDIS_KEY;
         Integer pageViews;
         Object redisPageViews = redisTemplate.opsForValue().get(key);
@@ -156,6 +164,7 @@ public class CommodityServiceImpl extends ServiceImpl<CommodityMapper, Commodity
         }
         pageViews++;
         redisTemplate.opsForValue().set(key, pageViews);
+        return pageViews;
     }
 
     @Override
@@ -165,7 +174,7 @@ public class CommodityServiceImpl extends ServiceImpl<CommodityMapper, Commodity
         Set<String> commoditiesKeys = redisTemplate.keys("*" + PAGE_VIEWS_REDIS_KEY);
         if (commoditiesKeys != null) {
             for (String commoditiesKey : commoditiesKeys) {
-                UUID id = UUID.fromString(commoditiesKey.substring(0, 32));
+                UUID id = UUID.fromString(commoditiesKey.substring(0, 36));
                 Integer pageViews = (Integer) redisTemplate.opsForValue().get(commoditiesKey);
                 baseMapper.saveCommoditiesPageViews(id, pageViews);
             }
@@ -206,6 +215,12 @@ public class CommodityServiceImpl extends ServiceImpl<CommodityMapper, Commodity
         }
         if (StringUtils.isEmpty(commodity.getInfo())) {
             throw new CommodityException("商品描述不能为空");
+        }
+        if (null == commodity.getCoverFileId()) {
+            throw new CommodityException("请设置商品封面");
+        }
+        if (null == commodity.getCategoryId()) {
+            throw new CommodityException("商品分类不能为空");
         }
     }
 

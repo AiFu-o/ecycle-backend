@@ -24,11 +24,7 @@ import java.util.Base64;
  */
 public class WxAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
 
-    public static final String SPRING_SECURITY_FORM_CODE_KEY = "jsCode";
-    public static final String SPRING_SECURITY_FORM_ENCRYPTED_DATA_KEY = "encryptedData";
-    public static final String SPRING_SECURITY_FORM_IV_KEY = "iv";
-    public static final String SPRING_SECURITY_FORM_OPEN_ID_KEY = "openId";
-    public static final String SPRING_SECURITY_FORM_TELEPHONE_KEY = "telephone";
+    public static final String SPRING_SECURITY_FORM_JS_CODE_KEY = "jsCode";
     public WxAuthenticationFilter() {
         super(new AntPathRequestMatcher("/wx/login", "POST"));
     }
@@ -48,22 +44,10 @@ public class WxAuthenticationFilter extends AbstractAuthenticationProcessingFilt
         }
         is.close();
         JSONObject body = JSONObject.parseObject(sb.toString());
-        WxPrincipal principal = new WxPrincipal() ;
-        String code;
-        if(body.containsKey(SPRING_SECURITY_FORM_OPEN_ID_KEY) && body.containsKey(SPRING_SECURITY_FORM_TELEPHONE_KEY)){
-            principal.setTelephone(body.getString(SPRING_SECURITY_FORM_TELEPHONE_KEY));
-            principal.setOpenId(body.getString(SPRING_SECURITY_FORM_OPEN_ID_KEY));
-            code = principal.getOpenId();
-        } else {
-            code = body.getString(SPRING_SECURITY_FORM_CODE_KEY);
-            String encryptedData = body.getString(SPRING_SECURITY_FORM_ENCRYPTED_DATA_KEY);
-            String iv = body.getString(SPRING_SECURITY_FORM_IV_KEY);
-            principal.setEncryptedData(encryptedData);
-            principal.setIv(iv);
-        }
 
+        String jsCode = body.getString(SPRING_SECURITY_FORM_JS_CODE_KEY);
         UsernamePasswordAuthenticationToken authRequest = new UsernamePasswordAuthenticationToken(
-                principal, code);
+                jsCode, "");
         setDetails(request, authRequest);
 
         return this.getAuthenticationManager().authenticate(authRequest);

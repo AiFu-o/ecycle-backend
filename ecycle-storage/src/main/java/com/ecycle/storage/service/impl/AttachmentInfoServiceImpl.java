@@ -15,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.UUID;
 
 /**
@@ -75,6 +76,11 @@ public class AttachmentInfoServiceImpl extends ServiceImpl<AttachmentInfoMapper,
             insertFile(file, belongId, category, anonymous);
         }
         return belongId;
+    }
+
+    @Override
+    public InputStream getInputStream(AttachmentInfo attachmentInfo) {
+        return attachmentDataService.getInputStream(attachmentInfo);
     }
 
     private String getFileName(MultipartFile file, Boolean anonymous, String fileType) {

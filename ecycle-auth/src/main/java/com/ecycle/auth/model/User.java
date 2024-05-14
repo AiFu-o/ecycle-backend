@@ -26,22 +26,59 @@ import java.util.UUID;
 @TableName("ecycle_user")
 public class User implements Serializable {
 
+    /**
+     * id
+     */
     @TableId
     private UUID id;
 
+    /**
+     * 昵称
+     */
+    private String nickName;
+
+    /**
+     * 用户名
+     */
     private String username;
 
+    /**
+     * openId
+     */
     private String openId;
 
+    /**
+     * 头像
+     */
+    private String profile;
+
+    /**
+     * 密码
+     */
     private String password;
 
+    /**
+     * 手机号
+     */
     private String telephone;
 
-    private int age;
+    /**
+     * 年龄
+     */
+    private Integer age;
 
+    /**
+     * 性别
+     */
     private String sex;
 
+    /**
+     * 创建时间
+     */
     private Date createTime;
 
+    /**
+     * 修改时间
+     */
     private Date modifyTime;
 }
