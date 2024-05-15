@@ -16,6 +16,8 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -46,7 +48,7 @@ public class AttachmentController {
         return RestResponse.success(fileId);
     }
 
-    @RequestMapping(value = "uploadFiles", method = RequestMethod.POST)
+    @RequestMapping(value = "/uploadFiles", method = RequestMethod.POST)
     public RestResponse<UUID> uploadFiles(@RequestParam(name = "belongId", required = false) UUID belongId,
                                           @RequestParam(name = "category", required = false) String category,
                                           @RequestParam("files") MultipartFile[] files,
@@ -80,10 +82,39 @@ public class AttachmentController {
                 .body(resource);
     }
 
+    @RequestMapping(value = "/file/{fileId}", method = RequestMethod.DELETE)
+    public void remove(@PathVariable UUID fileId) {
+
+    }
+
+    @RequestMapping(value = "/file/{fileId}", method = RequestMethod.GET)
+    public RestResponse<AttachmentInfo> loadInfo(@PathVariable UUID fileId) {
+        return RestResponse.success(attachmentInfoService.getById(fileId));
+    }
+
     private String encodeFileName(HttpServletRequest request, String infoFileName) {
         String fileName = null;
         fileName = new String(infoFileName.getBytes(StandardCharsets.UTF_8), StandardCharsets.ISO_8859_1);
         return fileName;
+    }
+
+    @RequestMapping(value = "/fileInfos", method = RequestMethod.GET)
+    public RestResponse<List<AttachmentInfo>> getFileInfoByBelongId(@RequestParam("belongId") UUID belongId) {
+        List<AttachmentInfo> attachmentInfos = attachmentInfoService.findByBelongId(belongId);
+        for (AttachmentInfo attachmentInfo : attachmentInfos) {
+            attachmentInfo.setAddress("/file/preview/" + attachmentInfo.getId());
+        }
+        return RestResponse.success(attachmentInfos);
+    }
+
+    @RequestMapping(value = "/fileInfos/{category}", method = RequestMethod.GET)
+    public RestResponse<List<AttachmentInfo>> getFileInfoByBelongId(@RequestParam("belongId") UUID belongId,
+                                                                    @PathVariable(name = "category") String category) {
+        List<AttachmentInfo> attachmentInfos = attachmentInfoService.findByBelongIdAndCategory(belongId, category);
+        for (AttachmentInfo attachmentInfo : attachmentInfos) {
+            attachmentInfo.setAddress("/file/preview/" + attachmentInfo.getId());
+        }
+        return RestResponse.success(attachmentInfos);
     }
 
 }

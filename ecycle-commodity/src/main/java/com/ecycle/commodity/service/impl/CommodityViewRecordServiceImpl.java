@@ -22,6 +22,7 @@ import java.util.*;
 @Service
 public class CommodityViewRecordServiceImpl extends ServiceImpl<CommodityViewRecordMapper, CommodityViewRecord>
         implements CommodityViewRecordService {
+
     @Override
     public void addRecord(UUID commodityId) {
         UUID userId = CurrentUserInfoUtils.getCurrentUserId();

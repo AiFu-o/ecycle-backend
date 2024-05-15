@@ -3,6 +3,9 @@ package com.ecycle.storage.mapper;
 import com.ecycle.storage.model.AttachmentInfo;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
+import java.util.List;
+import java.util.UUID;
+
 /**
 * @author wangweichen
 * @description 针对表【ecycle_attachment_info(附件)】的数据库操作Mapper

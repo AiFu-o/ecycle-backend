@@ -7,6 +7,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -47,4 +48,20 @@ public interface AttachmentInfoService extends IService<AttachmentInfo> {
      * @return 文件流
      */
     InputStream getInputStream(AttachmentInfo attachmentInfo);
+
+    /**
+     * 根据 belongId 查询文件
+     * @param belongId belongId
+     * @return 文件
+     */
+    List<AttachmentInfo> findByBelongId(UUID belongId);
+
+    /**
+     * 根据 belongId和分类 查询文件
+     * @param belongId belongId
+     * @param category 分类
+     * @return 文件
+     */
+    List<AttachmentInfo> findByBelongIdAndCategory(UUID belongId, String category);
+
 }

@@ -1,5 +1,6 @@
 package com.ecycle.storage.service.impl;
 
+import com.baomidou.mybatisplus.extension.conditions.query.QueryChainWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ecycle.common.utils.CurrentUserInfoUtils;
 import com.ecycle.storage.config.properties.AttachmentProperties;
@@ -16,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.annotation.Resource;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -81,6 +83,21 @@ public class AttachmentInfoServiceImpl extends ServiceImpl<AttachmentInfoMapper,
     @Override
     public InputStream getInputStream(AttachmentInfo attachmentInfo) {
         return attachmentDataService.getInputStream(attachmentInfo);
+    }
+
+    @Override
+    public List<AttachmentInfo> findByBelongId(UUID belongId) {
+        QueryChainWrapper<AttachmentInfo> queryMapper = query();
+        queryMapper.eq("belong_id", belongId);
+        return queryMapper.list();
+    }
+
+    @Override
+    public List<AttachmentInfo> findByBelongIdAndCategory(UUID belongId, String category) {
+        QueryChainWrapper<AttachmentInfo> queryMapper = query();
+        queryMapper.eq("belong_id", belongId);
+        queryMapper.eq("category", category);
+        return queryMapper.list();
     }
 
     private String getFileName(MultipartFile file, Boolean anonymous, String fileType) {

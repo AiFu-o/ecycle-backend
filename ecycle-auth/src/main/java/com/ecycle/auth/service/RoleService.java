@@ -2,6 +2,7 @@ package com.ecycle.auth.service;
 
 import com.ecycle.auth.model.Role;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.ecycle.auth.model.User;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.context.event.EventListener;
 
@@ -38,4 +39,11 @@ public interface RoleService extends IService<Role> {
      */
     Boolean hasRole(String code);
 
+    /**
+     * 根据角色编号判断用户有没有角色
+     * @param user 用户
+     * @param code 角色编号
+     * @return 是否有此角色
+     */
+    Boolean userHasRole(User user, String code);
 }

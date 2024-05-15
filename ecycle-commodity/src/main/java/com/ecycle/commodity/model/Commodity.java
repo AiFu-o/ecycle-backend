@@ -107,7 +107,4 @@ public class Commodity implements Serializable {
      */
     private UUID addressId;
 
-    @TableField(exist = false)
-    private static final long serialVersionUID = 1L;
-
 }

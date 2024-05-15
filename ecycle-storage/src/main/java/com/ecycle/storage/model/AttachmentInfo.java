@@ -8,10 +8,12 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.UUID;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 /**
  * 附件
+ * @author wangweichen
  * @TableName ecycle_attachment_info
  */
 @TableName(value ="ecycle_attachment_info")
@@ -56,6 +58,7 @@ public class AttachmentInfo implements Serializable {
     /**
      * 上传时间
      */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date createTime;
 
     /**

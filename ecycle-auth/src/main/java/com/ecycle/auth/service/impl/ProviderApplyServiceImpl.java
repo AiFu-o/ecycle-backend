@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.Date;
 import java.util.UUID;
 import java.util.regex.Pattern;
 
@@ -43,9 +44,15 @@ public class ProviderApplyServiceImpl extends ServiceImpl<ProviderApplyMapper, P
         if (ProviderApplyStatus.PENDING != providerApply.getStatus()) {
             throw new ProviderApplyException("申请单状态异常");
         }
+        if(StringUtils.isEmpty(approvalMessage)){
+            throw new ProviderApplyException("审批意见不能为空");
+        }
         User user = userService.getById(providerApply.getUserId());
         userService.addRoleByCode("provider", user);
         providerApply.setStatus(ProviderApplyStatus.APPROVE);
+        providerApply.setAuditTime(new Date());
+        providerApply.setApprovalMessage(approvalMessage);
+        updateById(providerApply);
     }
 
     @Override
@@ -58,7 +65,13 @@ public class ProviderApplyServiceImpl extends ServiceImpl<ProviderApplyMapper, P
         if (ProviderApplyStatus.PENDING != providerApply.getStatus()) {
             throw new ProviderApplyException("申请单状态异常");
         }
+        if(StringUtils.isEmpty(approvalMessage)){
+            throw new ProviderApplyException("审批意见不能为空");
+        }
         providerApply.setStatus(ProviderApplyStatus.REJECT);
+        providerApply.setAuditTime(new Date());
+        providerApply.setApprovalMessage(approvalMessage);
+        updateById(providerApply);
     }
 
     private void validateSaveData(ProviderApply apply) {
@@ -108,7 +121,7 @@ public class ProviderApplyServiceImpl extends ServiceImpl<ProviderApplyMapper, P
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public boolean updateById(ProviderApply apply) {
+    public boolean edit(ProviderApply apply) {
         if (null == apply.getId()) {
             throw new ProviderApplyException("id不能为空");
         }
@@ -121,7 +134,7 @@ public class ProviderApplyServiceImpl extends ServiceImpl<ProviderApplyMapper, P
         }
         apply.setStatus(ProviderApplyStatus.PENDING);
         validateSaveData(apply);
-        return super.updateById(apply);
+        return updateById(historyApply);
     }
 
     @Override

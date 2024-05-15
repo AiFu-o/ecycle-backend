@@ -44,7 +44,7 @@ public interface ProviderApplyService extends IService<ProviderApply> {
      * @param apply 申请单
      * @return 是否保存成功
      */
-    boolean updateById(ProviderApply apply);
+    boolean edit(ProviderApply apply);
 
     /**
      * 回收商申请单分页查询

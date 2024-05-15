@@ -46,11 +46,21 @@ public class ProviderApplyController {
         return RestResponse.success();
     }
 
+    @GetMapping("/load/{id}")
+    public RestResponse<ProviderApply> load(@PathVariable(name = "id") UUID id) {
+        try {
+            return RestResponse.success(providerApplyService.getById(id));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return RestResponse.validfail("未知异常");
+        }
+    }
+
     @PutMapping("/save")
     public RestResponse<UUID> update(@RequestBody ProviderApply providerApply) {
         Assert.notNull(providerApply, "申请单不能为空");
         try {
-            boolean isSave = providerApplyService.updateById(providerApply);
+            boolean isSave = providerApplyService.save(providerApply);
             if (!isSave) {
                 return RestResponse.validfail("保存失败");
             }

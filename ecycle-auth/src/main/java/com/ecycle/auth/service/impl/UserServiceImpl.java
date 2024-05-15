@@ -52,8 +52,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void addRole(Role role, User user) {
-        if (roleService.hasRole(role.getCode())) {
-            throw new UserException("用户已有该角色不能重复创建");
+        if (roleService.userHasRole(user, role.getCode())) {
+            log.error("用户已有该角色不能重复创建");
+            return;
         }
         Assert.notNull(role, "role is not null");
         Assert.notNull(user, "user is not null");

@@ -6,6 +6,9 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.UUID;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 /**
@@ -20,20 +23,21 @@ public class CommodityFavorite implements Serializable {
      * id
      */
     @TableId
-    private String id;
+    private UUID id;
 
     /**
      * 用户 id
      */
-    private String userId;
+    private UUID userId;
 
     /**
      * 商品 id
      */
-    private String commodityId;
+    private UUID commodityId;
 
     /**
      * 收藏时间
      */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date favoriteTime;
 }

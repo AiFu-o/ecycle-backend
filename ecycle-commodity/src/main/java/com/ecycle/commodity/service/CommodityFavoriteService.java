@@ -2,6 +2,10 @@ package com.ecycle.commodity.service;
 
 import com.ecycle.commodity.model.CommodityFavorite;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.ecycle.common.context.PageQueryRequest;
+import com.ecycle.common.context.PageQueryResponse;
+
+import java.util.UUID;
 
 /**
 * @author wangweichen
@@ -10,4 +14,11 @@ import com.baomidou.mybatisplus.extension.service.IService;
 */
 public interface CommodityFavoriteService extends IService<CommodityFavorite> {
 
+    void favorite(UUID commodityId);
+
+    void cancel(UUID commodityId);
+
+    PageQueryResponse queryAll(PageQueryRequest body);
+
+    Integer queryCount();
 }

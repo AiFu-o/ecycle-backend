@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ecycle.auth.mapper.RoleMapper;
 import com.ecycle.auth.model.Role;
+import com.ecycle.auth.model.User;
 import com.ecycle.auth.service.RoleService;
 import com.ecycle.auth.service.UserRoleService;
 import com.ecycle.common.context.UserInfo;
@@ -105,6 +106,20 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role>
         }
         roles = userInfo.getRoles();
         return !roles.isEmpty() && roles.contains(code);
+    }
+
+    @Override
+    public Boolean userHasRole(User user, String code) {
+        List<Role> roles = findRolesByUserId(user.getId());
+        if (null == roles || roles.size() < 1) {
+            return false;
+        }
+        for (Role role : roles) {
+            if (role.getCode().equals(code)) {
+                return true;
+            }
+        }
+        return false;
     }
 
 }

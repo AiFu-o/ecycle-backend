@@ -6,6 +6,8 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.UUID;
+
 import lombok.Data;
 
 /**
@@ -20,17 +22,17 @@ public class UserAddress implements Serializable {
      * id
      */
     @TableId
-    private String id;
+    private UUID id;
 
     /**
      * 姓名
      */
-    private Integer name;
+    private String name;
 
     /**
      * 手机号
      */
-    private Integer phone;
+    private String phone;
 
     /**
      * 省
@@ -80,9 +82,11 @@ public class UserAddress implements Serializable {
     /**
      * 用户
      */
-    private String userId;
+    private UUID userId;
 
-    @TableField(exist = false)
-    private static final long serialVersionUID = 1L;
+    /**
+     * 是否默认地址
+     */
+    private Boolean defaultAddress;
 
 }

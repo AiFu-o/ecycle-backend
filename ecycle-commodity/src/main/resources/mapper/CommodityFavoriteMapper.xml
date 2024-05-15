@@ -15,4 +15,22 @@
         id,user_id,commodity_id,
         favorite_time
     </sql>
+
+    <select id="findByUserIdAndCommodityId" resultType="com.ecycle.commodity.model.CommodityViewRecord">
+        SELECT *
+        FROM ecycle_commodity_favorite
+        WHERE commodity_id = #{commodityId}
+          AND user_id = #{userId}
+    </select>
+    <select id="queryMineAll" resultType="com.ecycle.commodity.web.info.FavoriteRecordQueryResponse">
+        SELECT a.create_time AS viewTime, b.*
+        FROM ecycle_commodity_favorite a
+                 LEFT JOIN ecycle_commodity b on b.id = a.commodity_id
+        WHERE user_id = #{userId}
+    </select>
+    <select id="queryCount" resultType="java.lang.Integer">
+        SELECT count(id)
+        FROM ecycle_commodity_favorite
+        WHERE user_id = #{userId}
+    </select>
 </mapper>

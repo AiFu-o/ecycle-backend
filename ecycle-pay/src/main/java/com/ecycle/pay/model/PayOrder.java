@@ -12,6 +12,7 @@ import com.baomidou.mybatisplus.annotation.Version;
 import com.ecycle.pay.constant.OrderTypeEnum;
 import com.ecycle.pay.constant.PaymentMethodEnum;
 import com.ecycle.pay.constant.PaymentStatus;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 /**
@@ -75,11 +76,13 @@ public class PayOrder implements Serializable {
     /**
      * 创建时间
      */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date createTime;
 
     /**
      * 支付时间
      */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date payTime;
 
     /**

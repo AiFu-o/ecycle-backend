@@ -8,6 +8,7 @@
             <id property="id" column="id" jdbcType="VARCHAR"/>
             <result property="name" column="name" jdbcType="VARCHAR"/>
             <result property="title" column="title" jdbcType="VARCHAR"/>
+            <result property="iconFileId" column="icon_file_id" jdbcType="VARCHAR"/>
             <result property="serviceChargeType" column="service_charge_type" jdbcType="VARCHAR"/>
             <result property="serviceChargeSetting" column="service_charge_setting" jdbcType="DECIMAL"/>
             <result property="enable" column="enable" jdbcType="TINYINT"/>
@@ -16,7 +17,7 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-        id,name,title,
+        id,name,title,icon_file_id,
         service_charge_type,service_charge_setting,
         enable,create_time,modify_time
     </sql>

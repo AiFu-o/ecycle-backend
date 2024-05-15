@@ -33,9 +33,6 @@ public class CommodityController {
     private CommodityService commodityService;
 
     @Resource
-    private CommodityCategoryService categoryService;
-
-    @Resource
     private CommodityViewRecordService commodityViewRecordService;
 
     @GetMapping("/load/{id}")
@@ -102,12 +99,6 @@ public class CommodityController {
         return RestResponse.success(result);
     }
 
-    @GetMapping("/queryCommodityCategoryAll")
-    public RestResponse<List<CommodityCategory>> queryCommodityCategoryAll() {
-        QueryChainWrapper<CommodityCategory> query = categoryService.query();
-        return RestResponse.success(query.list());
-    }
-
     @PostMapping("/view-record/queryAll")
     public RestResponse<PageQueryResponse> viewRecordQueryAll(@RequestBody PageQueryRequest body) {
         PageQueryResponse result = commodityViewRecordService.queryAll(body);
@@ -115,7 +106,7 @@ public class CommodityController {
     }
 
     @GetMapping("/view-record/count")
-    public RestResponse<Integer> viewRecordQueryAll() {
+    public RestResponse<Integer> viewRecordCount() {
         Integer result = commodityViewRecordService.queryCount();
         return RestResponse.success(result);
     }
