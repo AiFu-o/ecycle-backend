@@ -8,10 +8,10 @@ import java.util.UUID;
 /**
  * @author wangweichen
  * @Date 2024/4/19
- * @Description 创建订单传参
+ * @Description 创建出价传参
  */
 @Data
-public class CreateOrderRequest {
+public class CreateBiddingRequest {
 
     /**
      * 商品 id

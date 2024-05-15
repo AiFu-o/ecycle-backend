@@ -1,10 +1,10 @@
 package com.ecycle.commodity.service;
 
-import com.ecycle.commodity.model.BiddingOrder;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.ecycle.commodity.web.info.CreateOrderRequest;
-import com.ecycle.common.context.RestResponse;
-import org.springframework.transaction.annotation.Transactional;
+import com.ecycle.commodity.model.BiddingRecord;
+import com.ecycle.commodity.web.info.BiddingRecordQueryRequest;
+import com.ecycle.commodity.web.info.CreateBiddingRequest;
+import com.ecycle.common.context.PageQueryResponse;
 
 import java.math.BigDecimal;
 import java.util.UUID;
@@ -14,14 +14,14 @@ import java.util.UUID;
 * @description 针对表【ecycle_order(订单)】的数据库操作Service
 * @createDate 2024-04-19 09:05:55
 */
-public interface BiddingOrderService extends IService<BiddingOrder> {
+public interface BiddingRecordService extends IService<BiddingRecord> {
 
     /**
-     * 创建出价订单
+     * 创建出价
      * @param request 出价参数
      * @return 订单 id
      */
-    UUID createOrder(CreateOrderRequest request);
+    UUID create(CreateBiddingRequest request);
 
     /**
      * 修改出价
@@ -30,13 +30,6 @@ public interface BiddingOrderService extends IService<BiddingOrder> {
      * @return 是否修改成功
      */
     Boolean updateCommodityAmount(UUID orderId, BigDecimal commodityAmount);
-
-    /**
-     * 服务费预付单
-     * @param orderId 竞价订单 id
-     * @return 生成预付单需的参数
-     */
-    RestResponse<String> payServiceCharge(UUID orderId);
 
     /**
      * 卖家确认出价 出售
@@ -53,8 +46,9 @@ public interface BiddingOrderService extends IService<BiddingOrder> {
     Boolean close(UUID orderId);
 
     /**
-     * 服务费支付成功
-     * @param orderId 订单 id
+     * 分页查询我的出价
+     * @param biddingRecordQueryRequest 查询参数
+     * @return 我的出价列表
      */
-    void serviceChargeSuccess(UUID orderId);
+    PageQueryResponse queryMineAll(BiddingRecordQueryRequest biddingRecordQueryRequest);
 }

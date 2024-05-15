@@ -12,13 +12,13 @@ import java.util.UUID;
  * @Description TODO
  */
 @FeignClient(value = "ecycle-commodity", configuration = HeaderInterceptor.class)
-public interface BiddingFeign {
+public interface OrderFeign {
 
     /**
      * 服务费支付成功
      * @param orderId 订单 id
      */
-    @PutMapping("/bidding/service-charge/success-callBack/{orderId}")
+    @PutMapping("/order/service-charge/success-callBack/{orderId}")
     void serviceChargeSuccessCallBack(@PathVariable(name = "orderId") UUID orderId);
 
 }

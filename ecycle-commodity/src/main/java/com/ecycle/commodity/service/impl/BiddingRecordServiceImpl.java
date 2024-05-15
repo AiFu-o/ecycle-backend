@@ -1,21 +1,26 @@
 package com.ecycle.commodity.service.impl;
 
+import com.baomidou.mybatisplus.extension.conditions.query.QueryChainWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.ecycle.commodity.constant.BiddingOrderStatus;
+import com.ecycle.commodity.constant.BiddingStatus;
 import com.ecycle.commodity.constant.ServiceChargeType;
 import com.ecycle.commodity.exception.BiddingOrderException;
 import com.ecycle.commodity.exception.CommodityException;
-import com.ecycle.commodity.mapper.BiddingOrderMapper;
-import com.ecycle.commodity.model.BiddingOrder;
+import com.ecycle.commodity.mapper.BiddingRecordMapper;
+import com.ecycle.commodity.model.BiddingRecord;
 import com.ecycle.commodity.model.Commodity;
 import com.ecycle.commodity.model.CommodityCategory;
-import com.ecycle.commodity.service.BiddingOrderService;
+import com.ecycle.commodity.service.BiddingRecordService;
 import com.ecycle.commodity.service.CommodityCategoryService;
 import com.ecycle.commodity.service.CommodityService;
+import com.ecycle.commodity.service.OrderService;
 import com.ecycle.commodity.service.feign.PayFeignService;
-import com.ecycle.commodity.web.info.CreateOrderRequest;
+import com.ecycle.commodity.web.info.BiddingRecordQueryRequest;
+import com.ecycle.commodity.web.info.CreateBiddingRequest;
+import com.ecycle.common.context.PageQueryResponse;
 import com.ecycle.common.context.RestResponse;
 import com.ecycle.common.utils.CurrentUserInfoUtils;
+import com.ecycle.common.utils.MybatisUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,8 +39,8 @@ import java.util.UUID;
  * @createDate 2024-04-19 08:42:25
  */
 @Service
-public class BiddingOrderServiceImpl extends ServiceImpl<BiddingOrderMapper, BiddingOrder>
-        implements BiddingOrderService {
+public class BiddingRecordServiceImpl extends ServiceImpl<BiddingRecordMapper, BiddingRecord>
+        implements BiddingRecordService {
 
     @Resource
     private CommodityService commodityService;
@@ -44,11 +49,11 @@ public class BiddingOrderServiceImpl extends ServiceImpl<BiddingOrderMapper, Bid
     private CommodityCategoryService categoryService;
 
     @Resource
-    private PayFeignService payFeignService;
+    private OrderService orderService;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public UUID createOrder(CreateOrderRequest request) {
+    public UUID create(CreateBiddingRequest request) {
         if (null == request.getCommodityId()) {
             throw new BiddingOrderException("商品不能为空");
         }
@@ -69,22 +74,22 @@ public class BiddingOrderServiceImpl extends ServiceImpl<BiddingOrderMapper, Bid
         BigDecimal commodityAmount = request.getCommodityAmount();
 
         BigDecimal serviceCharge = mathServiceCharge(commodity, commodityAmount);
-        BiddingOrder biddingOrder = new BiddingOrder();
+        BiddingRecord biddingRecord = new BiddingRecord();
 
         String billCode = generateBillCode();
-        biddingOrder.setId(UUID.randomUUID());
-        biddingOrder.setBillCode(billCode);
-        biddingOrder.setStatus(BiddingOrderStatus.BIDDING);
-        biddingOrder.setCreatorId(userId);
-        biddingOrder.setCommodityAmount(commodityAmount);
-        biddingOrder.setServiceChargeReceivable(serviceCharge);
-        biddingOrder.setCommodityId(commodity.getId());
-        save(biddingOrder);
+        biddingRecord.setId(UUID.randomUUID());
+        biddingRecord.setBillCode(billCode);
+        biddingRecord.setStatus(BiddingStatus.BIDDING);
+        biddingRecord.setCreatorId(userId);
+        biddingRecord.setCommodityAmount(commodityAmount);
+        biddingRecord.setServiceCharge(serviceCharge);
+        biddingRecord.setCommodityId(commodity.getId());
+        save(biddingRecord);
 
         // 更新最新价格
         commodity.setAmount(commodityAmount);
         commodityService.updateById(commodity);
-        return biddingOrder.getId();
+        return biddingRecord.getId();
     }
 
     @Override
@@ -94,22 +99,22 @@ public class BiddingOrderServiceImpl extends ServiceImpl<BiddingOrderMapper, Bid
             throw new BiddingOrderException("出价不能为空");
         }
 
-        BiddingOrder biddingOrder = getById(orderId);
+        BiddingRecord biddingRecord = getById(orderId);
         UUID userId = CurrentUserInfoUtils.getCurrentUserId();
         if (null == userId) {
             throw new BiddingOrderException("用户未登录");
         }
-        if (!biddingOrder.getCreatorId().equals(userId)) {
+        if (!biddingRecord.getCreatorId().equals(userId)) {
             throw new BiddingOrderException("只能修改自己的出价");
         }
-        Commodity commodity = commodityService.getById(biddingOrder.getCommodityId());
+        Commodity commodity = commodityService.getById(biddingRecord.getCommodityId());
 
         BigDecimal serviceCharge = mathServiceCharge(commodity, commodityAmount);
 
-        biddingOrder.setCommodityAmount(commodityAmount);
-        biddingOrder.setServiceChargeReceivable(serviceCharge);
+        biddingRecord.setCommodityAmount(commodityAmount);
+        biddingRecord.setServiceCharge(serviceCharge);
 
-        updateById(biddingOrder);
+        updateById(biddingRecord);
 
         // 更新最新价格
         commodity.setAmount(commodityAmount);
@@ -118,70 +123,55 @@ public class BiddingOrderServiceImpl extends ServiceImpl<BiddingOrderMapper, Bid
     }
 
     @Override
-    public RestResponse<String> payServiceCharge(UUID orderId) {
-        UUID userId = CurrentUserInfoUtils.getCurrentUserId();
-        if (null == userId) {
-            throw new BiddingOrderException("订单异常");
-        }
-        BiddingOrder biddingOrder = getById(orderId);
-        if (!userId.equals(biddingOrder.getCreatorId())) {
-            throw new BiddingOrderException("无法支付其他人的订单");
-        }
-        BiddingOrderStatus biddingOrderStatus = biddingOrder.getStatus();
-        if (!(biddingOrderStatus == BiddingOrderStatus.PENDING_PAYMENT ||
-                biddingOrderStatus == BiddingOrderStatus.PAYMENT_ERROR)) {
-            throw new BiddingOrderException("竞价状态异常");
-        }
-        BigDecimal receivable = biddingOrder.getServiceChargeReceivable();
-        Integer amount = receivable.multiply(new BigDecimal("100")).intValue();
-        return payFeignService.serviceChargePrePay(orderId, amount);
-    }
-
-    @Override
     @Transactional(rollbackFor = Exception.class)
     public Boolean sell(UUID orderId) {
-        BiddingOrder biddingOrder = getById(orderId);
-        BiddingOrderStatus biddingOrderStatus = biddingOrder.getStatus();
-        if (biddingOrderStatus != BiddingOrderStatus.BIDDING) {
+        BiddingRecord biddingRecord = getById(orderId);
+        BiddingStatus biddingOrderStatus = biddingRecord.getStatus();
+        if (biddingOrderStatus != BiddingStatus.BIDDING) {
             throw new BiddingOrderException("竞价状态异常");
         }
-        biddingOrder.setConfirmTime(new Date());
-        biddingOrder.setStatus(BiddingOrderStatus.PENDING_PAYMENT);
-        updateById(biddingOrder);
+        biddingRecord.setStatus(BiddingStatus.SUCCESS);
+        updateById(biddingRecord);
 
-        List<BiddingOrder> otherBindings = baseMapper.getOtherBiddingByCommodityId(biddingOrder.getCommodityId(), orderId);
-        for (BiddingOrder otherBidding : otherBindings) {
-            if (otherBidding.getStatus() != BiddingOrderStatus.BIDDING) {
+        List<BiddingRecord> otherBindings = baseMapper.getOtherBiddingByCommodityId(biddingRecord.getCommodityId(), orderId);
+        for (BiddingRecord otherBidding : otherBindings) {
+            if (otherBidding.getStatus() != BiddingStatus.BIDDING) {
                 throw new BiddingOrderException("订单状态异常");
             }
             // 其他的竞价设置为已关闭
             close(otherBidding);
         }
+        orderService.generateOrder(biddingRecord);
         return true;
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Boolean close(UUID orderId) {
-        BiddingOrder order = getById(orderId);
-        if (order.getStatus() == BiddingOrderStatus.PENDING_VISIT ||
-                order.getStatus() == BiddingOrderStatus.VISITED) {
-            throw new BiddingOrderException("请联系管理员进行退款");
-        }
+        BiddingRecord order = getById(orderId);
         close(order);
         return true;
     }
 
-    private void close(BiddingOrder order) {
-        if (order.getStatus() == BiddingOrderStatus.PENDING_REVIEW ||
-                order.getStatus() == BiddingOrderStatus.REFUNDED ||
-                order.getStatus() == BiddingOrderStatus.COMPLETED) {
-            throw new BiddingOrderException("订单已完成");
+    @Override
+    public PageQueryResponse queryMineAll(BiddingRecordQueryRequest biddingRecordQueryRequest) {
+        QueryChainWrapper<BiddingRecord> queryChainWrapper = super.query();
+
+        queryChainWrapper.orderByAsc("create_time");
+
+        MybatisUtils<BiddingRecord> mybatisUtils = new MybatisUtils<>();
+
+        return mybatisUtils.pageQuery(queryChainWrapper, biddingRecordQueryRequest);
+    }
+
+    private void close(BiddingRecord order) {
+        if (order.getStatus() == BiddingStatus.SUCCESS) {
+            throw new BiddingOrderException("出价已经被确认, 请联系管理员");
         }
-        if(order.getStatus() == BiddingOrderStatus.CLOSED){
-            throw new BiddingOrderException("订单已关闭，不可重复关闭");
+        if (order.getStatus() == BiddingStatus.CLOSED) {
+            return;
         }
-        order.setStatus(BiddingOrderStatus.CLOSED);
+        order.setStatus(BiddingStatus.CLOSED);
         updateById(order);
 
         // 更新最新出价
@@ -189,15 +179,6 @@ public class BiddingOrderServiceImpl extends ServiceImpl<BiddingOrderMapper, Bid
         Commodity commodity = commodityService.getById(order.getCommodityId());
         commodity.setAmount(amount);
         commodityService.updateById(commodity);
-    }
-
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public void serviceChargeSuccess(UUID orderId) {
-        BiddingOrder biddingOrder = getById(orderId);
-        biddingOrder.setServiceChargeReceived(biddingOrder.getServiceChargeReceivable());
-        biddingOrder.setStatus(BiddingOrderStatus.PENDING_VISIT);
-        updateById(biddingOrder);
     }
 
     private String generateBillCode() {
@@ -236,12 +217,12 @@ public class BiddingOrderServiceImpl extends ServiceImpl<BiddingOrderMapper, Bid
         }
     }
 
-    public BiddingOrder getById(UUID id) {
-        BiddingOrder biddingOrder = super.getById(id);
-        if (null == biddingOrder) {
+    public BiddingRecord getById(UUID id) {
+        BiddingRecord biddingRecord = super.getById(id);
+        if (null == biddingRecord) {
             throw new BiddingOrderException("找不到订单");
         }
-        return biddingOrder;
+        return biddingRecord;
     }
 
 }

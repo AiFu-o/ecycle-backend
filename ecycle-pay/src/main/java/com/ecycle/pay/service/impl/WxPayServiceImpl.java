@@ -13,7 +13,7 @@ import com.ecycle.pay.exception.WxPayStatusException;
 import com.ecycle.pay.model.PayOrder;
 import com.ecycle.pay.service.PayOrderService;
 import com.ecycle.pay.service.WxPayService;
-import com.ecycle.pay.service.feign.BiddingFeign;
+import com.ecycle.pay.service.feign.OrderFeign;
 import com.ecycle.pay.web.info.WxCallBackResponse;
 import com.wechat.pay.java.core.Config;
 import com.wechat.pay.java.core.RSAAutoCertificateConfig;
@@ -27,13 +27,10 @@ import com.wechat.pay.java.service.payments.jsapi.model.*;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -47,7 +44,7 @@ import java.util.*;
 public class WxPayServiceImpl implements WxPayService {
 
     @Resource
-    private BiddingFeign biddingFeign;
+    private OrderFeign orderFeign;
 
     @Resource
     private WxConfiguration wxConfiguration;
@@ -145,7 +142,7 @@ public class WxPayServiceImpl implements WxPayService {
         updatePayOrder(transaction, payOrder);
 
         // 回调商品服务
-        biddingFeign.serviceChargeSuccessCallBack(payOrder.getOrderId());
+        orderFeign.serviceChargeSuccessCallBack(payOrder.getOrderId());
         log.info("{} 支付成功", payOrder.getBillCode());
     }
 

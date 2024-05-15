@@ -1,24 +1,24 @@
 package com.ecycle.commodity.model;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.ecycle.commodity.constant.BiddingOrderStatus;
-import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.Data;
-
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.UUID;
 
+import com.ecycle.commodity.constant.OrderStatus;
+import lombok.Data;
+
 /**
  * 订单
  * @TableName ecycle_order
  */
-@TableName(value ="ecycle_bidding_order")
+@TableName(value ="ecycle_order")
 @Data
-public class BiddingOrder implements Serializable {
+public class Order implements Serializable {
     /**
      * id
      */
@@ -29,6 +29,11 @@ public class BiddingOrder implements Serializable {
      * 订单编号
      */
     private String billCode;
+
+    /**
+     * 出价 id
+     */
+    private UUID biddingId;
 
     /**
      * 商品 id
@@ -43,7 +48,7 @@ public class BiddingOrder implements Serializable {
     /**
      * 状态
      */
-    private BiddingOrderStatus status;
+    private OrderStatus status;
 
     /**
      * 商品价格
@@ -61,24 +66,13 @@ public class BiddingOrder implements Serializable {
     private BigDecimal serviceChargeReceived;
 
     /**
-     * 出价时间
+     * 创建时间
      */
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date createTime;
-
-    /**
-     * 确定出价时间
-     */
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-    private Date confirmTime;
 
     /**
      * 服务费支付时间
      */
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date serviceChargePayTime;
-
-    @TableField(exist = false)
-    private static final long serialVersionUID = 1L;
 
 }

@@ -2,38 +2,35 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.ecycle.commodity.mapper.BiddingOrderMapper">
+<mapper namespace="com.ecycle.commodity.mapper.BiddingRecordMapper">
 
-    <resultMap id="BaseResultMap" type="com.ecycle.commodity.model.BiddingOrder">
+    <resultMap id="BaseResultMap" type="com.ecycle.commodity.model.BiddingRecord">
             <id property="id" column="id" jdbcType="VARCHAR"/>
             <result property="billCode" column="bill_code" jdbcType="VARCHAR"/>
             <result property="commodityId" column="commodity_id" jdbcType="VARCHAR"/>
             <result property="creatorId" column="creator_id" jdbcType="VARCHAR"/>
             <result property="status" column="status" jdbcType="VARCHAR"/>
             <result property="commodityAmount" column="commodity_amount" jdbcType="DECIMAL"/>
-            <result property="serviceChargeReceivable" column="service_charge_receivable" jdbcType="DECIMAL"/>
-            <result property="serviceChargeReceived" column="service_charge_received" jdbcType="DECIMAL"/>
+            <result property="serviceCharge" column="service_charge_receivable" jdbcType="DECIMAL"/>
             <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
-            <result property="confirmTime" column="confirm_time" jdbcType="TIMESTAMP"/>
-            <result property="serviceChargePayTime" column="service_charge_pay_time" jdbcType="TIMESTAMP"/>
     </resultMap>
 
     <sql id="Base_Column_List">
         id,bill_code,commodity_id,
         creator_id,status,commodity_amount,
-        service_charge_receivable,service_charge_received,create_time,
-        confirm_time,service_charge_pay_time
+        service_charge,create_time,
+        confirm_time
     </sql>
-    <select id="getOtherBiddingByCommodityId" resultType="com.ecycle.commodity.model.BiddingOrder">
+    <select id="getOtherBiddingByCommodityId" resultType="com.ecycle.commodity.model.BiddingRecord">
         SELECT *
-        FROM ecycle_bidding_order
+        FROM ecycle_bidding_record
         WHERE status != 'CLOSED'
           AND id != #{orderId}
           AND commodity_id = #{commodityId};
     </select>
     <select id="getHighestAmount" resultType="java.math.BigDecimal">
         SELECT IFNULL(MAX(commodity_amount), 0)
-        FROM ecycle_bidding_order
+        FROM ecycle_bidding_record
         WHERE status != 'CLOSED'
           AND commodity_id = #{commodityId};
     </select>

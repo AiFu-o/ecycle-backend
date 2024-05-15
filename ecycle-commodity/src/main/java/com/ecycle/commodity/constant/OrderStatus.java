@@ -9,20 +9,16 @@ import lombok.Getter;
  * @Description 订单状态
  */
 @Getter
-public enum BiddingOrderStatus {
+public enum OrderStatus {
+
 
     /**
-     * 竞价中
-     */
-    BIDDING("BIDDING","竞价中"),
-
-    /**
-     * 待支付
+     * 服务费待支付
      */
     PENDING_PAYMENT("PENDING_PAYMENT","待支付"),
 
     /**
-     * 支付失败
+     * 服务费支付失败
      */
     PAYMENT_ERROR("PAYMENT_ERROR","支付失败"),
 
@@ -61,7 +57,7 @@ public enum BiddingOrderStatus {
 
     private final String name;
 
-    BiddingOrderStatus(String value, String name) {
+    OrderStatus(String value, String name) {
         this.value = value;
         this.name = name;
     }
