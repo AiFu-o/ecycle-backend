@@ -34,4 +34,14 @@
     <update id="saveCommoditiesPageViews">
         UPDATE ecycle_commodity SET page_views = #{pageViews} WHERE id = #{id};
     </update>
+    <select id="pageQueryAll" resultType="com.ecycle.commodity.model.Commodity">
+        SELECT a.*
+        FROM ecycle_commodity a
+        LEFT JOIN ecycle_commodity_category b ON a.category_id = b.id
+        <if test="params.input != null and params.input != ''">
+            AND ( a.name LIKE CONCAT('%',#{params.input},'')
+            OR b.name LIKE CONCAT('%',#{params.input},''))
+        </if>
+        ORDER BY a.modify_time;
+    </select>
 </mapper>

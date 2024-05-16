@@ -30,6 +30,7 @@
         <module>ecycle-common</module>
         <module>ecycle-storage</module>
         <module>ecycle-pay</module>
+        <module>ecycle-message</module>
     </modules>
 
     <repositories>

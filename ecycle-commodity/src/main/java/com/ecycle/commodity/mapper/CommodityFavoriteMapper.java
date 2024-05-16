@@ -3,9 +3,7 @@ package com.ecycle.commodity.mapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.ecycle.commodity.model.CommodityFavorite;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.ecycle.commodity.model.CommodityViewRecord;
 import com.ecycle.commodity.web.info.FavoriteRecordQueryResponse;
-import com.ecycle.commodity.web.info.ViewRecordQueryResponse;
 
 import java.util.UUID;
 

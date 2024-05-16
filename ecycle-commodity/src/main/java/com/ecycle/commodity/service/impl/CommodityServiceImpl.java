@@ -1,13 +1,15 @@
 package com.ecycle.commodity.service.impl;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.conditions.query.QueryChainWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ecycle.commodity.constant.CommodityStatus;
 import com.ecycle.commodity.exception.CommodityException;
+import com.ecycle.commodity.mapper.CommodityMapper;
 import com.ecycle.commodity.model.Commodity;
 import com.ecycle.commodity.service.CommodityCategoryService;
 import com.ecycle.commodity.service.CommodityService;
-import com.ecycle.commodity.mapper.CommodityMapper;
 import com.ecycle.commodity.service.CommodityViewRecordService;
 import com.ecycle.commodity.web.info.CommodityQueryRequest;
 import com.ecycle.common.context.PageQueryResponse;
@@ -44,18 +46,17 @@ public class CommodityServiceImpl extends ServiceImpl<CommodityMapper, Commodity
 
     @Override
     public PageQueryResponse pageQueryAll(CommodityQueryRequest body) {
-        QueryChainWrapper<Commodity> queryChainWrapper = super.query();
-        if (StringUtils.isNotEmpty(body.getName())) {
-            queryChainWrapper.like("name", "%" + body.getName() + "%");
-        }
-        queryChainWrapper.orderByAsc("create_time");
+        PageQueryResponse result = new PageQueryResponse();
+        IPage<Commodity> query = new Page<>(body.getPageIndex(), body.getPageSize());
+        query = baseMapper.pageQueryAll(query, body);
+        result.setTotal(query.getTotal());
 
-        MybatisUtils<Commodity> mybatisUtils = new MybatisUtils<>();
-        PageQueryResponse response = mybatisUtils.pageQuery(queryChainWrapper, body);
+        List<Commodity> commodities = query.getRecords();
 
         // 因为浏览量是可能存在 redis 里的所以从 redis 取一下
-        putQueryPageViews((List<Commodity>) response.getDataList());
-        return response;
+        putQueryPageViews(commodities);
+        result.setDataList(commodities);
+        return result;
     }
 
     @Override
@@ -123,8 +124,8 @@ public class CommodityServiceImpl extends ServiceImpl<CommodityMapper, Commodity
     @Override
     public PageQueryResponse pageQueryMineAll(CommodityQueryRequest body) {
         QueryChainWrapper<Commodity> queryChainWrapper = super.query();
-        if (StringUtils.isNotEmpty(body.getName())) {
-            queryChainWrapper.like("name", "%" + body.getName() + "%");
+        if (StringUtils.isNotEmpty(body.getInput())) {
+            queryChainWrapper.like("name", "%" + body.getInput() + "%");
         }
         UUID userId = CurrentUserInfoUtils.getCurrentUserId();
         if (null == userId) {
@@ -186,7 +187,7 @@ public class CommodityServiceImpl extends ServiceImpl<CommodityMapper, Commodity
         for (Commodity commodity : commodities) {
             String key = commodity.getId().toString() + PAGE_VIEWS_REDIS_KEY;
             Object redisPageViews = redisTemplate.opsForValue().get(key);
-            if(null != redisPageViews){
+            if (null != redisPageViews) {
                 commodity.setPageViews((Integer) redisPageViews);
             }
         }

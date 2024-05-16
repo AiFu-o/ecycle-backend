@@ -1,8 +1,6 @@
 package com.ecycle.commodity.constant;
 
 import com.baomidou.mybatisplus.annotation.EnumValue;
-import com.baomidou.mybatisplus.annotation.IEnum;
-import lombok.Data;
 import lombok.Getter;
 
 /**

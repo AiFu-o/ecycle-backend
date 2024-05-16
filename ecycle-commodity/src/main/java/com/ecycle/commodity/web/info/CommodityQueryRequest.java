@@ -12,5 +12,5 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 @Data
 public class CommodityQueryRequest extends PageQueryRequest {
-    private String name;
+    private String input;
 }

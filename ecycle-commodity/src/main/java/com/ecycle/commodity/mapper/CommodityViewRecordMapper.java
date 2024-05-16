@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.ecycle.commodity.model.CommodityViewRecord;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.ecycle.commodity.web.info.ViewRecordQueryResponse;
-import com.ecycle.common.context.PageQueryRequest;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.UUID;

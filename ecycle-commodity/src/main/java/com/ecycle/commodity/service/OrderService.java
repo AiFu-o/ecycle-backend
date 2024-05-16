@@ -1,12 +1,11 @@
 package com.ecycle.commodity.service;
 
 import com.ecycle.commodity.model.BiddingRecord;
+import com.ecycle.commodity.web.info.OrderQueryRequest;
 import com.ecycle.commodity.model.Order;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.ecycle.commodity.web.info.OrderQueryRequest;
 import com.ecycle.common.context.PageQueryResponse;
 import com.ecycle.common.context.RestResponse;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 

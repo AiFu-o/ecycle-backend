@@ -1,12 +1,9 @@
 package com.ecycle.commodity.service;
 
-import com.ecycle.commodity.model.Commodity;
 import com.ecycle.commodity.model.CommodityViewRecord;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.ecycle.common.context.PageQueryRequest;
 import com.ecycle.common.context.PageQueryResponse;
-import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 

@@ -1,7 +1,9 @@
 package com.ecycle.commodity.mapper;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.ecycle.commodity.model.Commodity;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.ecycle.commodity.web.info.CommodityQueryRequest;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.UUID;
@@ -21,6 +23,14 @@ public interface CommodityMapper extends BaseMapper<Commodity> {
      */
     void saveCommoditiesPageViews(@Param("id") UUID id,
                                   @Param("pageViews") Integer pageViews);
+
+    /**
+     * 分页查询商品列表
+     * @param query 分页参数
+     * @param body 查询参数
+     * @return 商品列表
+     */
+    IPage<Commodity> pageQueryAll(IPage<Commodity> query, CommodityQueryRequest params);
 }
 
 

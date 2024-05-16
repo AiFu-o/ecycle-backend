@@ -1,10 +1,7 @@
 package com.ecycle.commodity.web;
 
-import com.baomidou.mybatisplus.extension.conditions.query.QueryChainWrapper;
 import com.ecycle.commodity.exception.CommodityException;
 import com.ecycle.commodity.model.Commodity;
-import com.ecycle.commodity.model.CommodityCategory;
-import com.ecycle.commodity.service.CommodityCategoryService;
 import com.ecycle.commodity.service.CommodityService;
 import com.ecycle.commodity.service.CommodityViewRecordService;
 import com.ecycle.commodity.web.info.CommodityQueryRequest;
@@ -12,11 +9,9 @@ import com.ecycle.common.context.PageQueryRequest;
 import com.ecycle.common.context.PageQueryResponse;
 import com.ecycle.common.context.RestResponse;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import java.util.List;
 import java.util.UUID;
 
 /**

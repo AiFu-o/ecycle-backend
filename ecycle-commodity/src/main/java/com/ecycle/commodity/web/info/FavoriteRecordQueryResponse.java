@@ -13,6 +13,6 @@ import java.util.Date;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class FavoriteRecordQueryResponse extends Commodity{
+public class FavoriteRecordQueryResponse extends Commodity {
     private Date createTime;
 }

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ecycle.message.mapper.NotificationMapper">
+
+    <resultMap id="BaseResultMap" type="com.ecycle.message.model.Notification">
+            <id property="id" column="id" jdbcType="VARCHAR"/>
+            <result property="content" column="content" jdbcType="VARCHAR"/>
+            <result property="receiverId" column="receiver_id" jdbcType="VARCHAR"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="del" column="del" jdbcType="TINYINT"/>
+            <result property="read" column="read" jdbcType="TINYINT"/>
+            <result property="coverId" column="cover_id" jdbcType="VARCHAR"/>
+            <result property="linkId" column="link_id" jdbcType="VARCHAR"/>
+            <result property="type" column="type" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,content,receiver_id,
+        link_id,cover_id,type,
+        create_time,del,read
+    </sql>
+    <update id="delReadMessage">
+        UPDATE ecycle_notification SET del = true WHERE `read` = true AND receiver_id = #{userId};
+    </update>
+</mapper>

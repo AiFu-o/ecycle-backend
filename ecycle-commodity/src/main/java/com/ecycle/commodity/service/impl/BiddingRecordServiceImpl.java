@@ -10,15 +10,11 @@ import com.ecycle.commodity.mapper.BiddingRecordMapper;
 import com.ecycle.commodity.model.BiddingRecord;
 import com.ecycle.commodity.model.Commodity;
 import com.ecycle.commodity.model.CommodityCategory;
-import com.ecycle.commodity.service.BiddingRecordService;
-import com.ecycle.commodity.service.CommodityCategoryService;
-import com.ecycle.commodity.service.CommodityService;
-import com.ecycle.commodity.service.OrderService;
-import com.ecycle.commodity.service.feign.PayFeignService;
+import com.ecycle.commodity.service.*;
+import com.ecycle.commodity.service.feign.NotificationFeignService;
 import com.ecycle.commodity.web.info.BiddingRecordQueryRequest;
 import com.ecycle.commodity.web.info.CreateBiddingRequest;
 import com.ecycle.common.context.PageQueryResponse;
-import com.ecycle.common.context.RestResponse;
 import com.ecycle.common.utils.CurrentUserInfoUtils;
 import com.ecycle.common.utils.MybatisUtils;
 import org.springframework.stereotype.Service;
@@ -28,7 +24,6 @@ import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.Instant;
-import java.util.Date;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
@@ -50,6 +45,9 @@ public class BiddingRecordServiceImpl extends ServiceImpl<BiddingRecordMapper, B
 
     @Resource
     private OrderService orderService;
+
+    @Resource
+    private NotificationService notificationService;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -85,6 +83,9 @@ public class BiddingRecordServiceImpl extends ServiceImpl<BiddingRecordMapper, B
         biddingRecord.setServiceCharge(serviceCharge);
         biddingRecord.setCommodityId(commodity.getId());
         save(biddingRecord);
+
+        // 发送消息提醒
+        notificationService.quoteMessage(commodity.getId(), commodity.getCreatorId());
 
         // 更新最新价格
         commodity.setAmount(commodityAmount);

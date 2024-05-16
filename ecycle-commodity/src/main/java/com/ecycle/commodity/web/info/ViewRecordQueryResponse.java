@@ -13,6 +13,6 @@ import java.util.Date;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class ViewRecordQueryResponse extends Commodity{
+public class ViewRecordQueryResponse extends Commodity {
     private Date viewTime;
 }

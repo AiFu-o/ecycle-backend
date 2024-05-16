@@ -17,7 +17,7 @@
             <result property="address" column="address" jdbcType="VARCHAR"/>
             <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
             <result property="modifyTime" column="modify_time" jdbcType="TIMESTAMP"/>
-            <result property="userId" column="user_id" jdbcType="VARCHAR"/>
+            <result property="creatorId" column="creator_id" jdbcType="VARCHAR"/>
             <result property="defaultAddress" column="default_address" jdbcType="TINYINT"/>
     </resultMap>
 
@@ -26,6 +26,12 @@
         province,province_code,district,
         district_code,city,city_code,
         address,create_time,modify_time,
-        user_id,default_address
+        creator_id,default_address
     </sql>
+    <update id="cancelDefaultAddress">
+        UPDATE ecycle_user_address
+        SET default_address = false
+        WHERE default_address = true
+        AND creator_id = #{userId}
+    </update>
 </mapper>
