@@ -50,10 +50,11 @@ public class UserAddressServiceImpl extends ServiceImpl<UserAddressMapper, UserA
         history.setPhone(address.getPhone());
         history.setAddress(address.getAddress());
         history.setProvince(address.getProvince());
-        history.setProvinceCode(address.getProvinceCode());
         history.setCity(address.getCity());
-        history.setCityCode(address.getCityCode());
         history.setDistrict(address.getDistrict());
+
+        history.setProvinceCode(address.getProvinceCode());
+        history.setCityCode(address.getCityCode());
         history.setDistrictCode(address.getDistrictCode());
         if(null != address.getDefaultAddress()){
             history.setDefaultAddress(address.getDefaultAddress());
