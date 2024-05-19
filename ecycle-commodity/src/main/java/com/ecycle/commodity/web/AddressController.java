@@ -40,6 +40,16 @@ public class AddressController {
         }
     }
 
+    @GetMapping("/load/{addressId}")
+    public RestResponse<UserAddress> load(@PathVariable(name = "addressId") UUID addressId) {
+        try {
+            return RestResponse.success(userAddressService.getById(addressId));
+        } catch (Exception e) {
+            log.error("未知异常", e);
+            return RestResponse.validfail("未知异常");
+        }
+    }
+
     @PostMapping("/save")
     public RestResponse<UUID> save(@RequestBody UserAddress request) {
         try {

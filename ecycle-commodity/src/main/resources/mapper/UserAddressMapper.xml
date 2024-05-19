@@ -14,6 +14,8 @@
             <result property="districtCode" column="district_code" jdbcType="VARCHAR"/>
             <result property="city" column="city" jdbcType="VARCHAR"/>
             <result property="cityCode" column="city_code" jdbcType="VARCHAR"/>
+            <result property="stress" column="stress" jdbcType="VARCHAR"/>
+            <result property="stressCode" column="stress_code" jdbcType="VARCHAR"/>
             <result property="address" column="address" jdbcType="VARCHAR"/>
             <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
             <result property="modifyTime" column="modify_time" jdbcType="TIMESTAMP"/>
@@ -26,7 +28,8 @@
         province,province_code,district,
         district_code,city,city_code,
         address,create_time,modify_time,
-        creator_id,default_address
+        creator_id,default_address,
+        stress,stress_code
     </sql>
     <update id="cancelDefaultAddress">
         UPDATE ecycle_user_address

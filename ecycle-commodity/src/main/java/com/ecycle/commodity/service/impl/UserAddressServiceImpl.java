@@ -52,10 +52,12 @@ public class UserAddressServiceImpl extends ServiceImpl<UserAddressMapper, UserA
         history.setProvince(address.getProvince());
         history.setCity(address.getCity());
         history.setDistrict(address.getDistrict());
+        history.setStress(address.getStress());
 
         history.setProvinceCode(address.getProvinceCode());
         history.setCityCode(address.getCityCode());
         history.setDistrictCode(address.getDistrictCode());
+        history.setStressCode(address.getStressCode());
         if(null != address.getDefaultAddress()){
             history.setDefaultAddress(address.getDefaultAddress());
         }
@@ -113,7 +115,10 @@ public class UserAddressServiceImpl extends ServiceImpl<UserAddressMapper, UserA
                 StringUtils.isEmpty(address.getDistrictCode())) {
             throw new AddressException("区不能为空");
         }
-
+        if (StringUtils.isEmpty(address.getStress()) ||
+                StringUtils.isEmpty(address.getStressCode())) {
+            throw new AddressException("街道不能为空");
+        }
     }
 }
 

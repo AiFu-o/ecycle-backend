@@ -63,6 +63,16 @@ public class UserAddress implements Serializable {
     private String cityCode;
 
     /**
+     * 街道
+     */
+    private String stress;
+
+    /**
+     * 街道编号
+     */
+    private String stressCode;
+
+    /**
      * 详细地址
      */
     private String address;
