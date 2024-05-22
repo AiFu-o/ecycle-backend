@@ -27,10 +27,10 @@ public interface CommodityMapper extends BaseMapper<Commodity> {
     /**
      * 分页查询商品列表
      * @param query 分页参数
-     * @param body 查询参数
+     * @param params 查询参数
      * @return 商品列表
      */
-    IPage<Commodity> pageQueryAll(IPage<Commodity> query, CommodityQueryRequest params);
+    IPage<Commodity> pageQueryAll(IPage<Commodity> query, @Param("params") CommodityQueryRequest params);
 }
 
 

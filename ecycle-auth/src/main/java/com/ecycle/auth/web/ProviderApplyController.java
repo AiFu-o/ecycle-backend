@@ -60,7 +60,7 @@ public class ProviderApplyController {
     public RestResponse<UUID> update(@RequestBody ProviderApply providerApply) {
         Assert.notNull(providerApply, "申请单不能为空");
         try {
-            boolean isSave = providerApplyService.save(providerApply);
+            boolean isSave = providerApplyService.edit(providerApply);
             if (!isSave) {
                 return RestResponse.validfail("保存失败");
             }
@@ -106,11 +106,10 @@ public class ProviderApplyController {
         }
     }
 
-    @PostMapping("/pageQueryMineAll")
-    public RestResponse<PageQueryResponse> pageQueryMineAll(@RequestBody ProviderApplyQueryRequest body) {
+    @GetMapping("/loadMine")
+    public RestResponse<ProviderApply> loadMine() {
         try {
-            PageQueryResponse result = providerApplyService.pageQueryMineAll(body);
-            return RestResponse.success(result);
+            return RestResponse.success(providerApplyService.loadMine());
         } catch (ProviderApplyException e) {
             e.printStackTrace();
             return RestResponse.validfail(e.getMessage());

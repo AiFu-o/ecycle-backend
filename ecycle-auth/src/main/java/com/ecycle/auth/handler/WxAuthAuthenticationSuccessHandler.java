@@ -43,6 +43,7 @@ public class WxAuthAuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         result.put(SessionKeyConstant.USER_ID, userInfo.getUserId());
         result.put(SessionKeyConstant.TELEPHONE, userInfo.getTelephone());
         result.put(SessionKeyConstant.OPEN_ID, userInfo.getOpenId());
+        result.put("roles", userInfo.getRoles());
         result.put("nickName", user.getNickName());
         result.put("profile", user.getProfile());
 

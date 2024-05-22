@@ -122,6 +122,7 @@ public class ProviderApplyServiceImpl extends ServiceImpl<ProviderApplyMapper, P
     @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean edit(ProviderApply apply) {
+        validateSaveData(apply);
         if (null == apply.getId()) {
             throw new ProviderApplyException("id不能为空");
         }
@@ -132,8 +133,9 @@ public class ProviderApplyServiceImpl extends ServiceImpl<ProviderApplyMapper, P
         if (null == historyApply.getStatus() || historyApply.getStatus() != ProviderApplyStatus.PENDING) {
             throw new ProviderApplyException("申请单状态异常");
         }
-        apply.setStatus(ProviderApplyStatus.PENDING);
-        validateSaveData(apply);
+        historyApply.setName(apply.getName());
+        historyApply.setIdCard(apply.getIdCard());
+        historyApply.setTelephone(apply.getTelephone());
         return updateById(historyApply);
     }
 
@@ -150,23 +152,17 @@ public class ProviderApplyServiceImpl extends ServiceImpl<ProviderApplyMapper, P
     }
 
     @Override
-    public PageQueryResponse pageQueryMineAll(ProviderApplyQueryRequest body) {
+    public ProviderApply loadMine() {
         UUID userId;
         try {
             userId = CurrentUserInfoUtils.getCurrentUserId();
         } catch (Exception e) {
             throw new ProviderApplyException("找不到小程序用户", e);
         }
-        QueryChainWrapper<ProviderApply> queryChainWrapper = super.query();
-        queryChainWrapper.eq("user_id", userId.toString());
-        if(StringUtils.isNotEmpty(body.getName())){
-            queryChainWrapper.like("name", "%" + body.getName() + "%");
-        }
-        queryChainWrapper.orderByAsc("create_time");
 
-        MybatisUtils<ProviderApply> mybatisUtils = new MybatisUtils<>();
-        return mybatisUtils.pageQuery(queryChainWrapper, body);
+        return baseMapper.loadMine(userId);
     }
+
 }
 
 

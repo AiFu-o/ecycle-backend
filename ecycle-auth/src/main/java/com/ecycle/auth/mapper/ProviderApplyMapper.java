@@ -2,6 +2,9 @@ package com.ecycle.auth.mapper;
 
 import com.ecycle.auth.model.ProviderApply;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.UUID;
 
 /**
 * @author wangweichen
@@ -11,6 +14,12 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 */
 public interface ProviderApplyMapper extends BaseMapper<ProviderApply> {
 
+    /**
+     * 查找我的申请单
+     * @param userId 用户 id
+     * @return 申请单
+     */
+    ProviderApply loadMine(@Param("userId") UUID userId);
 }
 
 

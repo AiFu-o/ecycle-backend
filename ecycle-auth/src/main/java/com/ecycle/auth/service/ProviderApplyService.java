@@ -55,11 +55,9 @@ public interface ProviderApplyService extends IService<ProviderApply> {
     PageQueryResponse pageQueryAll(ProviderApplyQueryRequest body);
 
     /**
-     * 自己申请的回收商申请单分页查询
+     * 自己申请的回收商申请单
      *
-     * @param body 查询参数
      * @return 查询结果
      */
-    PageQueryResponse pageQueryMineAll(ProviderApplyQueryRequest body);
-
+    ProviderApply loadMine();
 }

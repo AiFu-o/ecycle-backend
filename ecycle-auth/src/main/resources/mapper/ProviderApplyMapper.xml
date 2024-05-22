@@ -23,4 +23,7 @@
         create_time,audit_time,user_id,
 		approval_message
     </sql>
+    <select id="loadMine" resultType="com.ecycle.auth.model.ProviderApply">
+        SELECT * FROM ecycle_provider_apply where user_id = #{userId} AND status != 'DISCARD';
+    </select>
 </mapper>
