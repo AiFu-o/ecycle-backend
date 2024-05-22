@@ -100,6 +100,17 @@ public class AttachmentInfoServiceImpl extends ServiceImpl<AttachmentInfoMapper,
         return queryMapper.list();
     }
 
+    @Override
+    public Boolean removeFile(UUID fileId) {
+        AttachmentInfo info = getById(fileId);
+        if(null == info){
+            throw new AttachmentException("找不到文件");
+        }
+        removeById(info);
+        attachmentDataService.delete(info);
+        return true;
+    }
+
     private String getFileName(MultipartFile file, Boolean anonymous, String fileType) {
         String fileName = "";
         if (anonymous) {

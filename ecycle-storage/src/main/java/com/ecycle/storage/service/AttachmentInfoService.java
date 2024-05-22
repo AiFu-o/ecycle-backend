@@ -64,4 +64,10 @@ public interface AttachmentInfoService extends IService<AttachmentInfo> {
      */
     List<AttachmentInfo> findByBelongIdAndCategory(UUID belongId, String category);
 
+    /**
+     * 删除文件
+     * @param fileId
+     * @return 是否删除成功
+     */
+    Boolean removeFile(UUID fileId);
 }

@@ -83,8 +83,8 @@ public class AttachmentController {
     }
 
     @RequestMapping(value = "/file/{fileId}", method = RequestMethod.DELETE)
-    public void remove(@PathVariable UUID fileId) {
-
+    public RestResponse<Boolean> remove(@PathVariable UUID fileId) {
+        return RestResponse.success(attachmentInfoService.removeFile(fileId));
     }
 
     @RequestMapping(value = "/file/{fileId}", method = RequestMethod.GET)
