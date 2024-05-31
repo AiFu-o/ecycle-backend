@@ -9,8 +9,8 @@
             <result property="content" column="content" jdbcType="VARCHAR"/>
             <result property="receiverId" column="receiver_id" jdbcType="VARCHAR"/>
             <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
-            <result property="del" column="del" jdbcType="TINYINT"/>
-            <result property="read" column="read" jdbcType="TINYINT"/>
+            <result property="isDel" column="is_del" jdbcType="TINYINT"/>
+            <result property="isRead" column="is_read" jdbcType="TINYINT"/>
             <result property="coverId" column="cover_id" jdbcType="VARCHAR"/>
             <result property="linkId" column="link_id" jdbcType="VARCHAR"/>
             <result property="type" column="type" jdbcType="VARCHAR"/>
@@ -19,9 +19,9 @@
     <sql id="Base_Column_List">
         id,content,receiver_id,
         link_id,cover_id,type,
-        create_time,del,read
+        create_time,is_del,is_read
     </sql>
     <update id="delReadMessage">
-        UPDATE ecycle_notification SET del = true WHERE `read` = true AND receiver_id = #{userId};
+        UPDATE ecycle_notification SET is_del = true WHERE is_read = true AND receiver_id = #{userId};
     </update>
 </mapper>

@@ -41,12 +41,12 @@ public class Notification implements Serializable {
     /**
      * 是否删除
      */
-    private Boolean del;
+    private Boolean isDel;
 
     /**
      * 是否已读
      */
-    private Boolean read;
+    private Boolean isRead;
 
     /**
      * 消息类型

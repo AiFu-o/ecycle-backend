@@ -40,7 +40,7 @@ public class MessageController {
         return RestResponse.success(true);
     }
 
-    @PutMapping("/del/{messageId}")
+    @DeleteMapping("/del/{messageId}")
     public RestResponse<Boolean> del(@PathVariable(name = "messageId") UUID messageId) {
         try {
             notificationService.del(messageId);
@@ -68,7 +68,7 @@ public class MessageController {
         return RestResponse.success(true);
     }
 
-    @PutMapping("/delReadMessage")
+    @DeleteMapping("/delReadMessage")
     public RestResponse<Boolean> delReadMessage() {
         try {
             notificationService.delReadMessage();

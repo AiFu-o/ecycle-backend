@@ -62,7 +62,8 @@ public class NotificationServiceImpl extends ServiceImpl<NotificationMapper, Not
         Assert.notNull(userId, "找不到用户");
 
         QueryChainWrapper<Notification> queryChainWrapper = super.query();
-        queryChainWrapper.eq("receive_id", userId);
+        queryChainWrapper.eq("receiver_id", userId);
+        queryChainWrapper.eq("is_del", false);
         queryChainWrapper.orderByDesc("create_time");
 
         MybatisUtils<Notification> mybatisUtils = new MybatisUtils<>();
@@ -77,7 +78,7 @@ public class NotificationServiceImpl extends ServiceImpl<NotificationMapper, Not
         if(null == notification){
             throw new NotificationException("找不到通知");
         }
-        notification.setRead(true);
+        notification.setIsRead(true);
         updateById(notification);
     }
 
@@ -88,7 +89,7 @@ public class NotificationServiceImpl extends ServiceImpl<NotificationMapper, Not
         if(null == notification){
             throw new NotificationException("找不到通知");
         }
-        notification.setDel(true);
+        notification.setIsDel(true);
         updateById(notification);
     }
 

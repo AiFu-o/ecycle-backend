@@ -9,6 +9,8 @@ import com.ecycle.auth.model.ProviderApply;
 import com.ecycle.auth.model.User;
 import com.ecycle.auth.service.ProviderApplyService;
 import com.ecycle.auth.service.UserService;
+import com.ecycle.auth.service.feign.NotificationFeignService;
+import com.ecycle.auth.web.info.CreateNotificationRequest;
 import com.ecycle.auth.web.info.ProviderApplyQueryRequest;
 import com.ecycle.common.context.PageQueryResponse;
 import com.ecycle.common.utils.CurrentUserInfoUtils;
@@ -34,6 +36,9 @@ public class ProviderApplyServiceImpl extends ServiceImpl<ProviderApplyMapper, P
     @Resource
     private UserService userService;
 
+    @Resource
+    private NotificationFeignService notificationFeignService;
+
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void approve(UUID billId, String approvalMessage) {
@@ -44,7 +49,7 @@ public class ProviderApplyServiceImpl extends ServiceImpl<ProviderApplyMapper, P
         if (ProviderApplyStatus.PENDING != providerApply.getStatus()) {
             throw new ProviderApplyException("申请单状态异常");
         }
-        if(StringUtils.isEmpty(approvalMessage)){
+        if (StringUtils.isEmpty(approvalMessage)) {
             throw new ProviderApplyException("审批意见不能为空");
         }
         User user = userService.getById(providerApply.getUserId());
@@ -53,6 +58,17 @@ public class ProviderApplyServiceImpl extends ServiceImpl<ProviderApplyMapper, P
         providerApply.setAuditTime(new Date());
         providerApply.setApprovalMessage(approvalMessage);
         updateById(providerApply);
+
+        try {
+            CreateNotificationRequest notificationRequest = new CreateNotificationRequest();
+            notificationRequest.setType("PROVIDER_APPLY_SUCCESS");
+            notificationRequest.setContent("您在平台申请的回收商身份已经通过审核。");
+            notificationRequest.setLinkId(providerApply.getId());
+            notificationRequest.setReceiverId(providerApply.getUserId());
+            notificationFeignService.send(notificationRequest);
+        } catch (Exception e) {
+            log.error("发送平台消息失败", e);
+        }
     }
 
     @Override
@@ -65,13 +81,24 @@ public class ProviderApplyServiceImpl extends ServiceImpl<ProviderApplyMapper, P
         if (ProviderApplyStatus.PENDING != providerApply.getStatus()) {
             throw new ProviderApplyException("申请单状态异常");
         }
-        if(StringUtils.isEmpty(approvalMessage)){
+        if (StringUtils.isEmpty(approvalMessage)) {
             throw new ProviderApplyException("审批意见不能为空");
         }
         providerApply.setStatus(ProviderApplyStatus.REJECT);
         providerApply.setAuditTime(new Date());
         providerApply.setApprovalMessage(approvalMessage);
         updateById(providerApply);
+
+        try {
+            CreateNotificationRequest notificationRequest = new CreateNotificationRequest();
+            notificationRequest.setType("PROVIDER_APPLY_SUCCESS");
+            notificationRequest.setContent("您在平台申请的回收商身份未通过审核，失败原因：" + providerApply.getApprovalMessage());
+            notificationRequest.setLinkId(providerApply.getId());
+            notificationRequest.setReceiverId(providerApply.getUserId());
+            notificationFeignService.send(notificationRequest);
+        } catch (Exception e) {
+            log.error("发送平台消息失败", e);
+        }
     }
 
     private void validateSaveData(ProviderApply apply) {
@@ -142,7 +169,7 @@ public class ProviderApplyServiceImpl extends ServiceImpl<ProviderApplyMapper, P
     @Override
     public PageQueryResponse pageQueryAll(ProviderApplyQueryRequest body) {
         QueryChainWrapper<ProviderApply> queryChainWrapper = super.query();
-        if(StringUtils.isNotEmpty(body.getName())){
+        if (StringUtils.isNotEmpty(body.getName())) {
             queryChainWrapper.like("name", "%" + body.getName() + "%");
         }
         queryChainWrapper.orderByAsc("create_time");

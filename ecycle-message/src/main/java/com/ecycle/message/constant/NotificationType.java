@@ -11,6 +11,14 @@ import lombok.Getter;
 public enum NotificationType {
 
     /**
+     * 回收商申请单通过
+     */
+    PROVIDER_APPLY_SUCCESS("PROVIDER_APPLY_SUCCESS","回收商申请单通过"),
+    /**
+     * 回收商申请单驳回
+     */
+    PROVIDER_APPLY_REJECT("PROVIDER_APPLY_REJECT","回收商申请单驳回"),
+    /**
      * 商品被拍下
      */
     BOUGHT("BOUGHT","商品被拍下"),
