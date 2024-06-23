@@ -132,6 +132,10 @@ public class CommodityServiceImpl extends ServiceImpl<CommodityMapper, Commodity
             throw new CommodityException("用户未登录");
         }
         queryChainWrapper.eq("creator_id", userId);
+
+        if(null != body.getStatusList() && body.getStatusList().size() > 0){
+            queryChainWrapper.in("status", body.getStatusList());
+        }
         queryChainWrapper.orderByAsc("create_time");
 
         MybatisUtils<Commodity> mybatisUtils = new MybatisUtils<>();

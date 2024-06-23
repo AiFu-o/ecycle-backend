@@ -36,10 +36,10 @@ public interface AttachmentInfoService extends IService<AttachmentInfo> {
      * @param belongId belongId
      * @param category 文件分组
      * @param anonymous 是否匿名
-     * @return belongId
+     * @return 文件 id
      * @throws IOException 如果在向文件中插入数据时发生I/O错误，则抛出IOException
      */
-    UUID insertFiles(MultipartFile[] files, UUID belongId, String category, Boolean anonymous) throws IOException;
+    List<UUID> insertFiles(MultipartFile[] files, UUID belongId, String category, Boolean anonymous) throws IOException;
 
 
     /**

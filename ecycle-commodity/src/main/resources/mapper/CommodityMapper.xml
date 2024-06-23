@@ -38,10 +38,11 @@
         SELECT a.*
         FROM ecycle_commodity a
         LEFT JOIN ecycle_commodity_category b ON a.category_id = b.id
+        WHERE a.status = 'SELLING'
         <if test="params.input != null and params.input != ''">
             AND ( a.name LIKE CONCAT('%',#{params.input},'')
             OR b.name LIKE CONCAT('%',#{params.input},''))
         </if>
-        ORDER BY a.modify_time;
+        ORDER BY a.modify_time
     </select>
 </mapper>

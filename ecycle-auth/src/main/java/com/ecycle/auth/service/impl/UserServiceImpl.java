@@ -101,7 +101,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         List<Role> roles = roleService.findRolesByUserId(user.getId());
         if (null != roles) {
             for (Role role : roles) {
-                roleCodes.add(role.getName());
+                roleCodes.add(role.getCode());
             }
         }
         userInfo.setUsername(user.getUsername());

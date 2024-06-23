@@ -49,19 +49,18 @@ public class AttachmentController {
     }
 
     @RequestMapping(value = "/uploadFiles", method = RequestMethod.POST)
-    public RestResponse<UUID> uploadFiles(@RequestParam(name = "belongId", required = false) UUID belongId,
+    public RestResponse<List<UUID>> uploadFiles(@RequestParam(name = "belongId") UUID belongId,
                                           @RequestParam(name = "category", required = false) String category,
                                           @RequestParam("files") MultipartFile[] files,
                                           @RequestParam(name = "anonymous", defaultValue = "false") Boolean anonymous) {
         try {
-            belongId = attachmentInfoService.insertFiles(files, belongId, category, anonymous);
+            return RestResponse.success(attachmentInfoService.insertFiles(files, belongId, category, anonymous));
         } catch (AttachmentException e) {
             e.printStackTrace();
             return RestResponse.validfail(e.getMessage());
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        return RestResponse.success(belongId);
     }
 
     @RequestMapping(value = "/file/preview/{fileId}", method = RequestMethod.GET)

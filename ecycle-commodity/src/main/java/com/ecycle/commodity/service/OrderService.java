@@ -36,7 +36,14 @@ public interface OrderService extends IService<Order> {
     void serviceChargeSuccess(UUID orderId);
 
     /**
-     * 分页查询我的订单
+     * 根据卖家获取订单
+     * @param orderQueryRequest 请求参数
+     * @return 我的订单列表
+     */
+    PageQueryResponse queryBySeller(OrderQueryRequest orderQueryRequest);
+
+    /**
+     * 根据回收商获取订单
      * @param orderQueryRequest 请求参数
      * @return 我的订单列表
      */

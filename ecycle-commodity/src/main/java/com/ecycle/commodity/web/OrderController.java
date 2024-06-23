@@ -43,6 +43,19 @@ public class OrderController {
         orderService.serviceChargeSuccess(orderId);
     }
 
+    @PostMapping("/queryBySeller")
+    public RestResponse<PageQueryResponse> queryBySeller(@RequestBody OrderQueryRequest orderQueryRequest) {
+        try {
+            return RestResponse.success(orderService.queryBySeller(orderQueryRequest));
+        } catch (BiddingOrderException e) {
+            log.error(e.getMessage(), e);
+            return RestResponse.validfail(e.getMessage());
+        } catch (Exception e) {
+            log.error("未知异常", e);
+            return RestResponse.validfail("未知异常");
+        }
+    }
+
     @PostMapping("/queryMineAll")
     public RestResponse<PageQueryResponse> queryMineAll(@RequestBody OrderQueryRequest orderQueryRequest) {
         try {

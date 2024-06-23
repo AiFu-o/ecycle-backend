@@ -3,6 +3,7 @@ package com.ecycle.commodity.service.impl;
 import com.baomidou.mybatisplus.extension.conditions.query.QueryChainWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ecycle.commodity.constant.BiddingStatus;
+import com.ecycle.commodity.constant.CommodityStatus;
 import com.ecycle.commodity.constant.ServiceChargeType;
 import com.ecycle.commodity.exception.BiddingOrderException;
 import com.ecycle.commodity.exception.CommodityException;
@@ -143,6 +144,10 @@ public class BiddingRecordServiceImpl extends ServiceImpl<BiddingRecordMapper, B
             close(otherBidding);
         }
         orderService.generateOrder(biddingRecord);
+
+        // 修改商品为已售出
+        Commodity commodity = commodityService.getById(biddingRecord.getCommodityId());
+        commodity.setStatus(CommodityStatus.SOLD);
         return true;
     }
 

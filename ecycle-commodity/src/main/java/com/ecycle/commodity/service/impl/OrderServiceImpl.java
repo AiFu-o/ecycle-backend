@@ -50,8 +50,6 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order>
         order.setServiceChargeReceivable(biddingRecord.getServiceCharge());
         order.setBillCode(generateBillCode());
         save(order);
-
-
     }
 
     @Override
@@ -89,9 +87,24 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order>
     }
 
     @Override
+    public PageQueryResponse queryBySeller(OrderQueryRequest orderQueryRequest) {
+        QueryChainWrapper<Order> queryChainWrapper = super.query();
+
+        UUID userId = CurrentUserInfoUtils.getCurrentUserId();
+        queryChainWrapper.eq("seller_id", userId);
+        queryChainWrapper.orderByAsc("create_time");
+
+        MybatisUtils<Order> mybatisUtils = new MybatisUtils<>();
+
+        return mybatisUtils.pageQuery(queryChainWrapper, orderQueryRequest);
+    }
+
+    @Override
     public PageQueryResponse queryMineAll(OrderQueryRequest orderQueryRequest) {
         QueryChainWrapper<Order> queryChainWrapper = super.query();
 
+        UUID userId = CurrentUserInfoUtils.getCurrentUserId();
+        queryChainWrapper.eq("creator_id", userId);
         queryChainWrapper.orderByAsc("create_time");
 
         MybatisUtils<Order> mybatisUtils = new MybatisUtils<>();

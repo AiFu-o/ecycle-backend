@@ -17,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.annotation.Resource;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -69,15 +70,13 @@ public class AttachmentInfoServiceImpl extends ServiceImpl<AttachmentInfoMapper,
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public UUID insertFiles(MultipartFile[] files, UUID belongId, String category, Boolean anonymous) throws IOException {
-        if (null == belongId){
-            belongId = UUID.randomUUID();
-        }
+    public List<UUID> insertFiles(MultipartFile[] files, UUID belongId, String category, Boolean anonymous) throws IOException {
+        List<UUID> fileIds = new ArrayList<>();
         checkFilesUpload(files);
         for (MultipartFile file : files) {
-            insertFile(file, belongId, category, anonymous);
+            fileIds.add(insertFile(file, belongId, category, anonymous));
         }
-        return belongId;
+        return fileIds;
     }
 
     @Override

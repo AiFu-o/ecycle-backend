@@ -1,8 +1,11 @@
 package com.ecycle.commodity.web.info;
 
+import com.ecycle.commodity.constant.CommodityStatus;
 import com.ecycle.common.context.PageQueryRequest;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+
+import java.util.List;
 
 /**
  * @author wangweichen
@@ -13,4 +16,6 @@ import lombok.EqualsAndHashCode;
 @Data
 public class CommodityQueryRequest extends PageQueryRequest {
     private String input;
+
+    private List<CommodityStatus> statusList;
 }

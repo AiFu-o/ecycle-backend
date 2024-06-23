@@ -16,10 +16,11 @@
             <result property="serviceChargeReceived" column="service_charge_received" jdbcType="DECIMAL"/>
             <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
             <result property="serviceChargePayTime" column="service_charge_pay_time" jdbcType="TIMESTAMP"/>
+            <result property="sellerId" column="seller_id" jdbcType="VARCHAR"/>
     </resultMap>
 
     <sql id="Base_Column_List">
-        id,bill_code,bidding_id,
+        id,bill_code,bidding_id,seller_id,
         commodity_id,creator_id,status,
         commodity_amount,service_charge_receivable,service_charge_received,
         create_time,service_charge_pay_time

@@ -73,4 +73,9 @@ public class Order implements Serializable {
      */
     private Date serviceChargePayTime;
 
+    /**
+     * 出售人 id
+     */
+    private UUID sellerId;
+
 }
