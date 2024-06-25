@@ -19,4 +19,5 @@ public interface AuthFeignService {
      */
     @GetMapping("/role/hasRole")
     Boolean hasRole(@RequestParam(name = "roleCode") String roleCode);
+
 }

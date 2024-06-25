@@ -4,6 +4,7 @@ import com.ecycle.commodity.exception.CommodityException;
 import com.ecycle.commodity.model.Commodity;
 import com.ecycle.commodity.service.CommodityService;
 import com.ecycle.commodity.service.CommodityViewRecordService;
+import com.ecycle.commodity.web.info.CommodityInfo;
 import com.ecycle.commodity.web.info.CommodityQueryRequest;
 import com.ecycle.common.context.PageQueryRequest;
 import com.ecycle.common.context.PageQueryResponse;
@@ -36,7 +37,7 @@ public class CommodityController {
     }
 
     @GetMapping("/load-info/{id}")
-    public RestResponse<Commodity> loadInfo(@PathVariable(name = "id") UUID id) {
+    public RestResponse<CommodityInfo> loadInfo(@PathVariable(name = "id") UUID id) {
         return RestResponse.success(commodityService.loadInfo(id));
     }
 

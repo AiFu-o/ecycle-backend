@@ -1,6 +1,8 @@
 package com.ecycle.commodity.service.impl;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.conditions.query.QueryChainWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ecycle.commodity.constant.BiddingStatus;
 import com.ecycle.commodity.constant.CommodityStatus;
@@ -15,6 +17,7 @@ import com.ecycle.commodity.service.*;
 import com.ecycle.commodity.service.feign.NotificationFeignService;
 import com.ecycle.commodity.web.info.BiddingRecordQueryRequest;
 import com.ecycle.commodity.web.info.CreateBiddingRequest;
+import com.ecycle.commodity.web.info.OrderQueryResponse;
 import com.ecycle.common.context.PageQueryResponse;
 import com.ecycle.common.utils.CurrentUserInfoUtils;
 import com.ecycle.common.utils.MybatisUtils;
@@ -160,14 +163,14 @@ public class BiddingRecordServiceImpl extends ServiceImpl<BiddingRecordMapper, B
     }
 
     @Override
-    public PageQueryResponse queryMineAll(BiddingRecordQueryRequest biddingRecordQueryRequest) {
-        QueryChainWrapper<BiddingRecord> queryChainWrapper = super.query();
-
-        queryChainWrapper.orderByAsc("create_time");
-
-        MybatisUtils<BiddingRecord> mybatisUtils = new MybatisUtils<>();
-
-        return mybatisUtils.pageQuery(queryChainWrapper, biddingRecordQueryRequest);
+    public PageQueryResponse queryMineAll(BiddingRecordQueryRequest body) {
+        PageQueryResponse result = new PageQueryResponse();
+        UUID userId = CurrentUserInfoUtils.getCurrentUserId();
+        IPage<OrderQueryResponse> query = new Page<>(body.getPageIndex(), body.getPageSize());
+        query = baseMapper.queryMineAll(query, body, userId);
+        result.setTotal(query.getTotal());
+        result.setDataList(query.getRecords());
+        return result;
     }
 
     private void close(BiddingRecord order) {

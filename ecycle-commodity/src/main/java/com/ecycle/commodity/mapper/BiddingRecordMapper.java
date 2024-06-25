@@ -1,8 +1,12 @@
 package com.ecycle.commodity.mapper;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.ecycle.commodity.model.BiddingRecord;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.ecycle.commodity.web.info.BiddingRecordQueryRequest;
+import com.ecycle.commodity.web.info.OrderQueryResponse;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.security.core.parameters.P;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -32,6 +36,15 @@ public interface BiddingRecordMapper extends BaseMapper<BiddingRecord> {
      * @return 最高出价
      */
     BigDecimal getHighestAmount(@Param("commodityId") UUID commodityId);
+
+    /**
+     * 查询我的出价记录
+     * @param query 分页器
+     * @param param 查询参数
+     * @param userId 用户 id
+     * @return 出价记录列表
+     */
+    IPage<OrderQueryResponse> queryMineAll(IPage<OrderQueryResponse> query, @Param("param") BiddingRecordQueryRequest param, @Param("userId") UUID userId);
 }
 
 

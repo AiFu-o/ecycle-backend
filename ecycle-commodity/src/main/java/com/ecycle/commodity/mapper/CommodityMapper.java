@@ -3,6 +3,7 @@ package com.ecycle.commodity.mapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.ecycle.commodity.model.Commodity;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.ecycle.commodity.web.info.CommodityInfo;
 import com.ecycle.commodity.web.info.CommodityQueryRequest;
 import org.apache.ibatis.annotations.Param;
 
@@ -31,6 +32,13 @@ public interface CommodityMapper extends BaseMapper<Commodity> {
      * @return 商品列表
      */
     IPage<Commodity> pageQueryAll(IPage<Commodity> query, @Param("params") CommodityQueryRequest params);
+
+    /**
+     * 查询更详细的商品详情
+     * @param id 商品 id
+     * @return 商品信息
+     */
+    CommodityInfo loadInfo(@Param("id") UUID id);
 }
 
 

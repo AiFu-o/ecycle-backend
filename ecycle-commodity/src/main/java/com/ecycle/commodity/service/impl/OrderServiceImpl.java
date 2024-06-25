@@ -1,6 +1,8 @@
 package com.ecycle.commodity.service.impl;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.conditions.query.QueryChainWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ecycle.commodity.exception.BiddingOrderException;
 import com.ecycle.commodity.exception.OrderException;
@@ -11,6 +13,7 @@ import com.ecycle.commodity.model.Order;
 import com.ecycle.commodity.service.OrderService;
 import com.ecycle.commodity.mapper.OrderMapper;
 import com.ecycle.commodity.service.feign.PayFeignService;
+import com.ecycle.commodity.web.info.OrderQueryResponse;
 import com.ecycle.common.context.PageQueryResponse;
 import com.ecycle.common.context.RestResponse;
 import com.ecycle.common.utils.CurrentUserInfoUtils;
@@ -87,29 +90,25 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order>
     }
 
     @Override
-    public PageQueryResponse queryBySeller(OrderQueryRequest orderQueryRequest) {
-        QueryChainWrapper<Order> queryChainWrapper = super.query();
-
+    public PageQueryResponse queryBySeller(OrderQueryRequest body) {
+        PageQueryResponse result = new PageQueryResponse();
         UUID userId = CurrentUserInfoUtils.getCurrentUserId();
-        queryChainWrapper.eq("seller_id", userId);
-        queryChainWrapper.orderByAsc("create_time");
-
-        MybatisUtils<Order> mybatisUtils = new MybatisUtils<>();
-
-        return mybatisUtils.pageQuery(queryChainWrapper, orderQueryRequest);
+        IPage<OrderQueryResponse> query = new Page<>(body.getPageIndex(), body.getPageSize());
+        query = baseMapper.queryBySeller(query, body, userId);
+        result.setTotal(query.getTotal());
+        result.setDataList(query.getRecords());
+        return result;
     }
 
     @Override
-    public PageQueryResponse queryMineAll(OrderQueryRequest orderQueryRequest) {
-        QueryChainWrapper<Order> queryChainWrapper = super.query();
-
+    public PageQueryResponse queryMineAll(OrderQueryRequest body) {
+        PageQueryResponse result = new PageQueryResponse();
         UUID userId = CurrentUserInfoUtils.getCurrentUserId();
-        queryChainWrapper.eq("creator_id", userId);
-        queryChainWrapper.orderByAsc("create_time");
-
-        MybatisUtils<Order> mybatisUtils = new MybatisUtils<>();
-
-        return mybatisUtils.pageQuery(queryChainWrapper, orderQueryRequest);
+        IPage<OrderQueryResponse> query = new Page<>(body.getPageIndex(), body.getPageSize());
+        query = baseMapper.queryByBuyer(query, body, userId);
+        result.setTotal(query.getTotal());
+        result.setDataList(query.getRecords());
+        return result;
     }
 
     private String generateBillCode() {

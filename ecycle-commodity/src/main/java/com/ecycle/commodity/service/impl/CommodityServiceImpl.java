@@ -11,6 +11,8 @@ import com.ecycle.commodity.model.Commodity;
 import com.ecycle.commodity.service.CommodityCategoryService;
 import com.ecycle.commodity.service.CommodityService;
 import com.ecycle.commodity.service.CommodityViewRecordService;
+import com.ecycle.commodity.service.UserAddressService;
+import com.ecycle.commodity.web.info.CommodityInfo;
 import com.ecycle.commodity.web.info.CommodityQueryRequest;
 import com.ecycle.common.context.PageQueryResponse;
 import com.ecycle.common.utils.CurrentUserInfoUtils;
@@ -36,7 +38,7 @@ public class CommodityServiceImpl extends ServiceImpl<CommodityMapper, Commodity
         implements CommodityService {
 
     @Resource
-    private CommodityCategoryService categoryService;
+    private UserAddressService userAddressService;
 
     @Resource
     private CommodityViewRecordService viewRecordService;
@@ -147,9 +149,10 @@ public class CommodityServiceImpl extends ServiceImpl<CommodityMapper, Commodity
     }
 
     @Override
-    public Commodity loadInfo(UUID id) {
+    public CommodityInfo loadInfo(UUID id) {
         // 增加浏览量
-        Commodity commodity = load(id);
+        CommodityInfo commodity = baseMapper.loadInfo(id);
+        commodity.setAddress(userAddressService.getById(commodity.getAddressId()));
         Integer pageViews = addPageViews(commodity);
         commodity.setPageViews(pageViews);
         viewRecordService.addRecord(id);

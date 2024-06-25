@@ -34,4 +34,14 @@
         WHERE status != 'CLOSED'
           AND commodity_id = #{commodityId};
     </select>
+    <select id="queryMineAll" resultType="com.ecycle.commodity.web.info.OrderQueryResponse">
+        SELECT a.*, b.name commodityName, b.info commodityInfo, b.cover_file_id coverId
+        FROM ecycle_bidding_record a
+        LEFT JOIN ecycle_commodity b ON a.commodity_id = b.id
+        WHERE a.creator_id = #{buyerId}
+        <if test="param.status != null">
+            AND a.status = #{param.status}
+        </if>
+        ORDER BY a.create_time
+    </select>
 </mapper>

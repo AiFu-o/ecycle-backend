@@ -21,6 +21,7 @@ import org.springframework.util.Assert;
 import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.UUID;
 
 /**
@@ -82,7 +83,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
     public User createWxFirstLoginUser(String openId) {
         User user = new User();
         user.setId(UUID.randomUUID());
-        user.setNickName("普通用户");
+        user.setNickName("微信用户" + getMiddleAndAddRandom(openId));
         user.setUsername(openId);
         // 随便生成个密码就不让他用密码登录
         user.setPassword(passwordEncoder.encode(UUID.randomUUID().toString()));
@@ -120,6 +121,32 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
     @Override
     public UserInfoResponse findInfoById(UUID id) {
         return userMapper.findInfoById(id);
+    }
+
+    private static String getMiddleAndAddRandom(String openId) {
+        int length = openId.length();
+        String middleFour;
+        if (length < 4) {
+            middleFour = openId;
+        } else {
+            // 提取中间 4 位
+            int start = (length - 4) / 2;
+            middleFour = openId.substring(start, start + 4);
+        }
+
+
+        // 生成两个随机字符
+        char randomChar1 = getRandomChar();
+        char randomChar2 = getRandomChar();
+
+        // 拼接结果字符串
+        return randomChar1 + middleFour + randomChar2;
+    }
+
+    public static char getRandomChar() {
+        String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        Random random = new Random();
+        return chars.charAt(random.nextInt(chars.length()));
     }
 
 }

@@ -1,6 +1,7 @@
 package com.ecycle.commodity.service;
 
 import com.ecycle.commodity.model.Commodity;
+import com.ecycle.commodity.web.info.CommodityInfo;
 import com.ecycle.commodity.web.info.CommodityQueryRequest;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.ecycle.common.context.PageQueryResponse;
@@ -59,7 +60,7 @@ public interface CommodityService extends IService<Commodity> {
      * @param id 商品 id
      * @return 商品信息
      */
-    Commodity loadInfo(UUID id);
+    CommodityInfo loadInfo(UUID id);
 
     /**
      * 将浏览量数据持久化到数据库（定时任务每天晚上 12点执行，也可以手动调用）

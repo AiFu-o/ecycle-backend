@@ -25,4 +25,24 @@
         commodity_amount,service_charge_receivable,service_charge_received,
         create_time,service_charge_pay_time
     </sql>
+    <select id="queryBySeller" resultType="com.ecycle.commodity.web.info.OrderQueryResponse">
+        SELECT a.*, b.name commodityName, b.info commodityInfo, b.cover_file_id coverId
+        FROM ecycle_order a
+            LEFT JOIN ecycle_commodity b ON a.commodity_id = b.id
+        WHERE a.seller_id = #{sellerId}
+        <if test="param.status != null">
+            AND a.status = #{param.status}
+        </if>
+        ORDER BY a.create_time
+    </select>
+    <select id="queryByBuyer" resultType="com.ecycle.commodity.web.info.OrderQueryResponse">
+        SELECT a.*, b.name commodityName, b.info commodityInfo, b.cover_file_id coverId
+        FROM ecycle_order a
+        LEFT JOIN ecycle_commodity b ON a.commodity_id = b.id
+        WHERE a.creator_id = #{buyerId}
+        <if test="param.status != null">
+            AND a.status = #{param.status}
+        </if>
+        ORDER BY a.create_time
+    </select>
 </mapper>

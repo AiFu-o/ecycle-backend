@@ -45,4 +45,7 @@
         </if>
         ORDER BY a.modify_time
     </select>
+    <select id="loadInfo" resultType="com.ecycle.commodity.web.info.CommodityInfo">
+        SELECT a.*, b.nick_name creatorName FROM ecycle_commodity a LEFT JOIN ecycle_user b ON a.creator_id = b.id WHERE a.id = #{id}
+    </select>
 </mapper>

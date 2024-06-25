@@ -1,5 +1,6 @@
 package com.ecycle.commodity.web.info;
 
+import com.ecycle.commodity.constant.BiddingStatus;
 import com.ecycle.common.context.PageQueryRequest;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -12,4 +13,5 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 @Data
 public class BiddingRecordQueryRequest extends PageQueryRequest {
+    private BiddingStatus status;
 }
