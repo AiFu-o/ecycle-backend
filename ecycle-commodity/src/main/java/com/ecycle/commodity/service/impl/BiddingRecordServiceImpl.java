@@ -14,10 +14,10 @@ import com.ecycle.commodity.model.BiddingRecord;
 import com.ecycle.commodity.model.Commodity;
 import com.ecycle.commodity.model.CommodityCategory;
 import com.ecycle.commodity.service.*;
-import com.ecycle.commodity.service.feign.NotificationFeignService;
 import com.ecycle.commodity.web.info.BiddingRecordQueryRequest;
 import com.ecycle.commodity.web.info.CreateBiddingRequest;
 import com.ecycle.commodity.web.info.OrderQueryResponse;
+import com.ecycle.common.context.PageQueryRequest;
 import com.ecycle.common.context.PageQueryResponse;
 import com.ecycle.common.utils.CurrentUserInfoUtils;
 import com.ecycle.common.utils.MybatisUtils;
@@ -57,7 +57,7 @@ public class BiddingRecordServiceImpl extends ServiceImpl<BiddingRecordMapper, B
     @Transactional(rollbackFor = Exception.class)
     public UUID create(CreateBiddingRequest request) {
         if (null == request.getCommodityId()) {
-            throw new BiddingOrderException("商品不能为空");
+            throw new BiddingOrderException("商品id不能为空");
         }
         if (null == request.getCommodityAmount()) {
             throw new BiddingOrderException("商品价格不能为空");
@@ -68,7 +68,19 @@ public class BiddingRecordServiceImpl extends ServiceImpl<BiddingRecordMapper, B
             throw new BiddingOrderException("用户未登录");
         }
 
-        Commodity commodity = commodityService.getById(request.getCommodityId());
+        UUID commodityId = request.getCommodityId();
+        // 暂时是一个人只有一个出价 没有历史记录 以后可能会改
+        BiddingRecord biddingRecord = baseMapper.loadUserBiddingByCommodityId(userId, commodityId);
+        if(null == biddingRecord){
+            biddingRecord = new BiddingRecord();
+            String billCode = generateBillCode();
+            biddingRecord.setId(UUID.randomUUID());
+            biddingRecord.setBillCode(billCode);
+            biddingRecord.setCommodityId(commodityId);
+            biddingRecord.setCreatorId(userId);
+        }
+
+        Commodity commodity = commodityService.getById(commodityId);
         if (null == commodity) {
             throw new BiddingOrderException("找不到商品");
         }
@@ -76,17 +88,10 @@ public class BiddingRecordServiceImpl extends ServiceImpl<BiddingRecordMapper, B
         BigDecimal commodityAmount = request.getCommodityAmount();
 
         BigDecimal serviceCharge = mathServiceCharge(commodity, commodityAmount);
-        BiddingRecord biddingRecord = new BiddingRecord();
-
-        String billCode = generateBillCode();
-        biddingRecord.setId(UUID.randomUUID());
-        biddingRecord.setBillCode(billCode);
         biddingRecord.setStatus(BiddingStatus.BIDDING);
-        biddingRecord.setCreatorId(userId);
         biddingRecord.setCommodityAmount(commodityAmount);
         biddingRecord.setServiceCharge(serviceCharge);
-        biddingRecord.setCommodityId(commodity.getId());
-        save(biddingRecord);
+        saveOrUpdate(biddingRecord);
 
         // 发送消息提醒
         notificationService.quoteMessage(commodity.getId(), commodity.getCreatorId());
@@ -95,36 +100,6 @@ public class BiddingRecordServiceImpl extends ServiceImpl<BiddingRecordMapper, B
         commodity.setAmount(commodityAmount);
         commodityService.updateById(commodity);
         return biddingRecord.getId();
-    }
-
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public Boolean updateCommodityAmount(UUID orderId, BigDecimal commodityAmount) {
-        if (null == commodityAmount) {
-            throw new BiddingOrderException("出价不能为空");
-        }
-
-        BiddingRecord biddingRecord = getById(orderId);
-        UUID userId = CurrentUserInfoUtils.getCurrentUserId();
-        if (null == userId) {
-            throw new BiddingOrderException("用户未登录");
-        }
-        if (!biddingRecord.getCreatorId().equals(userId)) {
-            throw new BiddingOrderException("只能修改自己的出价");
-        }
-        Commodity commodity = commodityService.getById(biddingRecord.getCommodityId());
-
-        BigDecimal serviceCharge = mathServiceCharge(commodity, commodityAmount);
-
-        biddingRecord.setCommodityAmount(commodityAmount);
-        biddingRecord.setServiceCharge(serviceCharge);
-
-        updateById(biddingRecord);
-
-        // 更新最新价格
-        commodity.setAmount(commodityAmount);
-        commodityService.updateById(commodity);
-        return true;
     }
 
     @Override
@@ -171,6 +146,19 @@ public class BiddingRecordServiceImpl extends ServiceImpl<BiddingRecordMapper, B
         result.setTotal(query.getTotal());
         result.setDataList(query.getRecords());
         return result;
+    }
+
+    @Override
+    public PageQueryResponse queryAllByCommodityId(PageQueryRequest param, UUID commodityId) {
+        QueryChainWrapper<BiddingRecord> queryChainWrapper = super.query();
+
+        queryChainWrapper.ne("status", BiddingStatus.CLOSED);
+        queryChainWrapper.eq("commodity_id", commodityId);
+        queryChainWrapper.orderByDesc("commodity_amount");
+
+        MybatisUtils<BiddingRecord> mybatisUtils = new MybatisUtils<>();
+
+        return mybatisUtils.pageQuery(queryChainWrapper, param);
     }
 
     private void close(BiddingRecord order) {

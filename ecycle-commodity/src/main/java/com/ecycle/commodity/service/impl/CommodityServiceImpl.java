@@ -150,8 +150,13 @@ public class CommodityServiceImpl extends ServiceImpl<CommodityMapper, Commodity
 
     @Override
     public CommodityInfo loadInfo(UUID id) {
+        UUID userId = CurrentUserInfoUtils.getCurrentUserId();
+        if (null == userId) {
+            throw new CommodityException("用户未登录");
+        }
+
         // 增加浏览量
-        CommodityInfo commodity = baseMapper.loadInfo(id);
+        CommodityInfo commodity = baseMapper.loadInfo(id, userId);
         commodity.setAddress(userAddressService.getById(commodity.getAddressId()));
         Integer pageViews = addPageViews(commodity);
         commodity.setPageViews(pageViews);

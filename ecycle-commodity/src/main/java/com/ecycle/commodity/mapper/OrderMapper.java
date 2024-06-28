@@ -3,6 +3,7 @@ package com.ecycle.commodity.mapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.ecycle.commodity.model.Order;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.ecycle.commodity.web.info.OrderInfo;
 import com.ecycle.commodity.web.info.OrderQueryRequest;
 import com.ecycle.commodity.web.info.OrderQueryResponse;
 import org.apache.ibatis.annotations.Param;

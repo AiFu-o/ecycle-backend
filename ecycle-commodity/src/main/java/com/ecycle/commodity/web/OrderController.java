@@ -1,5 +1,6 @@
 package com.ecycle.commodity.web;
 
+import com.ecycle.commodity.web.info.OrderInfo;
 import com.ecycle.commodity.web.info.OrderQueryRequest;
 import com.ecycle.commodity.exception.BiddingOrderException;
 import com.ecycle.commodity.exception.OrderException;
@@ -67,6 +68,41 @@ public class OrderController {
             log.error("未知异常", e);
             return RestResponse.validfail("未知异常");
         }
+    }
+
+    @GetMapping("/loadInfo/{id}")
+    public RestResponse<OrderInfo> loadInfo(@PathVariable(name = "id") UUID id) {
+        try {
+            return RestResponse.success(orderService.loadInfo(id));
+        } catch (BiddingOrderException e) {
+            log.error(e.getMessage(), e);
+            return RestResponse.validfail(e.getMessage());
+        } catch (Exception e) {
+            log.error("未知异常", e);
+            return RestResponse.validfail("未知异常");
+        }
+    }
+
+    @PutMapping("/arrived/{orderId}")
+    public RestResponse<Boolean> arrived(@PathVariable("orderId") UUID orderId){
+        try {
+            orderService.arrived(orderId);
+        } catch (Exception e) {
+            log.error("未知异常", e);
+            return RestResponse.validfail(false,"未知异常");
+        }
+        return RestResponse.success(true);
+    }
+
+    @PutMapping("/finish/{orderId}")
+    public RestResponse<Boolean> finish(@PathVariable("orderId") UUID orderId){
+        try {
+            orderService.finish(orderId);
+        } catch (Exception e) {
+            log.error("未知异常", e);
+            return RestResponse.validfail(false,"未知异常");
+        }
+        return RestResponse.success(true);
     }
 
 }

@@ -11,6 +11,7 @@ import com.ecycle.common.context.PageQueryRequest;
 import com.ecycle.common.context.PageQueryResponse;
 import com.ecycle.common.utils.CurrentUserInfoUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.UUID;
@@ -24,13 +25,13 @@ import java.util.UUID;
 public class CommodityFavoriteServiceImpl extends ServiceImpl<CommodityFavoriteMapper, CommodityFavorite>
     implements CommodityFavoriteService{
 
-
     @Override
-    public void favorite(UUID commodityId) {
+    @Transactional(rollbackFor = Exception.class)
+    public UUID favorite(UUID commodityId) {
         UUID userId = CurrentUserInfoUtils.getCurrentUserId();
         CommodityFavorite favorite = baseMapper.findByUserIdAndCommodityId(userId, commodityId);
         if(null != favorite) {
-           return;
+           return favorite.getId();
         }
         favorite = new CommodityFavorite();
         favorite.setId(UUID.randomUUID());
@@ -38,9 +39,11 @@ public class CommodityFavoriteServiceImpl extends ServiceImpl<CommodityFavoriteM
         favorite.setFavoriteTime(new Date());
         favorite.setUserId(userId);
         saveOrUpdate(favorite);
+        return favorite.getId();
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void cancel(UUID commodityId) {
         UUID userId = CurrentUserInfoUtils.getCurrentUserId();
         CommodityFavorite favorite = baseMapper.findByUserIdAndCommodityId(userId, commodityId);

@@ -1,6 +1,7 @@
 package com.ecycle.commodity.service;
 
 import com.ecycle.commodity.model.BiddingRecord;
+import com.ecycle.commodity.web.info.OrderInfo;
 import com.ecycle.commodity.web.info.OrderQueryRequest;
 import com.ecycle.commodity.model.Order;
 import com.baomidou.mybatisplus.extension.service.IService;
@@ -48,4 +49,23 @@ public interface OrderService extends IService<Order> {
      * @return 我的订单列表
      */
     PageQueryResponse queryMineAll(OrderQueryRequest orderQueryRequest);
+
+    /**
+     * 查询订单详情
+     * @param id 订单id
+     * @return 订单详情
+     */
+    OrderInfo loadInfo(UUID id);
+
+    /**
+     * 完成订单
+     * @param orderId 订单 id
+     */
+    void finish(UUID orderId);
+
+    /**
+     * 回收商到达指定位置
+     * @param orderId 订单 id
+     */
+    void arrived(UUID orderId);
 }

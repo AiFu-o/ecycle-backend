@@ -24,14 +24,13 @@ public class CommodityFavoriteController {
     private CommodityFavoriteService commodityFavoriteService;
 
     @PostMapping("/save/{commodityId}")
-    public RestResponse<Boolean> queryAll(@PathVariable(name = "commodityId") UUID commodityId) {
+    public RestResponse<UUID> queryAll(@PathVariable(name = "commodityId") UUID commodityId) {
         try{
-            commodityFavoriteService.favorite(commodityId);
+            return RestResponse.success(commodityFavoriteService.favorite(commodityId));
         } catch (Exception e){
             log.error("收藏失败", e);
-            RestResponse.validfail("未知异常");
+            return RestResponse.validfail("未知异常");
         }
-        return RestResponse.success(true);
     }
 
     @PutMapping("/cancel/{commodityId}")

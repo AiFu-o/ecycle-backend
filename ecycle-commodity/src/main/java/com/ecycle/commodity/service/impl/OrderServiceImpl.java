@@ -4,9 +4,14 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.conditions.query.QueryChainWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.ecycle.commodity.constant.CommodityStatus;
 import com.ecycle.commodity.exception.BiddingOrderException;
 import com.ecycle.commodity.exception.OrderException;
 import com.ecycle.commodity.model.BiddingRecord;
+import com.ecycle.commodity.model.Commodity;
+import com.ecycle.commodity.service.CommodityService;
+import com.ecycle.commodity.service.UserAddressService;
+import com.ecycle.commodity.web.info.OrderInfo;
 import com.ecycle.commodity.web.info.OrderQueryRequest;
 import com.ecycle.commodity.constant.OrderStatus;
 import com.ecycle.commodity.model.Order;
@@ -36,6 +41,12 @@ import java.util.UUID;
 @Service
 public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order>
     implements OrderService{
+
+    @Resource
+    private UserAddressService userAddressService;
+
+    @Resource
+    private CommodityService commodityService;
 
     @Resource
     private PayFeignService payFeignService;
@@ -109,6 +120,55 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order>
         result.setTotal(query.getTotal());
         result.setDataList(query.getRecords());
         return result;
+    }
+
+    @Override
+    public OrderInfo loadInfo(UUID id) {
+        OrderInfo info = (OrderInfo) baseMapper.selectById(id);
+        Commodity commodity = commodityService.getById(info.getCommodityId());
+        info.setCommodity(commodity);
+        // 钱没付 或者退款了 就不给他看地址
+        if(!(info.getStatus() == OrderStatus.PENDING_PAYMENT || info.getStatus() == OrderStatus.REFUNDED ||
+                info.getStatus() == OrderStatus.PAYMENT_ERROR || info.getStatus() == OrderStatus.CLOSED)){
+            info.setAddress(userAddressService.getById(commodity.getAddressId()));
+        }
+        return info;
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void finish(UUID orderId) {
+        Order order = getById(orderId);
+        if(order.getStatus() != OrderStatus.VISITED){
+            throw new OrderException("订单状态异常");
+        }
+
+        UUID userId = CurrentUserInfoUtils.getCurrentUserId();
+        if (null == userId || !userId.equals(order.getCreatorId())) {
+            throw new OrderException("用户身份异常");
+        }
+
+        order.setStatus(OrderStatus.PENDING_REVIEW);
+        order.setFinishTime(new Date());
+        updateById(order);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void arrived(UUID orderId) {
+        Order order = getById(orderId);
+        if(order.getStatus() != OrderStatus.PENDING_VISIT){
+            throw new OrderException("订单状态异常");
+        }
+
+        UUID userId = CurrentUserInfoUtils.getCurrentUserId();
+        if (null == userId || !userId.equals(order.getCreatorId())) {
+            throw new OrderException("用户身份异常");
+        }
+
+        order.setStatus(OrderStatus.VISITED);
+        order.setArrivedTime(new Date());
+        updateById(order);
     }
 
     private String generateBillCode() {

@@ -32,6 +32,7 @@ public interface BiddingRecordMapper extends BaseMapper<BiddingRecord> {
 
     /**
      * 获取商品最高出价
+     *
      * @param commodityId 商品 id
      * @return 最高出价
      */
@@ -39,12 +40,22 @@ public interface BiddingRecordMapper extends BaseMapper<BiddingRecord> {
 
     /**
      * 查询我的出价记录
-     * @param query 分页器
-     * @param param 查询参数
+     *
+     * @param query  分页器
+     * @param param  查询参数
      * @param userId 用户 id
      * @return 出价记录列表
      */
     IPage<OrderQueryResponse> queryMineAll(IPage<OrderQueryResponse> query, @Param("param") BiddingRecordQueryRequest param, @Param("userId") UUID userId);
+
+    /**
+     * 查询用户在某个商品的出价
+     *
+     * @param userId      用户 id
+     * @param commodityId 商品 id
+     * @return 出价记录
+     */
+    BiddingRecord loadUserBiddingByCommodityId(@Param("userId") UUID userId, @Param("commodityId") UUID commodityId);
 }
 
 

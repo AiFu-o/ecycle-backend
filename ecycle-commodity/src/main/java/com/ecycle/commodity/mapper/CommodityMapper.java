@@ -36,9 +36,10 @@ public interface CommodityMapper extends BaseMapper<Commodity> {
     /**
      * 查询更详细的商品详情
      * @param id 商品 id
+     * @param userId 当前用户 id
      * @return 商品信息
      */
-    CommodityInfo loadInfo(@Param("id") UUID id);
+    CommodityInfo loadInfo(@Param("id") UUID id, @Param("userId") UUID userId);
 }
 
 

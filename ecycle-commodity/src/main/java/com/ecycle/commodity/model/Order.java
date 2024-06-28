@@ -74,6 +74,16 @@ public class Order implements Serializable {
     private Date serviceChargePayTime;
 
     /**
+     * 回收商抵达时间
+     */
+    private Date arrivedTime;
+
+    /**
+     * 订单完成时间
+     */
+    private Date finishTime;
+
+    /**
      * 出售人 id
      */
     private UUID sellerId;

@@ -44,4 +44,7 @@
         </if>
         ORDER BY a.create_time
     </select>
+    <select id="loadUserBiddingByCommodityId" resultType="com.ecycle.commodity.model.BiddingRecord">
+        SELECT * FROM ecycle_bidding_record WHERE commodity_id = #{commodityId} AND creator_id = #{userId}
+    </select>
 </mapper>

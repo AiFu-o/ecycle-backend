@@ -46,6 +46,10 @@
         ORDER BY a.modify_time
     </select>
     <select id="loadInfo" resultType="com.ecycle.commodity.web.info.CommodityInfo">
-        SELECT a.*, b.nick_name creatorName FROM ecycle_commodity a LEFT JOIN ecycle_user b ON a.creator_id = b.id WHERE a.id = #{id}
+        SELECT a.*, b.nick_name creatorName, c.id AS favoriteId
+        FROM ecycle_commodity a
+                 LEFT JOIN ecycle_user b ON a.creator_id = b.id
+                 LEFT JOIN ecycle_commodity_favorite c ON c.commodity_id = a.id AND c.user_id = #{userId}
+        WHERE a.id = #{id}
     </select>
 </mapper>

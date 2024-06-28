@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.ecycle.commodity.model.BiddingRecord;
 import com.ecycle.commodity.web.info.BiddingRecordQueryRequest;
 import com.ecycle.commodity.web.info.CreateBiddingRequest;
+import com.ecycle.common.context.PageQueryRequest;
 import com.ecycle.common.context.PageQueryResponse;
 
 import java.math.BigDecimal;
@@ -22,14 +23,6 @@ public interface BiddingRecordService extends IService<BiddingRecord> {
      * @return 订单 id
      */
     UUID create(CreateBiddingRequest request);
-
-    /**
-     * 修改出价
-     * @param orderId 订单 id
-     * @param commodityAmount 出价
-     * @return 是否修改成功
-     */
-    Boolean updateCommodityAmount(UUID orderId, BigDecimal commodityAmount);
 
     /**
      * 卖家确认出价 出售
@@ -51,4 +44,12 @@ public interface BiddingRecordService extends IService<BiddingRecord> {
      * @return 我的出价列表
      */
     PageQueryResponse queryMineAll(BiddingRecordQueryRequest biddingRecordQueryRequest);
+
+    /**
+     * 根据商品获取出价列表
+     * @param param 分页参数
+     * @param commodityId 商品 id
+     * @return 出价列表
+     */
+    PageQueryResponse queryAllByCommodityId(PageQueryRequest param, UUID commodityId);
 }

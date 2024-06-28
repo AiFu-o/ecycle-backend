@@ -4,6 +4,7 @@ import com.ecycle.commodity.exception.BiddingOrderException;
 import com.ecycle.commodity.service.BiddingRecordService;
 import com.ecycle.commodity.web.info.BiddingRecordQueryRequest;
 import com.ecycle.commodity.web.info.CreateBiddingRequest;
+import com.ecycle.common.context.PageQueryRequest;
 import com.ecycle.common.context.PageQueryResponse;
 import com.ecycle.common.context.RestResponse;
 import lombok.extern.log4j.Log4j2;
@@ -54,21 +55,6 @@ public class BiddingRecordController {
 
     }
 
-    @PostMapping("/updateCommodityAmount/{orderId}")
-    public RestResponse<Boolean> createOrder(@PathVariable(name = "orderId") UUID orderId,
-                                             @RequestParam(name = "commodityAmount") BigDecimal commodityAmount) {
-        try {
-            return RestResponse.success(biddingRecordService.updateCommodityAmount(orderId, commodityAmount));
-        } catch (BiddingOrderException e) {
-            log.error(e.getMessage(), e);
-            return RestResponse.validfail(e.getMessage());
-        } catch (Exception e) {
-            log.error("未知异常", e);
-            return RestResponse.validfail("未知异常");
-        }
-
-    }
-
     @PutMapping("/sell/{orderId}")
     public RestResponse<Boolean> createOrder(@PathVariable(name = "orderId") UUID orderId) {
         try {
@@ -86,6 +72,20 @@ public class BiddingRecordController {
     public RestResponse<PageQueryResponse> queryMineAll(@RequestBody BiddingRecordQueryRequest biddingRecordQueryRequest) {
         try {
             return RestResponse.success(biddingRecordService.queryMineAll(biddingRecordQueryRequest));
+        } catch (BiddingOrderException e) {
+            log.error(e.getMessage(), e);
+            return RestResponse.validfail(e.getMessage());
+        } catch (Exception e) {
+            log.error("未知异常", e);
+            return RestResponse.validfail("未知异常");
+        }
+    }
+
+    @PostMapping("/queryAll/{commodityId}")
+    public RestResponse<PageQueryResponse> queryAllByCommodityId(@RequestBody PageQueryRequest param,
+                                                                 @PathVariable(name = "commodityId") UUID commodityId) {
+        try {
+            return RestResponse.success(biddingRecordService.queryAllByCommodityId(param, commodityId));
         } catch (BiddingOrderException e) {
             log.error(e.getMessage(), e);
             return RestResponse.validfail(e.getMessage());
