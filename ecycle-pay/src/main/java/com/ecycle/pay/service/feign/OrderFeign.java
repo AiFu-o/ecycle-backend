@@ -11,7 +11,7 @@ import java.util.UUID;
  * @Date 2024/4/26
  * @Description TODO
  */
-@FeignClient(value = "ecycle-commodity", configuration = HeaderInterceptor.class)
+@FeignClient(value = "ecycle-commodity", configuration = HeaderInterceptor.class, contextId = "pay")
 public interface OrderFeign {
 
     /**

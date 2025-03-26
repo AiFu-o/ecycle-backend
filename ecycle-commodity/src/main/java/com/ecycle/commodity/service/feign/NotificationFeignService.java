@@ -20,6 +20,6 @@ public interface NotificationFeignService {
      * @param request 通知参数
      * @return 是否成功
      */
-    @PostMapping("/send")
+    @PostMapping("/notification/send")
     RestResponse<Boolean> send(@RequestBody CreateNotificationRequest request);
 }

@@ -1,10 +1,8 @@
 package com.ecycle.commodity.service.impl;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.conditions.query.QueryChainWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.ecycle.commodity.constant.CommodityStatus;
 import com.ecycle.commodity.exception.BiddingOrderException;
 import com.ecycle.commodity.exception.OrderException;
 import com.ecycle.commodity.model.BiddingRecord;
@@ -22,7 +20,7 @@ import com.ecycle.commodity.web.info.OrderQueryResponse;
 import com.ecycle.common.context.PageQueryResponse;
 import com.ecycle.common.context.RestResponse;
 import com.ecycle.common.utils.CurrentUserInfoUtils;
-import com.ecycle.common.utils.MybatisUtils;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -39,6 +37,7 @@ import java.util.UUID;
 * @createDate 2024-05-15 16:59:49
 */
 @Service
+@Log4j2
 public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order>
     implements OrderService{
 
@@ -52,7 +51,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order>
     private PayFeignService payFeignService;
 
     @Override
-    public void generateOrder(BiddingRecord biddingRecord) {
+    public void generateOrder(BiddingRecord biddingRecord, Commodity commodity) {
         Order order = new Order();
 
         order.setId(UUID.randomUUID());
@@ -63,6 +62,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order>
         order.setCommodityAmount(biddingRecord.getCommodityAmount());
         order.setServiceChargeReceivable(biddingRecord.getServiceCharge());
         order.setBillCode(generateBillCode());
+        order.setSellerId(commodity.getCreatorId());
         save(order);
     }
 
@@ -91,8 +91,8 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order>
 
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
     public void serviceChargeSuccess(UUID orderId) {
+        log.info("订单支付成功回调");
         Order order = getById(orderId);
         order.setServiceChargeReceived(order.getServiceChargeReceivable());
         order.setStatus(OrderStatus.PENDING_VISIT);
@@ -124,7 +124,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order>
 
     @Override
     public OrderInfo loadInfo(UUID id) {
-        OrderInfo info = (OrderInfo) baseMapper.selectById(id);
+        OrderInfo info =  baseMapper.selectInfo(id);
         Commodity commodity = commodityService.getById(info.getCommodityId());
         info.setCommodity(commodity);
         // 钱没付 或者退款了 就不给他看地址

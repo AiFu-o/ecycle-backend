@@ -1,6 +1,7 @@
 package com.ecycle.auth.filter;
 
 import com.alibaba.fastjson.JSONObject;
+import com.ecycle.auth.web.info.WxUserInfo;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -46,8 +47,17 @@ public class WxAuthenticationFilter extends AbstractAuthenticationProcessingFilt
         JSONObject body = JSONObject.parseObject(sb.toString());
 
         String jsCode = body.getString(SPRING_SECURITY_FORM_JS_CODE_KEY);
+
+        WxUserInfo wxUserInfo = new WxUserInfo();
+        if(StringUtils.isNotEmpty(body.getString("nickname"))){
+            wxUserInfo.setNickName(body.getString("nickname"));
+        }
+        if(StringUtils.isNotEmpty(body.getString("avatarUrl"))){
+            wxUserInfo.setAvatarUrl(body.getString("avatarUrl"));
+        }
+
         UsernamePasswordAuthenticationToken authRequest = new UsernamePasswordAuthenticationToken(
-                jsCode, "");
+                jsCode, wxUserInfo);
         setDetails(request, authRequest);
 
         return this.getAuthenticationManager().authenticate(authRequest);

@@ -45,6 +45,7 @@ public class WxAuthAuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         result.put(SessionKeyConstant.OPEN_ID, userInfo.getOpenId());
         result.put("roles", userInfo.getRoles());
         result.put("nickName", user.getNickName());
+        result.put("avatarUrl", user.getProfile());
         result.put("profile", user.getProfile());
 
         // 设置响应的字符编码

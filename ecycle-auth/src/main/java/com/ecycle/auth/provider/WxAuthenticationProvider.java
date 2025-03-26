@@ -5,6 +5,7 @@ import cn.binarywang.wx.miniapp.bean.WxMaJscode2SessionResult;
 import cn.binarywang.wx.miniapp.bean.WxMaPhoneNumberInfo;
 import com.ecycle.auth.model.User;
 import com.ecycle.auth.service.UserService;
+import com.ecycle.auth.web.info.WxUserInfo;
 import com.ecycle.common.context.UserInfo;
 import lombok.extern.log4j.Log4j2;
 import me.chanjar.weixin.common.error.WxErrorException;
@@ -35,6 +36,7 @@ public class WxAuthenticationProvider implements AuthenticationProvider {
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         String jsCode = (String) authentication.getPrincipal();
+        WxUserInfo wxUserInfo = (WxUserInfo) authentication.getCredentials();
 
         WxMaJscode2SessionResult session;
         try {
@@ -47,7 +49,7 @@ public class WxAuthenticationProvider implements AuthenticationProvider {
 
         if (null == user) {
             // 创建用户
-            user = userService.createWxFirstLoginUser(openId);
+            user = userService.createWxFirstLoginUser(openId, wxUserInfo);
         }
 
         UserInfo userInfo = userService.buildUserInfo(user);

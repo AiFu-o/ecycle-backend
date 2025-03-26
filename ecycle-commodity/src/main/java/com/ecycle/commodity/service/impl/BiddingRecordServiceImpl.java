@@ -121,11 +121,13 @@ public class BiddingRecordServiceImpl extends ServiceImpl<BiddingRecordMapper, B
             // 其他的竞价设置为已关闭
             close(otherBidding);
         }
-        orderService.generateOrder(biddingRecord);
+        Commodity commodity = commodityService.getById(biddingRecord.getCommodityId());
+
+        orderService.generateOrder(biddingRecord, commodity);
 
         // 修改商品为已售出
-        Commodity commodity = commodityService.getById(biddingRecord.getCommodityId());
         commodity.setStatus(CommodityStatus.SOLD);
+        commodityService.updateById(commodity);
         return true;
     }
 

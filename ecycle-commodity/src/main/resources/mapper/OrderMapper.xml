@@ -48,4 +48,7 @@
         </if>
         ORDER BY a.create_time
     </select>
+    <select id="selectInfo" resultType="com.ecycle.commodity.web.info.OrderInfo">
+        SELECT * FROM ecycle_order WHERE id = #{id}
+    </select>
 </mapper>

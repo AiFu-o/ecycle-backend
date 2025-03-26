@@ -1,7 +1,6 @@
 package com.ecycle.auth.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.ecycle.auth.exception.UserException;
 import com.ecycle.auth.model.Role;
 import com.ecycle.auth.model.User;
 import com.ecycle.auth.model.UserRole;
@@ -10,6 +9,7 @@ import com.ecycle.auth.service.UserRoleService;
 import com.ecycle.auth.service.UserService;
 import com.ecycle.auth.mapper.UserMapper;
 import com.ecycle.auth.web.info.UserInfoResponse;
+import com.ecycle.auth.web.info.WxUserInfo;
 import com.ecycle.common.context.UserInfo;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.core.GrantedAuthority;
@@ -80,10 +80,18 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public User createWxFirstLoginUser(String openId) {
+    public User createWxFirstLoginUser(String openId, WxUserInfo wxUserInfo) {
         User user = new User();
         user.setId(UUID.randomUUID());
-        user.setNickName("微信用户" + getMiddleAndAddRandom(openId));
+        if(StringUtils.isNotEmpty(wxUserInfo.getNickName())){
+            user.setNickName(wxUserInfo.getNickName());
+        } else {
+            user.setNickName("微信用户" + getMiddleAndAddRandom(openId));
+        }
+        if(StringUtils.isNotEmpty(wxUserInfo.getAvatarUrl())){
+            user.setProfile(wxUserInfo.getAvatarUrl());
+        }
+
         user.setUsername(openId);
         // 随便生成个密码就不让他用密码登录
         user.setPassword(passwordEncoder.encode(UUID.randomUUID().toString()));

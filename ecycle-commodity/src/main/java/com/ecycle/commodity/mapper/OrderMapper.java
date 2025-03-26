@@ -39,6 +39,13 @@ public interface OrderMapper extends BaseMapper<Order> {
      */
     IPage<OrderQueryResponse> queryByBuyer(IPage<OrderQueryResponse> query,
                                             @Param("param") OrderQueryRequest param, @Param("buyerId") UUID buyerId);
+
+    /**
+     * 查询订单详情
+     * @param id 订单 id
+     * @return 订单详情
+     */
+    OrderInfo selectInfo(@Param("id") UUID id);
 }
 
 

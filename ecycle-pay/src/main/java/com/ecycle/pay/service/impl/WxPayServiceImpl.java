@@ -136,13 +136,12 @@ public class WxPayServiceImpl implements WxPayService {
     }
 
     private void paySuccess(Transaction transaction, PayOrder payOrder) {
-        // TODO 支付成功处理 要回调商品服务修改订单状态
+        // 回调商品服务
+        orderFeign.serviceChargeSuccessCallBack(payOrder.getOrderId());
 
         // 修改支付订单状态
         updatePayOrder(transaction, payOrder);
 
-        // 回调商品服务
-        orderFeign.serviceChargeSuccessCallBack(payOrder.getOrderId());
         log.info("{} 支付成功", payOrder.getBillCode());
     }
 
@@ -159,6 +158,7 @@ public class WxPayServiceImpl implements WxPayService {
                 // 如果是支付成功 走支付成功的逻辑
                 if (transaction.getTradeState() == Transaction.TradeStateEnum.SUCCESS) {
                     paySuccess(transaction, payOrder);
+                    errorMessage = "订单已支付";
                 } else if (transaction.getTradeState() == Transaction.TradeStateEnum.USERPAYING) {
                     errorMessage = "订单支付中";
                 } else if (transaction.getTradeState() == Transaction.TradeStateEnum.CLOSED) {

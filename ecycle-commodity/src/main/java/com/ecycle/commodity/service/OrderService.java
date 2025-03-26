@@ -1,6 +1,7 @@
 package com.ecycle.commodity.service;
 
 import com.ecycle.commodity.model.BiddingRecord;
+import com.ecycle.commodity.model.Commodity;
 import com.ecycle.commodity.web.info.OrderInfo;
 import com.ecycle.commodity.web.info.OrderQueryRequest;
 import com.ecycle.commodity.model.Order;
@@ -19,9 +20,11 @@ public interface OrderService extends IService<Order> {
 
     /**
      * 根据出价记录生成订单
+     *
      * @param biddingRecord 出价记录
+     * @param commodity 商品
      */
-    void generateOrder(BiddingRecord biddingRecord);
+    void generateOrder(BiddingRecord biddingRecord, Commodity commodity);
 
     /**
      * 生成订单服务费预付单
