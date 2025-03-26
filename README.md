@@ -19,7 +19,7 @@
 ### gitee仓库地址
 * 管理端前端：https://gitee.com/wang-weichen/ecycle-manage-frontend
 * 小程序端：https://gitee.com/JoKing_93/ecycle-frontend
-* 后端：https://gitee.com/wang-weichen/ecycle-manage-backend
+* 后端：https://gitee.com/wang-weichen/ecycle-backend
 
 ### github仓库地址
 * 管理端前端：https://github.com/AiFu-o/ecycle-manage-frontend
