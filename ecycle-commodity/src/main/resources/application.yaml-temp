@@ -1,0 +1,14 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost/ecycle
+    username: root
+    password: root
+  redis:
+    database: 2
+    host: 127.0.0.1
+mybatis-plus:
+   configuration:
+     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+amap:
+  key: 0973669e9cf346ab28133710e1419c48 # 高德地图 Web服务-key 创建链接https://console.amap.com/dev/key/app

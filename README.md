@@ -13,8 +13,41 @@
 
 如果这个项目让你有所收获，记得 Star 关注哦。
 
-## 项目简介
+### 项目简介
 **有价**，后端基于 SpringMvc 构建，小程序基于 uniapp 构建，个人可以直接使用，如要商用请联系微信 w569111843。
+
+### 项目结构
+~~~
+|-- ecycle-auth 用户、权限管理
+|-- ecycle-commodity 商品、订单管理
+|-- ecycle-gateway 网关
+|-- ecycle-message 消息推送
+|-- ecycle-pay 支付(目前只有微信支付)
+|-- ecycle-storage 附件管理
+~~~
+
+### 项目启动教程
+* 配置环境(java11、nacos2、mysql8、redis)
+* 将项目导入 idea
+* 第一次启动服务前需要执行 **init.sql** 创建数据库表
+* 启动 nacos，并创建配置文件，配置文件名根据 bootstrap.yaml中的配置创建
+
+  ***具体配置项参考各个服务下的 application.yaml-temp***
+
+  配置文件名称示例:
+    ~~~
+    spring:
+      application:
+        name: ecycle-commodity
+      profiles:
+        active: dev
+    ## 配置文件名称 = 
+    ## ecycle-commodity 或 ecycle-commodity-dev
+  
+    ~~~
+* 按顺序启动服务
+ 
+  ***gateway > auth > commodity > pay > message > storage***
 
 ### gitee仓库地址
 * 管理端前端：https://gitee.com/wang-weichen/ecycle-manage-frontend

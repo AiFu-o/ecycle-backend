@@ -1,0 +1,22 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost/ecycle
+    username: root
+    password: root
+  redis:
+    database: 2
+    host: 127.0.0.1
+wx:
+  xcx-pay:
+    appId: wx2c933545169e1b16 # 小程序 appId
+    merchantId: 1975406771 # 微信支付商户 id
+    payNotifyUrl:  https://f35037890q.imdo.co/pay-api/wx-pay/pay-notify # 微信支付支付成功回调地址 域名 + /pay-api/wx-pay/pay-notify
+    privateKeyFilePath: wx_pay_key.pem # 微信支付签名文件 (pem 文件)
+    merchantSerialNumber: 4BA71E48C12DF02E8EB798WA2FED9F1C1195AD60 # 微信支付商户序列号
+    apiV3Key: "zCJEdWBCyXadpFqPrXsVXwQBpESVyYrS" # 微信支付apiV3Key
+    miniprogram_state: developer
+security:
+  ignore:
+    urls:
+      - "/wx-pay/pay-notify"

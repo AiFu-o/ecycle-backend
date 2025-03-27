@@ -1,0 +1,9 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost/ecycle
+    username: root
+    password: root
+  redis:
+    database: 2
+    host: 127.0.0.1

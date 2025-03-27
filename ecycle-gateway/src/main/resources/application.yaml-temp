@@ -1,0 +1,52 @@
+security:
+  ignore:
+    urls:
+      - "/auth-api/login" ## 公开接口
+cors:
+  allowedOrigins:
+    - "*"
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost/ecycle
+    username: root
+    password: root
+  redis:
+    database: 2
+    host: 127.0.0.1
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+      routes:
+        - id: ecycle-commodity
+          uri: lb://ecycle-commodity
+          predicates:
+            - Path= /commodity-api/**
+          filters:
+            - StripPrefix=1
+        - id: ecycle-auth
+          uri: lb://ecycle-auth
+          predicates:
+            - Path= /auth-api/**
+          filters:
+            - StripPrefix=1
+        - id: ecycle-storage
+          uri: lb://ecycle-storage
+          predicates:
+            - Path= /storage-api/**
+          filters:
+            - StripPrefix=1
+        - id: ecycle-pay
+          uri: lb://ecycle-pay
+          predicates:
+            - Path= /pay-api/**
+          filters:
+            - StripPrefix=1
+        - id: ecycle-message
+          uri: lb://ecycle-message
+          predicates:
+            - Path= /message-api/**
+          filters:
+            - StripPrefix=1

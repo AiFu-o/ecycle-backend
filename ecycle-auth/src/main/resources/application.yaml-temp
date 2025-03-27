@@ -1,0 +1,21 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost/ecycle
+    username: root
+    password: root
+  redis:
+    database: 2
+    host: 127.0.0.1
+wx:
+  miniapp:
+    url: https://api.weixin.qq.com
+    appId: wx2c933545169e1b16 # 小程序 appId
+    secret: 48c37ac50104efeq0b46ec6b0cc6a59e # 小程序 appSecret
+    msgDataFormat: JSON
+    config-storage:
+      type: RedisTemplate
+      key-prefix: xcx
+mybatis-plus:
+   configuration:
+     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl

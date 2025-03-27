@@ -1,0 +1,26 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost/ecycle
+    username: root
+    password: root
+  redis:
+    database: 2
+    host: 127.0.0.1
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+ecycle:
+  attachment:
+    max-upload-count: 10
+    max-file-size: 10
+    types:
+      - jpg
+      - png
+    path: /file # 文件存储路径
+    store-type: DISK
+security:
+  ignore:
+    urls:
+      - "/file/preview/**"
